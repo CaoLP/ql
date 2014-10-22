@@ -1,79 +1,87 @@
 <?php
-setlocale(LC_MONETARY,"vi_VN");
+setlocale (LC_MONETARY, "vi_VN");
 ?>
 <!-- Row start -->
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-3">
 		<div class="widget">
 			<div class="widget-header">
-				<div class="title">
-					<?php echo $this->Html->link ('Tạo mới', array ('action' => 'add'), array (
-																							  'class' => 'btn btn-sm btn-success'
-																						));?>
-				</div>
+				<h3>Tìm kiếm</h3>
 			</div>
 			<div class="widget-body">
-				<table class="table table-condensed table-bordered table-hover no-margin">
+				<form action="" method="get">
+					<input class="form-control" placeholder="Theo mã phiếu chuyển">
+				</form>
+			</div>
+		</div>
+		<div class="widget">
+			<div class="widget-header">
+				<h3>Lọc thời gian</h3>
+			</div>
+			<div class="widget-body">
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+						Toàn thời gian
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+						Hôm nay
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+						Tuần này
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+						Tháng này
+					</label>
+				</div>
+				<a href="javascript:;">Lựa chọn khác »</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="widget">
+			<div class="widget-header">
+				<div class="title pull-right">
+					<?php echo $this->Html->link (
+						'<span aria-hidden="true" class="icon-plus"></span> Chuyển hàng',
+						array ('action' => 'add'),
+						array ('class' => 'btn btn-sm btn-success','escape'=>false));?>
+				</div>
+			<h3>Phiếu chuyển hàng</h3>
+			</div>
+			<div class="widget-body">
+				<table class="table table-condensedtable-hover no-margin">
 					<thead>
-
-					<th><?php echo $this->Paginator->sort('id','Mã số'); ?></th>
-					<th><?php echo $this->Paginator->sort('code','Mã số xuất'); ?></th>
-					<th><?php echo $this->Paginator->sort('note','Ghi chú'); ?></th>
-					<th><?php echo $this->Paginator->sort('type','Loại'); ?></th>
-					<th><?php echo $this->Paginator->sort('store_id','Cửa hàng xuất'); ?></th>
-					<th><?php echo $this->Paginator->sort('store_receive','Cửa hàng nhận'); ?></th>
-					<th><?php echo $this->Paginator->sort('customer_id','Khách hàng'); ?></th>
-					<th><?php echo $this->Paginator->sort('total','Thành tiền'); ?></th>
-					<th><?php echo $this->Paginator->sort('created','Ngày tạo'); ?></th>
-					<th><?php echo $this->Paginator->sort('created_by','Người tạo'); ?></th>
-					<th><?php echo $this->Paginator->sort('approved','Ngày duyệt'); ?></th>
-					<th><?php echo $this->Paginator->sort('approved_by','Người duyệt'); ?></th>
-					<th class="actions"><?php echo __('Actions'); ?></th>
-
+					<th><?php echo $this->Paginator->sort ('code', 'Mã số chuyển'); ?></th>
+					<th><?php echo $this->Paginator->sort ('store_id', 'Từ chi nhánh'); ?></th>
+					<th><?php echo $this->Paginator->sort ('store_receive', 'Tới chi nhánh'); ?></th>
+					<th><?php echo $this->Paginator->sort ('created', 'Ngày chuyển'); ?></th>
+					<th><?php echo $this->Paginator->sort ('status', 'Trạng thái'); ?></th>
 					</thead>
 					<tbody>
 					<?php foreach ($inoutWarehouses as $inoutWarehouse): ?>
-						<tr>
-							<td><?php echo h($inoutWarehouse['InoutWarehouse']['id']); ?>&nbsp;</td>
-							<td><?php echo h($inoutWarehouse['InoutWarehouse']['code']); ?>&nbsp;</td>
+						<tr class="table-toggle-expand">
+							<td><?php echo h ($inoutWarehouse['InoutWarehouse']['code']); ?>&nbsp;</td>
 							<td>
-								<a
-										class="label label-success info"
-										data-container="body"
-										data-toggle="popover"
-										data-placement="bottom"
-										data-content="<?php echo h($inoutWarehouse['InoutWarehouse']['note']); ?>"
-										data-original-title="<?php echo h($inoutWarehouse['InoutWarehouse']['code']); ?>">
-									<span>Ghi chú</span>
-								</a>
-							</td>
-							<td><?php echo h($wtypes[$inoutWarehouse['InoutWarehouse']['type']]); ?>&nbsp;</td>
-							<td>
-								<?php echo $this->Html->link($inoutWarehouse['Store']['name'], array('controller' => 'stores', 'action' => 'view', $inoutWarehouse['Store']['id'])); ?>
+								<?php echo $inoutWarehouse['Store']['name']; ?>
 							</td>
 							<td>
-								<?php echo $this->Html->link($inoutWarehouse['ReceiveStore']['name'], array('controller' => 'stores', 'action' => 'view', $inoutWarehouse['ReceiveStore']['id'])); ?>
+								<?php echo $inoutWarehouse['ReceiveStore']['name']; ?>
 							</td>
-							<td>
-								<?php echo $this->Html->link($inoutWarehouse['Customer']['id'], array('controller' => 'customers', 'action' => 'view', $inoutWarehouse['Customer']['id'])); ?>
-							</td>
-							<td>
-								<?php echo money_format('%.0n',h ($inoutWarehouse['InoutWarehouse']['total'])); ?>
-							</td>
-							<td><?php echo h($inoutWarehouse['InoutWarehouse']['created']); ?>&nbsp;</td>
-							<td>
-								<?php echo $this->Html->link($inoutWarehouse['Creater']['name'], array('controller' => 'users', 'action' => 'view', $inoutWarehouse['InoutWarehouse']['created_by'])); ?>
-							</td>
-							<td><?php echo h($inoutWarehouse['InoutWarehouse']['approved']); ?>&nbsp;</td>
-							<td>
-								<?php echo $this->Html->link($inoutWarehouse['Approver']['name'], array('controller' => 'users', 'action' => 'view', $inoutWarehouse['InoutWarehouse']['approved_by'])); ?>
-							</td>
-							<td class="actions">
-								<?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view',    $inoutWarehouse['InoutWarehouse']['id']), array('escape' => false,'title'=>'Xem thông tin')); ?>
-								<?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit',   $inoutWarehouse['InoutWarehouse']['id']), array('escape' => false,'title'=>'Thay đổi thông tin')); ?>
-								<?php echo $this->Form->postLink('<i class="glyphicon glyphicon-trash"></i>', array('action' => 'delete',   $inoutWarehouse['InoutWarehouse']['id']), array('escape' => false,'title'=>'Xoá'), __('Are you sure you want to delete # %s?',
-																																																						$inoutWarehouse['InoutWarehouse']['id'])); ?>
-							</td>
+							<td><?php echo h ($inoutWarehouse['InoutWarehouse']['created']); ?>&nbsp;</td>
+							<td><?php echo h ($inoutWarehouse['InoutWarehouse']['status']); ?>&nbsp;</td>
+						</tr>
+						<tr class="table-expandable">
+							<td colspan="5"></td>
 						</tr>
 					<?php endforeach; ?>
 

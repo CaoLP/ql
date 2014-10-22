@@ -79,18 +79,13 @@ setlocale(LC_MONETARY,"vi_VN");
 <div class="main-container">
 <!-- Dashboard wrapper start -->
 <div class="dashboard-wrapper">
-<?php echo $this->element('content_header')?>
-
-<!--Content-->
-    <?php echo $this->fetch('content'); ?>
+	<div class="container">
+		<?php echo $this->element('content_header')?>
+		<?php echo $this->fetch('content'); ?>
+	</div>
 </div>
 <!-- Dashboard wrapper end -->
-
 </div>
 <!-- Main Container end -->
-
-
-
-
 </body>
 </html>
