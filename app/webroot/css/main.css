@@ -2896,7 +2896,7 @@ form input[type=checkbox]{
     text-align: center;
 }
 /**/
-
+/*--------------------------------------------------------*/
 .table-toggle-expand{
     cursor: pointer;
 }
@@ -2907,5 +2907,6 @@ form input[type=checkbox]{
     display: none;
 }
 .table-expandable.tb-expanded{
-    display: block;
+    display: table-row;
 }
+

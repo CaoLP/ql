@@ -15,8 +15,14 @@ var admin = {
 }
 $(document).ready(function(){
    $(document).on('click','.table-toggle-expand td',function(){
+
        var tag = $(this).parent().next('.table-expandable');
        if(tag.hasClass('tb-expanded')) tag.removeClass('tb-expanded');
-       else tag.addClass('tb-expanded');
+       else {
+           $('.table-expandable').each(function(){
+               $(this).removeClass('tb-expanded');
+           });
+           tag.addClass('tb-expanded');
+       }
    })
 });

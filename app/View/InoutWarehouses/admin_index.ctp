@@ -81,7 +81,86 @@ setlocale (LC_MONETARY, "vi_VN");
 							<td><?php echo h ($inoutWarehouse['InoutWarehouse']['status']); ?>&nbsp;</td>
 						</tr>
 						<tr class="table-expandable">
-							<td colspan="5"></td>
+							<td colspan="5">
+                                <div class="col-md-12">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">Panel heading without title</div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <table class="table">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Mã chuyển hàng</strong>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="label label-success">TRF000001</span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Từ chi nhánh</strong>
+                                                                </td>
+                                                                <td>
+                                                                    Chi nhánh trung tâm
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Ngày chuyển</strong>
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Người tạo</strong>
+                                                                </td>
+                                                                <td>
+                                                                    Bao Bao
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <table class="table">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Trạng thái</strong>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="label label-warning">Đang chuyển</span>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>Tới chi nhánh</strong>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control"></select>
+                                                                </td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input class="form-control" placeholder="Ghi chú">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-footer">Panel footer</div>
+                                    </div>
+                                </div>
+
+							</td>
 						</tr>
 					<?php endforeach; ?>
 
