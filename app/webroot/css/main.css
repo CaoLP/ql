@@ -2895,6 +2895,19 @@ form input[type=checkbox]{
 .tb-toggle{
     text-align: center;
 }
+.icondemo{
+    display: inline-table;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid;
+    width: 100px;
+    height: 80px;
+    margin: 2px;
+}
+.p-0{
+    padding: 0 !important;
+}
 /**/
 /*--------------------------------------------------------*/
 .table-toggle-expand{
@@ -2909,4 +2922,10 @@ form input[type=checkbox]{
 .table-expandable.tb-expanded{
     display: table-row;
 }
-
+.input-time{
+    width: 100%;
+    height: 25px;
+}
+.table-expandable table td{
+    vertical-align: middle !important;
+}

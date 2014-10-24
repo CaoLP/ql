@@ -23,6 +23,11 @@ class InoutWarehousesController extends AppController {
 			'Nhập hàng',
 		);
 		$this->set (compact ('wtypes'));
+		$status = array (
+			'Đang chuyển',
+			'Đã chuyển',
+		);
+		$this->set (compact ('status'));
 		parent::beforeRender ();
 	}
 
@@ -32,8 +37,10 @@ class InoutWarehousesController extends AppController {
 	 * @return void
 	 */
 	public function admin_index ($action = '') {
-		$this->InoutWarehouse->recursive = 0;
+		$this->InoutWarehouse->recursive = 1;
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
+		$stores = $this->InoutWarehouse->Store->find('list');
+		$this->set(compact('stores'));
 	}
 
 	/**
