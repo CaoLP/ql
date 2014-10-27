@@ -34,6 +34,7 @@ setlocale(LC_MONETARY,"vi_VN");
 								 'bootstrap.min',
 								 'main',
 								 'bootstrap-modal',
+								 '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css',
 						   ));
 	echo $this->fetch ('meta');
 	echo $this->fetch ('css');

@@ -53,7 +53,7 @@ setlocale(LC_MONETARY, "vi_VN");
             <div class="title pull-right">
                 <?php echo $this->Html->link(
                     '<span aria-hidden="true" class="icon-plus"></span> Chuyển hàng',
-                    array('action' => 'add'),
+                    array('action' => 'add',0),
                     array('class' => 'btn btn-sm btn-success', 'escape' => false));?>
             </div>
             <h3>Phiếu chuyển hàng</h3>
@@ -117,10 +117,12 @@ setlocale(LC_MONETARY, "vi_VN");
                                                                 <strong>Ngày chuyển</strong>
                                                             </td>
                                                             <td>
-                                                                <input type="date"
-                                                                       class="input-time"
+                                                                <input type="text"
+                                                                       class="input-time datepicker"
+                                                                       id="time<?php echo $key;?>"
                                                                        name="data[InoutWarehouse][tranfered]"
-                                                                       value="<?php echo $inoutWarehouse['InoutWarehouse']['created']; ?>">
+																	   readonly="readonly"
+                                                                       value="<?php echo date('Y-m-d',strtotime($inoutWarehouse['InoutWarehouse']['tranfered'])); ?>">
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -164,8 +166,8 @@ setlocale(LC_MONETARY, "vi_VN");
                                                     </table>
                                                 </div>
                                                 <div class="col-md-3 p-0">
-                                                    <textarea class="form-control" placeholder="Ghi chú"
-                                                              rows="5"><?php echo $inoutWarehouse['InoutWarehouse']['note']; ?></textarea>
+													<?php echo $this->Form->input('note', array('class' => 'form-control','placeholder'=>'Ghi chú','label' => false, 'div' => false,'value'=> $inoutWarehouse['InoutWarehouse']['note'])) ?>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -260,4 +262,20 @@ setlocale(LC_MONETARY, "vi_VN");
             }
         });
     });
+	Date.prototype.toDateInputValue = (function() {
+		var local = new Date(this);
+		local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+		return local.toJSON().slice(0,10);
+	});
+	$(function() {
+		$( ".datepicker" ).datepicker({
+			showOn: "button",
+			buttonImage: "/img/dateIcon.png",
+			buttonImageOnly: true,
+			buttonText: 'Chọn ngày',
+			dateFormat : 'yy-mm-dd',
+			minDate: 0,
+			maxDate: "+1M +10D"
+		});
+	});
 </script>

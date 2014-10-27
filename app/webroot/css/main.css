@@ -2929,3 +2929,8 @@ form input[type=checkbox]{
 .table-expandable table td{
     vertical-align: middle !important;
 }
+.ui-datepicker-trigger{
+    position: absolute;
+    right: 8px;
+    cursor: pointer;
+}

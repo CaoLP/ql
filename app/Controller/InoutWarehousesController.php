@@ -38,6 +38,11 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_index ($action = '') {
 		$this->InoutWarehouse->recursive = 1;
+		$this->Paginator->settings = array (
+			'conditions' => array (
+				'InoutWarehouse.type' =>'0',
+			)
+		);
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
 		$stores = $this->InoutWarehouse->Store->find('list');
 		$this->set(compact('stores'));
@@ -87,7 +92,7 @@ class InoutWarehousesController extends AppController {
 	 *
 	 * @return void
 	 */
-	public function admin_add () {
+	public function admin_add ($type=0) {
 		if ($this->request->is ('post')) {
 			//			debug($this->request->data);die;
 			$this->InoutWarehouse->create ();
@@ -110,7 +115,7 @@ class InoutWarehousesController extends AppController {
 		}
 		$stores = $this->InoutWarehouse->Store->find ('list');
 		$customers = $this->InoutWarehouse->Customer->find ('list');
-		$this->set (compact ('stores', 'customers'));
+		$this->set (compact ('stores', 'customers','type'));
 	}
 
 	/**
@@ -123,7 +128,7 @@ class InoutWarehousesController extends AppController {
 	 * @return void
 	 */
 	public function admin_edit ($id = null) {
-        debug($this->request);die;
+//        debug($this->request);die;
 		if (!$this->InoutWarehouse->exists ($id)) {
 			throw new NotFoundException(__ ('Invalid inout warehouse'));
 		}
