@@ -74,9 +74,8 @@ setlocale(LC_MONETARY, "vi_VN");
 						<?php echo date('d/m/Y',strtotime($inoutWarehouse['InoutWarehouse']['created'])); ?>
 					</td>
 					<td>
-						<?php echo $inoutWarehouse['InoutWarehouse']['total']; ?>
+						<?php echo money_format ('%.0n',$inoutWarehouse['InoutWarehouse']['total']); ?>
 					</td>
-					<td><?php echo h($inoutWarehouse['InoutWarehouse']['created']); ?>&nbsp;</td>
 					<td><?php echo $status[$inoutWarehouse['InoutWarehouse']['status']]; ?>&nbsp;</td>
 				</tr>
 				<tr class="table-expandable">
