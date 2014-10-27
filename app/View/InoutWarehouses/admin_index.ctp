@@ -68,7 +68,7 @@ setlocale(LC_MONETARY, "vi_VN");
                 <th><?php echo $this->Paginator->sort('status', 'Trạng thái'); ?></th>
                 </thead>
                 <tbody>
-                <?php foreach ($inoutWarehouses as $inoutWarehouse): ?>
+                <?php foreach ($inoutWarehouses as $key=>$inoutWarehouse): ?>
                     <tr class="table-toggle-expand">
                         <td><?php echo h($inoutWarehouse['InoutWarehouse']['code']); ?>&nbsp;</td>
                         <td>
@@ -83,7 +83,10 @@ setlocale(LC_MONETARY, "vi_VN");
                     <tr class="table-expandable">
                         <td colspan="5">
                             <div class="col-md-12">
-                                <?php $this->Form->create('InoutWarehouse',array('action'=>'/edit/'.$inoutWarehouse['InoutWarehouse']['id']));?>
+                                <?php echo $this->Form->create('InoutWarehouse',array('id'=>'InoutWarehouse'.$key,'action'=>'/edit/'.$inoutWarehouse['InoutWarehouse']['id']));?>
+                                <?php
+                                echo $this->Form->input('id',array('value'=>$inoutWarehouse['InoutWarehouse']['id']));
+                                ?>
                                 <div class="panel panel-success">
                                     <div class="panel-heading">Thông tin</div>
                                     <div class="panel-body">
@@ -203,7 +206,16 @@ setlocale(LC_MONETARY, "vi_VN");
                                         <a href="javascript:;" class="btn btn-warning"><i class="icon-print"></i> In</a>
                                         <a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
                                             Xuất file</a>
-                                        <a href="javascript:;" class="btn btn-success"><i class="icon-storage"></i> Lưu</a>
+                                        <?php echo $this->Html->link('<i class="icon-storage"></i> Lưu',array('#'),array('class'=>'btn btn-success','id'=>'clickInoutWarehouse'.$key,'escape'=>false,'div'=>false)); ?>
+                                        <script>
+                                            $(document).ready(function(){
+                                                $(document).on('click','#clickInoutWarehouse<?php echo $key;?>',function(e){
+                                                    e.preventDefault();
+                                                    $(this).closest('form').submit();
+                                                });
+                                            });
+
+                                        </script>
                                     </div>
                                 </div>
                                 <?php echo $this->Form->end();?>

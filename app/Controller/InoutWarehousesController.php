@@ -123,6 +123,7 @@ class InoutWarehousesController extends AppController {
 	 * @return void
 	 */
 	public function admin_edit ($id = null) {
+        debug($this->request);die;
 		if (!$this->InoutWarehouse->exists ($id)) {
 			throw new NotFoundException(__ ('Invalid inout warehouse'));
 		}
