@@ -40,23 +40,36 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                     </ul>
 
                     <!-- Tab panes -->
-                    <div class="tab-content">
+                    <div class="tab-content content-1">
                         <div class="tab-pane fade in active" id="info">
                             <ul class="list-group no-margin">
                                 <li class="list-group-item">
                                     <div class="input-group">
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" placeholder="Nhà cung cấp">
                                   <span class="input-group-btn">
                                     <a class="btn btn-default" type="button" data-original-title=""><i class="icon-plus"></i></a>
                                   </span>
                                     </div>
                                 </li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li class="list-group-item"><strong>Nhà cung cấp chưa xác định</strong></li>
+                                <li class="list-group-item">
+									<div class="input-group input-group-sm">
+										<span class="input-group-addon">Trạng thái</span>
+										<input type="text" class="form-control" value="Phiếu tạm" disabled="disabled">
+									</div>
+								</li>
+                                <li class="list-group-item">
+									<div class="input-group input-group-sm">
+										<span class="input-group-addon">Mã phiếu</span>
+										<input type="text" class="form-control" placeholder="Tự động">
+									</div>
+								</li>
                             </ul>
 
                         </div>
-                        <div class="tab-pane fade" id="note">...</div>
+                        <div class="tab-pane fade" id="note">
+							<textarea class="form-control" rows="8" placeholder="Ghi chú"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -67,7 +80,23 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="sell">...</div>
+                        <div class="tab-pane fade in active" id="sell">
+							<ul class="list-group no-margin">
+								<li class="list-group-item">
+									<div class="input-group input-group-sm">
+										<span class="input-group-addon">Tổng tiền hàng</span>
+										<input type="text" class="form-control" placeholder="Tự động" disabled="disabled">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<div class="btn-group">
+									<a class="btn btn-danger" onclick="history.back()">Trở về</a>
+									<a class="btn btn-warning" id="temp-save">Lưu tạm</a>
+									<a class="btn btn-success" id="save">Hoàn tất</a>
+									</div>
+								</li>
+							</ul>
+                        </div>
                     </div>
                 </div>
             </div>

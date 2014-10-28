@@ -2934,3 +2934,6 @@ form input[type=checkbox]{
     right: 8px;
     cursor: pointer;
 }
+.content-1{
+    min-height: 230px;
+}

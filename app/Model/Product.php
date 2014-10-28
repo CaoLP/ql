@@ -169,4 +169,12 @@ class Product extends AppModel {
 			'order' => ''
 		)
 	);
+	public function filter($input){
+		$result = $this->find('all',array(
+										 'fields'=>'',
+										 'conditions'=>array(
+											 ''=>'',
+										 )
+									));
+	}
 }
