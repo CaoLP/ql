@@ -22,10 +22,12 @@ class ProductsController extends AppController {
  *
  * @return void
  */
-	public function admin_index($input=null) {
+	public function admin_index() {
 		$this->Product->recursive = 0;
 		if($this->request->isAjax()){
-			$products = $this->Product->filter($input);
+			$input='';
+			if(isset($this->request->query['term'])) $input = $this->request->query['term'];
+			$products = $this->Product->filterData($input);
 			$this->set(compact('products'));
 			$this->layout = 'ajax';
 			$this->view = 'admin_ajax_pro';

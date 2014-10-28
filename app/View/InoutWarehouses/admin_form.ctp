@@ -5,8 +5,13 @@ if ($this->request->params['action'] == 'admin_add') {
 } else {
     $this->Html->addCrumb('<li>Phiếu xuất' . $this->request->data['InoutWarehouse']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
 }
+echo $this->Html->script (array ('warehouse'), array ('inline' => false)
+);
 echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 ?>
+<script>
+	var ajax_url = '<?php echo $this->Html->url(array('controller'=>'products','action'=>'index'))?>';
+</script>
     <div class="row">
         <div class="col-md-8">
             <div class="widget-header">

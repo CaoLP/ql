@@ -38,7 +38,6 @@ setlocale(LC_MONETARY,"vi_VN");
 						   ));
 	echo $this->fetch ('meta');
 	echo $this->fetch ('css');
-	echo $this->fetch ('script');
 	?>
 	<?php
 	echo $this->Html->script (array (
@@ -63,6 +62,7 @@ setlocale(LC_MONETARY,"vi_VN");
                                     'bootstrap-modal',
 
     ));
+	echo $this->fetch ('script');
 	?>
 	<?php echo $this->fetch('scriptBottom');?>
 </head>

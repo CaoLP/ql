@@ -169,12 +169,16 @@ class Product extends AppModel {
 			'order' => ''
 		)
 	);
-	public function filter($input){
+	public function filterData($input){
 		$result = $this->find('all',array(
-										 'fields'=>'',
+//										 'fields'=>'',
 										 'conditions'=>array(
-											 ''=>'',
+											 'OR'=>array(
+												 'Product.name like'=>'%'.$input.'%',
+												 'Product.sku like'=>'%'.$input.'%'
+											 ),
 										 )
 									));
+		return $result;
 	}
 }
