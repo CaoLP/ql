@@ -2937,3 +2937,6 @@ form input[type=checkbox]{
 .content-1{
     min-height: 230px;
 }
+.ui-autocomplete{
+    z-index: 2 !important;
+}
