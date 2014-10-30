@@ -115,7 +115,9 @@ class InoutWarehousesController extends AppController {
 		}
 		$stores = $this->InoutWarehouse->Store->find ('list');
 		$customers = $this->InoutWarehouse->Customer->find ('list');
-		$this->set (compact ('stores', 'customers','type'));
+		$this->loadModel('OptionGroup');
+		$options = $this->OptionGroup->getOptions();
+		$this->set (compact ('stores', 'customers','type','options'));
 	}
 
 	/**

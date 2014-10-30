@@ -11,6 +11,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 ?>
 <script>
 	var ajax_url = '<?php echo $this->Html->url(array('controller'=>'products','action'=>'index'))?>';
+	var optionData = JSON.parse('<?php echo json_encode($options)?>');
 </script>
     <div class="row">
         <div class="col-md-8">
@@ -30,7 +31,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                     <th>Thành tiền</th>
                     </thead>
                     <tbody>
-                    <tr data-id="">
+                    <tr data-id="" data-options="">
                         <td>323454</td>
                         <td>adasdasdasd</td>
                         <td>4,00023,000</td>
@@ -38,7 +39,10 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                         <td>1,515,125,125</td>
                     </tr>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="4" class="text-right">
+							<span>Thuộc tính : </span><span class="options">Xanh,XL</span>
+                        </td>
+                        <td>
 
                         </td>
                     </tr>
@@ -120,3 +124,20 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
         </div>
     </div>
 <?php echo $this->Form->end(); ?>
+
+<div id="dialog-form" title="Thêm hàng">
+	<p class="validateTips">Không được bỏ trống</p>
+	<form>
+		<fieldset>
+			<label for="qty">Số lượng</label>
+			<input type="number" name="name" id="qty" class="text ui-widget-content ui-corner-all" min="1">
+			<hr>
+			<p><strong>Thuộc tính</strong></p>
+			<div id="options-list">
+
+			</div>
+			<!-- Allow form submission with keyboard without duplicating the dialog button -->
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+		</fieldset>
+	</form>
+</div>

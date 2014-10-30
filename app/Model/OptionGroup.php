@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model');
+App::uses ('AppModel', 'Model');
 /**
  * OptionGroup Model
  *
@@ -7,16 +7,16 @@ App::uses('AppModel', 'Model');
  */
 class OptionGroup extends AppModel {
 
-public $title_for_layout = 'Nhóm thuộc tính';
-/**
- * Validation rules
- *
- * @var array
- */
-	public $validate = array(
-		'name' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
+	public $title_for_layout = 'Nhóm thuộc tính';
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
+	public $validate = array (
+		'name' => array (
+			'notEmpty' => array (
+				'rule' => array ('notEmpty'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -28,13 +28,13 @@ public $title_for_layout = 'Nhóm thuộc tính';
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
-/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
-		'Option' => array(
+	/**
+	 * hasMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array (
+		'Option' => array (
 			'className' => 'Option',
 			'foreignKey' => 'option_group_id',
 			'dependent' => false,
@@ -49,4 +49,8 @@ public $title_for_layout = 'Nhóm thuộc tính';
 		)
 	);
 
+	public function getOptions () {
+		$result = $this->find('all');
+		return $result;
+	}
 }
