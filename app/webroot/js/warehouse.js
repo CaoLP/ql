@@ -36,8 +36,8 @@ $(document).ready(function () {
 
     dialog = $("#dialog-form").dialog({
         autoOpen: false,
-        height: 300,
-        width: 350,
+        height: 400,
+        width: 400,
         modal: true,
         buttons: {
             "Thêm": addProduct,
@@ -100,36 +100,77 @@ $(document).ready(function () {
         }
     });
     function addProduct() {
+        var valid = true;
+        allFields.removeClass( "ui-state-error" );
+        valid = valid && checkRegexp( qty, /^[0-9]+$/i, "Số lượng chỉ có thể là số" );
+        if ( valid ) {
+            dialog.dialog( "close" );
+        }
 
+        return valid;
     }
 
     function buildOptions(itemOptions) {
         var html = '';
-        console.log(optionData);
-        console.log(itemOptions);
-
         Object.keys(optionData).forEach(function (key, index) {
             var OptionGroup = this[key]['OptionGroup'];
             var Option = this[key]['Option'];
             var item = '', renderIt = false;
             item += '<legend>' + OptionGroup['name'] + '</legend><ul style="display: inline; margin-bottom: 5px">';
+            var check = true;
             Object.keys(Option).forEach(function (key, index) {
-                var radio = '<li style="display: inline; padding: 5px"><input type="radio" name="radio' + this[key]['option_group_id'] + '" value="' + this[key]['id'] + '"';
+                var radio = '';
                 var compare_id = this[key]['id'];
+                var name = this[key]['name'];
                 Object.keys(itemOptions).forEach(function (key, index) {
                     if (compare_id == this[key]['option_id']) {
-                        radio += ' checked="checked"';
+                        if(check)
+                            check = 'checked="checked"';
+                        radio += '<li style="display: inline; padding: 5px">' +
+                            '<input type="radio" name="radio' + this[key]['id'] + '" value="' + this[key]['option_id'] + '" '+check+'>' +
+                            '<span style="margin-left: 3px">' + name +'</span>' +
+                            '</li>';
                         renderIt = true;
+                        check = false;
                     }
                 }, itemOptions);
-                radio += '><span style="margin-left: 3px">' + this[key]['name']+'</span></li>';
                 item += radio;
             }, Option);
+            check = true;
             item += '</ul>';
             if (renderIt)
                 html += item;
         }, optionData);
         optionsList.html(html);
+    }
+    function updateTips( t ) {
+        tips
+            .text( t )
+            .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+            tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
+
+    function checkLength( o, n, min, max ) {
+        if ( o.val().length > max || o.val().length < min ) {
+            o.addClass( "ui-state-error" );
+            updateTips( "Length of " + n + " must be between " +
+                min + " and " + max + "." );
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function checkRegexp( o, regexp, n ) {
+        if ( !( regexp.test( o.val() ) ) ) {
+            o.addClass( "ui-state-error" );
+            updateTips( n );
+            return false;
+        } else {
+            return true;
+        }
     }
 
 //    $("#p-search").on('keypress',function(event){
