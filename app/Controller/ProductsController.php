@@ -23,7 +23,6 @@ class ProductsController extends AppController {
  * @return void
  */
 	public function admin_index() {
-		$this->Product->recursive = 0;
 		if($this->request->isAjax()){
 			$input='';
 			if(isset($this->request->query['term'])) $input = $this->request->query['term'];
@@ -32,7 +31,8 @@ class ProductsController extends AppController {
 			$this->layout = 'ajax';
 			$this->view = 'admin_ajax_pro';
 		}else{
-			$this->set('products', $this->Paginator->paginate());
+            $this->Product->recursive = 0;
+            $this->set('products', $this->Paginator->paginate());
 		}
 	}
 

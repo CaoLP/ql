@@ -30,6 +30,18 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                     <th>Thành tiền</th>
                     </thead>
                     <tbody>
+                    <tr data-id="">
+                        <td>323454</td>
+                        <td>adasdasdasd</td>
+                        <td>4,00023,000</td>
+                        <td>10</td>
+                        <td>1,515,125,125</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -93,7 +105,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 										<input type="text" class="form-control" placeholder="Tự động" disabled="disabled">
 									</div>
 								</li>
-								<li class="list-group-item">
+								<li class="list-group-item text-center">
 									<div class="btn-group">
 									<a class="btn btn-danger" onclick="history.back()">Trở về</a>
 									<a class="btn btn-warning" id="temp-save">Lưu tạm</a>
