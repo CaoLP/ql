@@ -30,22 +30,8 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                     <th>Số lượng</th>
                     <th>Thành tiền</th>
                     </thead>
-                    <tbody>
-                    <tr data-id="" data-options="">
-                        <td>323454</td>
-                        <td>adasdasdasd</td>
-                        <td>4,00023,000</td>
-                        <td>10</td>
-                        <td>1,515,125,125</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right">
-							<span>Thuộc tính : </span><span class="options">Xanh,XL</span>
-                        </td>
-                        <td>
+                    <tbody id="product-list">
 
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
 
@@ -113,7 +99,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 									<div class="btn-group">
 									<a class="btn btn-danger" onclick="history.back()">Trở về</a>
 									<a class="btn btn-warning" id="temp-save">Lưu tạm</a>
-									<a class="btn btn-success" id="save">Hoàn tất</a>
+									<button type="submit" class="btn btn-success" id="save">Hoàn tất</button>
 									</div>
 								</li>
 							</ul>
@@ -130,7 +116,12 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 	<form>
 		<fieldset>
 			<label for="qty">Số lượng</label>
-			<input type="number" name="name" id="qty" class="text ui-widget-content ui-corner-all" min="1">
+			<input type="number" name="qty" id="qty" class="text ui-widget-content ui-corner-all" min="1">
+			<input type="hidden" name="id" id="p-id">
+			<input type="hidden" name="sku" id="p-sku">
+			<input type="hidden" name="name" id="p-name">
+			<input type="hidden" name="price" id="p-price">
+			<input type="hidden" name="data" id="p-data">
 			<hr>
 			<p><strong>Thuộc tính</strong></p>
 			<div id="options-list">

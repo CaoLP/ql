@@ -94,7 +94,7 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_add ($type=0) {
 		if ($this->request->is ('post')) {
-			//			debug($this->request->data);die;
+						debug($this->request->data);die;
 			$this->InoutWarehouse->create ();
 			$this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
 			if ($this->InoutWarehouse->save ($this->request->data) && isset($this->request->data['InoutWarehouseDetail'])) {

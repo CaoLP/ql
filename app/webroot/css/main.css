@@ -2940,3 +2940,21 @@ form input[type=checkbox]{
 .ui-autocomplete{
     z-index: 2 !important;
 }
+#product-list tr td{
+    border: none;
+}
+#product-list tr.first-tr{
+    border-top: 1px solid #8EBFFF;
+    border-left: 1px solid #8EBFFF;
+    border-right: 1px solid #8EBFFF;
+}
+#product-list tr.last-tr{
+    border-bottom: 1px solid #8EBFFF;
+    border-left: 1px solid #8EBFFF;
+    border-right: 1px solid #8EBFFF;
+}
+.hidden-qty{
+    width: 35px;
+    text-align: center;
+    font-weight: bold;
+}

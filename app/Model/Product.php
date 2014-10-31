@@ -190,6 +190,7 @@ class Product extends AppModel
             )
         );
         $result = $this->find('all', array(
+		  	'fields'=>'Product.sku,Product.name,Product.id,Product.price',
             'conditions' => array(
                 'OR' => array(
                     'Product.name like' => '%' . $input . '%',
