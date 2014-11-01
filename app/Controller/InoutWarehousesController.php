@@ -17,17 +17,21 @@ class InoutWarehousesController extends AppController {
 
 	public $title_for_layout = 'Quản lý nhập xuất';
 
+    public $status=array();
+
 	public function  beforeRender () {
 		$wtypes = array (
 			'Xuất hàng',
 			'Nhập hàng',
 		);
 		$this->set (compact ('wtypes'));
-		$status = array (
+        if(count($this->status)==0)
+            $this->status = array (
 			'Đang chuyển',
 			'Đã chuyển',
+			'Đã huỷ',
 		);
-		$this->set (compact ('status'));
+		$this->set('status',$this->status);
 		parent::beforeRender ();
 	}
 
@@ -40,7 +44,7 @@ class InoutWarehousesController extends AppController {
 		$this->InoutWarehouse->recursive = 1;
 		$this->Paginator->settings = array (
 			'conditions' => array (
-				'InoutWarehouse.type' =>'0',
+				'InoutWarehouse.type' =>'1',
 			)
 		);
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
@@ -57,13 +61,19 @@ class InoutWarehousesController extends AppController {
 		$this->title_for_layout = 'Phiếu nhập hàng chờ duyệt';
 		$this->Paginator->settings = array (
 			'conditions' => array (
-				'InoutWarehouse.store_receive' => $this->Session->read ('Auth.User.Store.id'),
-				'InoutWarehouse.parent_id' => '',
+				'InoutWarehouse.store_id' => $this->Session->read ('Auth.User.Store.id'),
+                'InoutWarehouse.type' =>'0',
 			)
 		);
 
-		$this->InoutWarehouse->recursive = 0;
+		$this->InoutWarehouse->recursive = 1;
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
+
+        $this->status = array (
+            'Chờ duyệt',
+            'Đã nhập',
+            'Đã huỷ',
+        );
 	}
 
 	/**
@@ -94,24 +104,47 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_add ($type=0) {
 		if ($this->request->is ('post')) {
-						debug($this->request->data);die;
+//						debug($this->request->data);
+//        die;
+            if(isset($this->request->data['ProductList'])){
 			$this->InoutWarehouse->create ();
-			$this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
-			if ($this->InoutWarehouse->save ($this->request->data) && isset($this->request->data['InoutWarehouseDetail'])) {
-
+            if(empty($this->request->data['InoutWarehouse']['code']))
+			    $this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
+                $summary = 0;
+            foreach($this->request->data['ProductList'] as $pItem){
+                $data = json_decode($pItem['Product']['data'],true);
+                $summary += $data['price']*$pItem['Product']['qty'];
+            }
+            $this->request->data['InoutWarehouse']['total'] = $summary;
+			if ($this->InoutWarehouse->save ($this->request->data)) {
 				$arrStore = array ();
-				foreach ($this->request->data['InoutWarehouseDetail'] as $item) {
-					$temp = $item;
-					$temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
-					$arrStore['InoutWarehouseDetail'][] = $temp;
-				};
+
+                foreach($this->request->data['ProductList'] as $pItem){
+                    $data = json_decode($pItem['Product']['data'],true);
+                    $total = $data['price']*$pItem['Product']['qty'];
+                    $temp = array();
+                    $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
+                    $temp['product_id'] = $data['id'];
+                    $temp['sku'] = $data['sku'];
+                    $temp['qty'] = $pItem['Product']['qty'];
+                    $temp['price'] = $data['price'];
+                    $temp['total'] = $total;
+                    $temp['options'] = implode(',',json_decode($pItem['Product']['option']));
+                    $temp['option_names'] = implode(',',json_decode($pItem['Product']['optionName']));
+                    $temp['name'] = $data['name'];
+                    $arrStore['InoutWarehouseDetail'][] = $temp;
+                }
+
 				$this->InoutWarehouse->InoutWarehouseDetail->saveMany ($arrStore['InoutWarehouseDetail']);
 				$this->Session->setFlash (__ ('The inout warehouse has been saved.'));
 
-				return $this->redirect (array ('action' => 'index'));
+				return $this->redirect (array ('action' => 'in'));
 			} else {
 				$this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
 			}
+            }else{
+                $this->Session->setFlash (__ ('Vui lòng thêm hàng'));
+            }
 		}
 		$stores = $this->InoutWarehouse->Store->find ('list');
 		$customers = $this->InoutWarehouse->Customer->find ('list');
@@ -170,18 +203,20 @@ class InoutWarehousesController extends AppController {
 				$approvedata = $data['InoutWarehouse'];
 				$approvedata['approved'] = date ("Y-m-d h:i:s");
 				$approvedata['approved_by'] = $this->Session->read ('Auth.User.id');
-				$inoutWarehouse = $data['InoutWarehouse'];
-				unset($inoutWarehouse['id']);
-				$inoutWarehouse['parent_id'] = $data['InoutWarehouse']['id'];
-				$inoutWarehouse['type'] = 1;
-				$inoutWarehouseDetail_tmp = $data['InoutWarehouseDetail'];
-				$inoutWarehouseDetail=array();
-				foreach($inoutWarehouseDetail_tmp as $key=>$val){
-					unset($val['id']);
-					$inoutWarehouseDetail[] = $val;
-				}
+				$approvedata['status'] = 1;
+//				$inoutWarehouse = $data['InoutWarehouse'];
+//				unset($inoutWarehouse['id']);
+//				$inoutWarehouse['parent_id'] = $data['InoutWarehouse']['id'];
+//				$inoutWarehouse['type'] = 1;
+				$inoutWarehouseDetail = $data['InoutWarehouseDetail'];
+//				$inoutWarehouseDetail_tmp = $data['InoutWarehouseDetail'];
+//				$inoutWarehouseDetail=array();
+//				foreach($inoutWarehouseDetail_tmp as $key=>$val){
+//					unset($val['id']);
+//					$inoutWarehouseDetail[] = $val;
+//				}
 
-				if ($this->InoutWarehouse->save ($inoutWarehouse)) {
+//				if ($this->InoutWarehouse->save ($inoutWarehouse)) {
 //				if (true) {
 					$arrStore = array ();
 					foreach ($inoutWarehouseDetail as $item) {
@@ -189,7 +224,7 @@ class InoutWarehousesController extends AppController {
 						$temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
 						$arrStore['InoutWarehouseDetail'][] = $temp;
 					};
-					$this->InoutWarehouse->InoutWarehouseDetail->saveMany($arrStore['InoutWarehouseDetail']);
+//					$this->InoutWarehouse->InoutWarehouseDetail->saveMany($arrStore['InoutWarehouseDetail']);
 					$this->loadModel('Warehouse');
 					$warehouse = array();
 					$storeId = $this->Session->read ('Auth.User.store_id');
@@ -227,14 +262,14 @@ class InoutWarehousesController extends AppController {
 
 					$this->Session->setFlash (__ ('The inout warehouse has been saved.'));
 
-					return $this->redirect (array ('action' => 'index', 'in'));
-				} else {
-					$this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
-
-					return $this->redirect (array ('action' => 'view', $id, 'in'));
-				}
+					return $this->redirect (array ('action'=>'in'));
+//				} else {
+//					$this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
+//
+//					return $this->redirect (array ('action' => 'view', $id, 'in'));
+//				}
 		}
-		die;
+//		die;
 	}
 
 	/**

@@ -74,7 +74,7 @@ setlocale(LC_MONETARY, "vi_VN");
 						<?php echo date('d/m/Y',strtotime($inoutWarehouse['InoutWarehouse']['created'])); ?>
 					</td>
 					<td>
-						<?php echo money_format ('%.0n',$inoutWarehouse['InoutWarehouse']['total']); ?>
+						<span class="price-text"><?php echo money_format ('%.0n',$inoutWarehouse['InoutWarehouse']['total']); ?></span>
 					</td>
 					<td><?php echo $status[$inoutWarehouse['InoutWarehouse']['status']]; ?>&nbsp;</td>
 				</tr>
@@ -95,7 +95,7 @@ setlocale(LC_MONETARY, "vi_VN");
 													<tbody>
 													<tr>
 														<td>
-															<strong>Mã chuyển hàng</strong>
+															<strong>Mã nhập hàng</strong>
 														</td>
 														<td>
                                                                 <span
@@ -104,7 +104,7 @@ setlocale(LC_MONETARY, "vi_VN");
 													</tr>
 													<tr>
 														<td>
-															<strong>Từ chi nhánh</strong>
+															<strong>Chi nhánh</strong>
 														</td>
 														<td>
 															<?php echo $inoutWarehouse['Store']['name']; ?>
@@ -112,25 +112,13 @@ setlocale(LC_MONETARY, "vi_VN");
 													</tr>
 													<tr>
 														<td>
-															<strong>Ngày chuyển</strong>
+															<strong>Ngày tạo</strong>
 														</td>
 														<td>
-															<input type="text"
-																   class="input-time datepicker"
-																   id="time<?php echo $key;?>"
-																   name="data[InoutWarehouse][tranfered]"
-																   readonly="readonly"
-																   value="<?php echo date('Y-m-d',strtotime($inoutWarehouse['InoutWarehouse']['tranfered'])); ?>">
+                                                            <?php echo date('d/m/Y',strtotime($inoutWarehouse['InoutWarehouse']['created'])); ?>
 														</td>
 													</tr>
-													<tr>
-														<td>
-															<strong>Người tạo</strong>
-														</td>
-														<td>
-															<?php echo $inoutWarehouse['Creater']['name']; ?>
-														</td>
-													</tr>
+
 													</tbody>
 												</table>
 											</div>
@@ -146,20 +134,14 @@ setlocale(LC_MONETARY, "vi_VN");
 																		class="label label-warning"><?php echo $status[$inoutWarehouse['InoutWarehouse']['status']]; ?></span>
 														</td>
 													</tr>
-
-													<tr>
-														<td>
-															<strong>Tới chi nhánh</strong>
-														</td>
-														<td>
-															<?php
-															$tempStore = $stores;
-															unset($tempStore[$inoutWarehouse['InoutWarehouse']['store_id']])
-															?>
-															<?php echo $this->Form->input('store_receive', array('class' => 'input-sm', 'options' => $tempStore, 'selected' => $inoutWarehouse['InoutWarehouse']['store_receive'], 'label' => false, 'div' => false)) ?>
-														</td>
-													</tr>
-
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Người tạo</strong>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $inoutWarehouse['Creater']['name']; ?>
+                                                        </td>
+                                                    </tr>
 													</tbody>
 												</table>
 											</div>
@@ -195,27 +177,28 @@ setlocale(LC_MONETARY, "vi_VN");
 									</div>
 								</div>
 								<div class="panel-footer text-right">
-									<?php echo $this->Form->postLink(
+									<?php
+                                    if($inoutWarehouse['InoutWarehouse']['status']==0)
+                                    echo $this->Form->postLink(
 										'<i class="icon-remove"></i> Huỷ bỏ',
 										array('action' => 'delete',
 											 $inoutWarehouse['InoutWarehouse']['id']),
 										array('escape'=>false,'class'=>'btn btn-danger'),
-										__('Are you sure you want to delete # %s?',
+										__('Bạn có muốn huỷ đơn nhập hàng # %s này không?',
 										   $inoutWarehouse['InoutWarehouse']['code'])); ?>
 
 									<a href="javascript:;" class="btn btn-warning"><i class="icon-print"></i> In</a>
 									<a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
 										Xuất file</a>
-									<?php echo $this->Html->link('<i class="icon-storage"></i> Lưu',array('#'),array('class'=>'btn btn-success','id'=>'clickInoutWarehouse'.$key,'escape'=>false,'div'=>false)); ?>
-									<script>
-										$(document).ready(function(){
-											$(document).on('click','#clickInoutWarehouse<?php echo $key;?>',function(e){
-												e.preventDefault();
-												$(this).closest('form').submit();
-											});
-										});
-
-									</script>
+                                    <?php
+                                    if($inoutWarehouse['InoutWarehouse']['status']==0)
+                                    echo $this->Form->postLink(
+                                        '<i class="icon-checkmark"></i> Duyệt hàng',
+                                        array('action' => 'approve',
+                                            $inoutWarehouse['InoutWarehouse']['id']),
+                                        array('escape'=>false,'class'=>'btn btn-success'),
+                                        __('Bạn có muốn duyệt đơn nhập hàng # %s này không?',
+                                            $inoutWarehouse['InoutWarehouse']['code'])); ?>
 								</div>
 							</div>
 							<?php echo $this->Form->end();?>

@@ -2958,3 +2958,12 @@ form input[type=checkbox]{
     text-align: center;
     font-weight: bold;
 }
+#summary-total{
+    font-size: 14px;
+    font-weight: bold;
+    color: red;
+}
+.price-text{
+    color: red;
+    font-weight: bold;
+}

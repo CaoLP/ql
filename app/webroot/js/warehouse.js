@@ -111,15 +111,16 @@ $(document).ready(function () {
     }).click(function () {
             $(this).mcautocomplete("search");
         });
-    $(document).on('click','.remove-row',function(){
+    $(document).on('click', '.remove-row', function () {
         if (confirm("Bạn có muốn xoá sản phẩm này không?")) {
-        var id = $(this).data('needremove');
-        $(id).remove();
+            var id = $(this).data('needremove');
+            $(id).remove();
+            updatePrice();
         }
     });
     $(document).on('keyup mouseup change', '#product-list tr .hidden-qty', function (e) {
         var qty = $(this).val();
-        if(qty < 1) {
+        if (qty < 1) {
             $(this).val(1);
             $(this).change();
             return false;
@@ -127,12 +128,24 @@ $(document).ready(function () {
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
             var total = $(this).val() * sPrice;
-            $(this).closest('tr').find('.total-price').text(total);
+            $(this).closest('tr').find('.total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
             updatePrice();
         } else {
             e.preventDefault();
             return false;
         }
+    });
+    $(document).on('click', '.price-down', function () {
+        var Qty = $(this).parent().find('.hidden-qty');
+        if (parseInt(Qty.val()) > 1){
+            Qty.val(parseInt(Qty.val()) - 1);
+            Qty.trigger('change');
+        }
+    });
+    $(document).on('click', '.price-up', function () {
+        var Qty = $(this).parent().find('.hidden-qty');
+        Qty.val(parseInt(Qty.val()) + 1);
+        Qty.trigger('change');
     });
     function addProduct() {
         var valid = true;
@@ -158,7 +171,7 @@ $(document).ready(function () {
                     duplicated = true;
                     var hiddenQty = $(this).find('.hidden-qty');
                     hiddenQty.val(parseInt(hiddenQty.val()) + parseInt(qtyVal));
-                    $(this).find('.hidden-qty-text').text(hiddenQty.val());
+                    //$(this).find('.hidden-qty-text').text(hiddenQty.val());
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
                     $(this).find('.total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
@@ -172,7 +185,7 @@ $(document).ready(function () {
                     '<td>' + pName.val() + '</td>' +
                     '<td><span class="price-text">' + subPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
                     '<td class="hidden-qty-text">' +
-                    '<a href="javascript:;" class="price-up"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-price="'+subPrice+'" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-down"><i class="icon icon-arrow-up"></i></a>' +
+                    '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
                     '<td><span class="price-text total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
                     '</tr>' +
@@ -183,13 +196,14 @@ $(document).ready(function () {
                     '<span class="options">' + optionNames + '</span>' +
                     '</td>' +
                     '<td>' +
-                    '<textarea style="display: none" name="data[ProductList]['+uuid+'][Product][data]">' + pData.val() + '</textarea>' +
-                    '<textarea style="display: none" name="data[ProductList]['+uuid+'][Product][option]">' + JSON.stringify(optionIds) + '</textarea>' +
-                    '<textarea style="display: none" name="data[ProductList]['+uuid+'][Product][optionName]">' + JSON.stringify(optionNames) + '</textarea>' +
+                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][data]">' + pData.val() + '</textarea>' +
+                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + JSON.stringify(optionIds) + '</textarea>' +
+                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][optionName]">' + JSON.stringify(optionNames) + '</textarea>' +
                     '</td>' +
                     '</tr>';
                 $('#product-list').append(template);
             }
+            updatePrice();
             dialog.dialog("close");
         }
         return valid;
@@ -266,11 +280,19 @@ $(document).ready(function () {
     }
 
     function updatePrice() {
-
+        var summary = 0;
+        $('#product-list .hidden-qty').each(function () {
+            var price = $(this).data('price');
+            var qty = $(this).val();
+            summary += parseInt(price)* parseInt(qty);
+        });
+        $('#summary-total').val(summary.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
     }
+
     function uniqId() {
         return Math.round(new Date().getTime() + (Math.random() * 100));
     }
+
 //    $("#p-search").on('keypress',function(event){
 //            if (e.which == 13 && $('ul.ui-autocomplete').is(':visible')){
 //                var li = $('li.ui-menu-item:first')[0];
