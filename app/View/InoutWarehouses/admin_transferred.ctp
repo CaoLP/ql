@@ -1,16 +1,12 @@
 <?php
 $this->Html->addCrumb('<li>' . $title_for_layout . '</li>', array('action' => 'index'), array('escape' => false));
-if ($this->request->params['action'] == 'admin_add') {
-    $this->Html->addCrumb('<li>Nhập hàng</li>', '/' . $this->request->url, array('escape' => false));
-} else {
-    $this->Html->addCrumb('<li>Phiếu xuất' . $this->request->data['InoutWarehouse']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
-}
-echo $this->Html->script(array('warehouse'), array('inline' => false)
+$this->Html->addCrumb('<li>Chuyển hàng</li>', '/' . $this->request->url, array('escape' => false));
+echo $this->Html->script(array('warehouse_transferred'), array('inline' => false)
 );
 echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 ?>
 <script>
-    var ajax_url = '<?php echo $this->Html->url(array('controller'=>'products','action'=>'index'))?>';
+    var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
     var optionData = JSON.parse('<?php echo json_encode($options)?>');
 </script>
 <div class="row">
@@ -27,42 +23,57 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                 <th>Mã hàng hóa</th>
                 <th>Tên hàng hóa</th>
                 <th>Đơn giá</th>
+                <th>Tồn kho</th>
                 <th>Số lượng</th>
                 <th>Thành tiền</th>
                 </thead>
                 <tbody id="product-list">
                 <?php
                 if (isset($this->request->data['ProductList']))
-                    foreach ($this->request->data['ProductList'] as $key=>$item) {
-                        $data = json_decode($item['Product']['data'],true);
+                    foreach ($this->request->data['ProductList'] as $key => $item) {
+                        $data = json_decode($item['Product']['data'], true);
                         $summary = $item['Product']['qty'] * $data['price'];
                         ?>
-                        <tr class="first-tr row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo htmlentities($item['Product']['option'])?>">
-                            <td><?php echo $data['sku']?></td>
-                            <td><?php echo $data['name']?></td>
-                            <td><span class="price-text"><?php echo number_format($data['price'], 2, '.', ',');?></span></td>
+                        <tr class="first-tr row<?php echo $key ?>" data-id="<?php echo $data['id'] ?>"
+                            data-options="<?php echo htmlentities($item['Product']['option']) ?>">
+                            <td><?php echo $data['sku'] ?></td>
+                            <td><?php echo $data['name'] ?></td>
+                            <td><span
+                                    class="price-text"><?php echo number_format($data['price'], 2, '.', ','); ?></span>
+                            </td>
+                            <td><?php echo $item['Product']['limit'] ?></td>
                             <td class="hidden-qty-text">
                                 <a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>
-                                <input type="text" class="hidden-qty" data-price="<?php echo $data['price']?>" name="data[ProductList][<?php echo $key?>][Product][qty]" value="<?php echo $item['Product']['qty']?>">
-                                <a href="javascript:;"class="price-up"><i class="icon icon-arrow-up"></i></a>
+                                <input type="text" class="hidden-qty" data-limit="<?php echo $item['Product']['limit'] ?>" data-price="<?php echo $data['price'] ?>"
+                                       name="data[ProductList][<?php echo $key ?>][Product][qty]"
+                                       value="<?php echo $item['Product']['qty'] ?>">
+                                <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                             </td>
-                            <td><span class="price-text total-price"><?php echo number_format($summary, 2, '.', ',');?></span></td>
+                            <td><span
+                                    class="price-text total-price"><?php echo number_format($summary, 2, '.', ','); ?></span>
+                            </td>
                         </tr>
-                        <tr class="last-tr row<?php echo $key?>">
+                        <tr class="last-tr row<?php echo $key ?>">
                             <td class="text-left"><a href="javascript:;" class="remove-row"
-                                                     data-needremove=".row<?php echo $key?>"><i
+                                                     data-needremove=".row<?php echo $key ?>"><i
                                         class="icon icon-close"></i></a></td>
                             <td colspan="3" class="text-right"><span>Thuộc tính : </span><span
                                     class="options"><?php
-                                     echo implode(',',json_decode($item['Product']['optionName'],true))
+                                    echo $item['Product']['optionName']
                                     ?></span>
                             </td>
                             <td>
-                                <textarea style="display: none" name="data[ProductList][<?php echo $key?>][Product][data]"><?php echo $item['Product']['data']?></textarea>
+                                <input type="hidden" name="data[ProductList][<?php echo $key ?>][Product][limit]" value="<?php echo $item['Product']['limit'] ?>">
+                                <input type="hidden" name="data[ProductList][<?php echo $key ?>][Product][warehouse]" value="<?php echo $item['Product']['warehouse'] ?>">
+                                <textarea style="display: none"
+                                          name="data[ProductList][<?php echo $key ?>][Product][data]"><?php echo $item['Product']['data'] ?></textarea>
                                 <textarea
                                     style="display: none"
-                                    name="data[ProductList][<?php echo $key?>][Product][option]"><?php echo $item['Product']['option']?></textarea><textarea
-                                    style="display: none" name="data[ProductList][<?php echo $key?>][Product][optionName]"><?php echo $item['Product']['optionName']?></textarea>
+                                    name="data[ProductList][<?php echo $key ?>][Product][option]"><?php echo $item['Product']['option'] ?></textarea><textarea
+                                    style="display: none"
+                                    name="data[ProductList][<?php echo $key ?>][Product][optionName]"><?php echo $item['Product']['optionName'] ?></textarea>
+                            </td>
+                            <td>
                             </td>
                         </tr>
                     <?php
@@ -96,13 +107,16 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                              </li>
                              <li class="list-group-item"><strong>Nhà cung cấp chưa xác định</strong></li>-->
                             <?php
-                            if($type==1){
+                            if ($type == 1) {
                                 ?>
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Ngày chuyển</span>
                                         <?php
-                                        echo $this->Form->input('tranfered', array('type'=>'text','label' => false, 'div' => false, 'class' => 'form-control datepicker','readonly'=>'readonly'));
+                                        if(!empty($this->request->data['InoutWarehouse']['tranfered']))
+                                        echo $this->Form->input('tranfered', array('type' => 'text', 'label' => false, 'div' => false, 'class' => 'form-control datepicker', 'readonly' => 'readonly'));
+                                        else
+                                        echo $this->Form->input('tranfered', array('value'=>date('Y-m-d'),'type' => 'text', 'label' => false, 'div' => false, 'class' => 'form-control datepicker', 'readonly' => 'readonly'));
                                         ?>
                                     </div>
                                 </li>
@@ -116,15 +130,15 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                                     echo $this->Form->input('store_id', array('label' => false, 'div' => false, 'class' => 'form-control'));
                                     ?>
                                 </div>
-                             </li>
+                            </li>
                             <?php
-                            if($type==1){
+                            if ($type == 1) {
                                 ?>
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Cửa hàng nhận</span>
                                         <?php
-                                        echo $this->Form->input('store_receive_id', array('label' => false, 'div' => false, 'class' => 'form-control','options'=>$stores));
+                                        echo $this->Form->input('store_receive_id', array('label' => false, 'div' => false, 'class' => 'form-control', 'options' => $stores));
                                         ?>
                                     </div>
                                 </li>
@@ -134,7 +148,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                             <li class="list-group-item">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon">Loại</span>
-                                    <span type="text" class="form-control"><?php echo $wtypes[$type]?></span>
+                                    <span type="text" class="form-control"><?php echo $wtypes[$type] ?></span>
                                     <?php
                                     echo $this->Form->hidden('type', array('value' => $type));
                                     echo $this->Form->hidden('status', array('value' => '0'));
@@ -173,7 +187,7 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon">Tổng tiền hàng</span>
                                     <?php
-                                    echo $this->Form->input('P.total', array('id'=>'summary-total','readonly'=>'readonly','label' => false, 'div' => false, 'class' => 'form-control'));
+                                    echo $this->Form->input('P.total', array('id' => 'summary-total', 'readonly' => 'readonly', 'label' => false, 'div' => false, 'class' => 'form-control'));
                                     ?>
                                 </div>
                             </li>
@@ -205,12 +219,10 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
             <input type="hidden" name="name" id="p-name">
             <input type="hidden" name="price" id="p-price">
             <input type="hidden" name="data" id="p-data">
-            <hr>
-            <p><strong>Thuộc tính</strong></p>
-
-            <div id="options-list">
-
-            </div>
+            <input type="hidden" name="options" id="p-options">
+            <input type="hidden" name="optionsName" id="p-optionsName">
+            <input type="hidden" name="limit" id="p-limit">
+            <input type="hidden" name="warehouse" id="p-warehouse">
             <!-- Allow form submission with keyboard without duplicating the dialog button -->
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
         </fieldset>

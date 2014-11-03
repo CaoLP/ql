@@ -53,7 +53,7 @@ setlocale(LC_MONETARY, "vi_VN");
 		<div class="title pull-right">
 			<?php echo $this->Html->link(
 				'<span aria-hidden="true" class="icon-plus"></span> Nhập hàng',
-				array('action' => 'add',1),
+				array('action' => 'add',0),
 				array('class' => 'btn btn-sm btn-success', 'escape' => false));?>
 		</div>
 		<h3>Phiếu nhập hàng</h3>

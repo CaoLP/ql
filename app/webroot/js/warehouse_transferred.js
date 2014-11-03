@@ -35,14 +35,22 @@ $(document).ready(function () {
         pName = $("#p-name"),
         pPrice = $("#p-price"),
         pData = $("#p-data"),
-        optionsList = $("#options-list"),
-        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName),
+        pOptions = $("#p-options"),
+        pLimit = $("#p-limit"),
+        pWarehouse = $("#p-warehouse"),
+        pOptionsName = $("#p-optionsName"),
+        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName).add(pOptions).add(pOptionsName),
         tips = $(".validateTips");
 
+    var store_id = '';
+    $('#InoutWarehouseStoreId').on('change',function(){
+        store_id = $(this).val();
+    });
+    $('#InoutWarehouseStoreId').trigger('change');
     dialog = $("#dialog-form").dialog({
         autoOpen: false,
-        height: 400,
-        width: 400,
+        height: 200,
+        width: 350,
         modal: true,
         buttons: {
             "Thêm": addProduct,
@@ -53,7 +61,6 @@ $(document).ready(function () {
         close: function () {
             form[0].reset();
             allFields.removeClass("ui-state-error");
-            optionsList.html('');
         }
     });
     form = dialog.find("form").on("submit", function (event) {
@@ -73,9 +80,15 @@ $(document).ready(function () {
             },
             {
                 name: 'Tên',
-                width: '70%',
+                width: '40%',
                 Group: 'Product',
                 Key: 'name'
+            },
+            {
+                name: 'Thuộc tính',
+                width: '30%',
+                Group: 'Product',
+                Key: 'optionsName'
             }
         ],
 
@@ -87,7 +100,10 @@ $(document).ready(function () {
             pName.val(ui.item.Product.name);
             pPrice.val(ui.item.Product.price);
             pData.val(JSON.stringify(ui.item.Product));
-            buildOptions(ui.item.ProductOption);
+            pOptions.val(ui.item.Product.options);
+            pLimit.val(ui.item.Product.qty);
+            pWarehouse.val(ui.item.Product.warehouse);
+            pOptionsName.val(ui.item.Product.optionsName);
             dialog.dialog("open");
             return false;
         },
@@ -97,7 +113,7 @@ $(document).ready(function () {
         autoFocus: true,
         source: function (request, response) {
             $.ajax({
-                url: ajax_url + '/index',
+                url: ajax_url+'/'+store_id,
                 dataType: 'json',
                 data: {
                     term: request.term
@@ -120,10 +136,16 @@ $(document).ready(function () {
     });
     $(document).on('keyup mouseup change', '#product-list tr .hidden-qty', function (e) {
         var qty = $(this).val();
+        var limit = $(this).data('limit');
         if (qty < 1) {
             $(this).val(1);
             $(this).change();
             return false;
+        }
+        if(qty > parseInt(limit)){
+            alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+            qty = limit;
+            $(this).val(qty);
         }
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
@@ -161,25 +183,26 @@ $(document).ready(function () {
         allFields.removeClass("ui-state-error");
         valid = valid && checkRegexp(qty, /^[0-9]+$/i, "Số lượng chỉ có thể là số");
         if (valid) {
-            var qtyVal, optionNames = [], optionIds = [], price, subPrice;
+            var qtyVal, optionNames = '', optionIds = '', price, subPrice;
             qtyVal = qty.val();
-            subPrice = pPrice.val() * 1;
-            price = qtyVal * subPrice;
-            $('.radio-op').each(function () {
-                if ($(this).is(':checked')) {
-                    optionNames.push($(this).data('name'));
-                    optionIds.push($(this).val());
-                }
-            });
+            optionIds  = pOptions.val();
+            optionNames = pOptionsName.val();
             var duplicated = false;
 
             $('#product-list tr').each(function () {
                 var listId = $(this).data('id'),
                     listOptions = $(this).data('options');
-                if (pId.val() == listId && JSON.stringify(optionIds) == JSON.stringify(listOptions)) {
+                if (pId.val() == listId && optionIds== listOptions) {
                     duplicated = true;
                     var hiddenQty = $(this).find('.hidden-qty');
-                    hiddenQty.val(parseInt(hiddenQty.val()) + parseInt(qtyVal));
+                    var limit = pLimit.val();
+                    var to = parseInt(hiddenQty.val()) + parseInt(qtyVal);
+                    if(to > parseInt(limit)){
+                        alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+                        to = limit;
+                        return false;
+                    }
+                    hiddenQty.val(to);
                     //$(this).find('.hidden-qty-text').text(hiddenQty.val());
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
@@ -188,13 +211,23 @@ $(document).ready(function () {
                 }
             });
             if (!duplicated) {
+                var limit = pLimit.val();
+                if(qtyVal > parseInt(limit)){
+                    alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+                    qtyVal = limit;
+                    return false;
+                }
+
+                subPrice = pPrice.val() * 1;
+                price = qtyVal * subPrice;
                 var uuid = uniqId();
-                var template = '<tr class="first-tr row' + uuid + '" data-id="' + pId.val() + '" data-options=\'' + JSON.stringify(optionIds) + '\'>' +
+                var template = '<tr class="first-tr row' + uuid + '" data-id="' + pId.val() + '" data-options=\'' + optionIds + '\'>' +
                     '<td>' + pSku.val() + '</td>' +
                     '<td>' + pName.val() + '</td>' +
                     '<td><span class="price-text">' + subPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td>' + pLimit.val() + '</td>' +
                     '<td class="hidden-qty-text">' +
-                    '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
+                    '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-limit="' + pLimit.val() + '" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
                     '<td><span class="price-text total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
                     '</tr>' +
@@ -205,9 +238,13 @@ $(document).ready(function () {
                     '<span class="options">' + optionNames + '</span>' +
                     '</td>' +
                     '<td>' +
+                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][limit]" value="' + pLimit.val() + '">' +
+                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][warehouse]" value="' + pWarehouse.val() + '">' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][data]">' + pData.val() + '</textarea>' +
-                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + JSON.stringify(optionIds) + '</textarea>' +
-                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][optionName]">' + JSON.stringify(optionNames) + '</textarea>' +
+                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + optionIds + '</textarea>' +
+                    '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][optionName]">' + optionNames + '</textarea>' +
+                    '</td>' +
+                    '<td>' +
                     '</td>' +
                     '</tr>';
                 $('#product-list').append(template);
@@ -216,41 +253,6 @@ $(document).ready(function () {
             dialog.dialog("close");
         }
         return valid;
-    }
-
-    function buildOptions(itemOptions) {
-        var html = '';
-        Object.keys(optionData).forEach(function (key, index) {
-            var OptionGroup = this[key]['OptionGroup'];
-            var Option = this[key]['Option'];
-            var item = '', renderIt = false;
-            item += '<legend>' + OptionGroup['name'] + '</legend><ul style="display: inline; margin-bottom: 5px">';
-            var check = true;
-            Object.keys(Option).forEach(function (key, index) {
-                var radio = '';
-                var compare_id = this[key]['id'];
-                var name = this[key]['name'];
-                var group_id = this[key]['option_group_id'];
-                Object.keys(itemOptions).forEach(function (key, index) {
-                    if (compare_id == this[key]['option_id']) {
-                        if (check)
-                            check = 'checked="checked"';
-                        radio += '<li style="display: inline; padding: 5px">' +
-                            '<input class="radio-op" data-name="' + name + '" type="radio" name="radio' + group_id + '" value="' + this[key]['option_id'] + '" ' + check + '>' +
-                            '<span style="margin-left: 3px">' + name + '</span>' +
-                            '</li>';
-                        renderIt = true;
-                        check = false;
-                    }
-                }, itemOptions);
-                item += radio;
-            }, Option);
-            check = true;
-            item += '</ul>';
-            if (renderIt)
-                html += item;
-        }, optionData);
-        optionsList.html(html);
     }
 
     function updateTips(t) {

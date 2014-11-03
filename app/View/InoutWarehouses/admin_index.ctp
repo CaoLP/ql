@@ -53,7 +53,7 @@ setlocale(LC_MONETARY, "vi_VN");
             <div class="title pull-right">
                 <?php echo $this->Html->link(
                     '<span aria-hidden="true" class="icon-plus"></span> Chuyển hàng',
-                    array('action' => 'add',0),
+                    array('action' => 'transferred'),
                     array('class' => 'btn btn-sm btn-success', 'escape' => false));?>
             </div>
             <h3>Phiếu chuyển hàng</h3>
@@ -158,7 +158,7 @@ setlocale(LC_MONETARY, "vi_VN");
                                                                 $tempStore = $stores;
                                                                 unset($tempStore[$inoutWarehouse['InoutWarehouse']['store_id']])
                                                                 ?>
-                                                                <?php echo $this->Form->input('store_receive', array('class' => 'input-sm', 'options' => $tempStore, 'selected' => $inoutWarehouse['InoutWarehouse']['store_receive'], 'label' => false, 'div' => false)) ?>
+                                                                <?php echo $this->Form->input('store_receive_id', array('class' => 'input-sm', 'options' => $tempStore, 'selected' => $inoutWarehouse['InoutWarehouse']['store_receive_id'], 'label' => false, 'div' => false)) ?>
                                                             </td>
                                                         </tr>
 
@@ -209,6 +209,7 @@ setlocale(LC_MONETARY, "vi_VN");
                                         <a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
                                             Xuất file</a>
                                         <?php echo $this->Html->link('<i class="icon-storage"></i> Lưu',array('#'),array('class'=>'btn btn-success','id'=>'clickInoutWarehouse'.$key,'escape'=>false,'div'=>false)); ?>
+                                        <?php echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu',array('action'=>'view', $inoutWarehouse['InoutWarehouse']['id']),array('class'=>'btn btn-success','escape'=>false,'div'=>false)); ?>
                                         <script>
                                             $(document).ready(function(){
                                                 $(document).on('click','#clickInoutWarehouse<?php echo $key;?>',function(e){

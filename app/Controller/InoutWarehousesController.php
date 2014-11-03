@@ -21,9 +21,9 @@ class InoutWarehousesController extends AppController {
 
 	public function  beforeRender () {
 		$wtypes = array (
-			'Xuất hàng',
 			'Nhập hàng',
-		);
+            'Chuyển hàng',
+        );
 		$this->set (compact ('wtypes'));
         if(count($this->status)==0)
             $this->status = array (
@@ -42,11 +42,16 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_index ($action = '') {
 		$this->InoutWarehouse->recursive = 1;
-		$this->Paginator->settings = array (
-			'conditions' => array (
-				'InoutWarehouse.type' =>'1',
-			)
-		);
+        $conds = array (
+            'conditions' => array (
+                'InoutWarehouse.type' =>'1',
+            )
+        );
+        if($this->Session->read('Auth.User.group_id')!=1){
+            $conds['conditions']['InoutWarehouse.store_id']= $this->Session->read ('Auth.User.Store.id');
+        }
+        $this->Paginator->settings = $conds;
+
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
 		$stores = $this->InoutWarehouse->Store->find('list');
 		$this->set(compact('stores'));
@@ -59,12 +64,15 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_in () {
 		$this->title_for_layout = 'Phiếu nhập hàng chờ duyệt';
-		$this->Paginator->settings = array (
-			'conditions' => array (
-				'InoutWarehouse.store_id' => $this->Session->read ('Auth.User.Store.id'),
+        $conds = array (
+            'conditions' => array (
                 'InoutWarehouse.type' =>'0',
-			)
-		);
+            )
+        );
+        if($this->Session->read('Auth.User.group_id')!=1){
+            $conds['conditions']['InoutWarehouse.store_id']= $this->Session->read ('Auth.User.Store.id');
+        }
+		$this->Paginator->settings = $conds;
 
 		$this->InoutWarehouse->recursive = 1;
 		$this->set ('inoutWarehouses', $this->Paginator->paginate ());
@@ -92,8 +100,14 @@ class InoutWarehousesController extends AppController {
 		if (!$this->InoutWarehouse->exists ($id)) {
 			throw new NotFoundException(__ ('Invalid inout warehouse'));
 		}
-		$options = array ('conditions' => array ('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
-		$this->set ('inoutWarehouse', $this->InoutWarehouse->find ('first', $options));
+        $options = array ('conditions' => array ('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
+        $inoutWarehouse = $this->InoutWarehouse->find ('first', $options);
+        if ($this->request->is (array ('post', 'put'))) {
+            debug($this->request->data);die;
+        }else{
+            $this->request->data  = array('InoutWarehouse'=>$inoutWarehouse['InoutWarehouse'],'InoutWarehouseDetail'=>$inoutWarehouse['InoutWarehouseDetail']);
+        }
+		$this->set (compact('inoutWarehouse'));
 		$this->set (compact ('showBtn'));
 	}
 
@@ -104,46 +118,55 @@ class InoutWarehousesController extends AppController {
 	 */
 	public function admin_add ($type=0) {
 		if ($this->request->is ('post')) {
-//						debug($this->request->data);
-//        die;
-            if(isset($this->request->data['ProductList'])){
-			$this->InoutWarehouse->create ();
-            if(empty($this->request->data['InoutWarehouse']['code']))
-			    $this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
-                $summary = 0;
-            foreach($this->request->data['ProductList'] as $pItem){
-                $data = json_decode($pItem['Product']['data'],true);
-                $summary += $data['price']*$pItem['Product']['qty'];
-            }
-            $this->request->data['InoutWarehouse']['total'] = $summary;
-			if ($this->InoutWarehouse->save ($this->request->data)) {
-				$arrStore = array ();
-
-                foreach($this->request->data['ProductList'] as $pItem){
-                    $data = json_decode($pItem['Product']['data'],true);
-                    $total = $data['price']*$pItem['Product']['qty'];
-                    $temp = array();
-                    $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
-                    $temp['product_id'] = $data['id'];
-                    $temp['sku'] = $data['sku'];
-                    $temp['qty'] = $pItem['Product']['qty'];
-                    $temp['price'] = $data['price'];
-                    $temp['total'] = $total;
-                    $temp['options'] = implode(',',json_decode($pItem['Product']['option']));
-                    $temp['option_names'] = implode(',',json_decode($pItem['Product']['optionName']));
-                    $temp['name'] = $data['name'];
-                    $arrStore['InoutWarehouseDetail'][] = $temp;
+            $cont = true;
+            if($type==1){
+                if($this->request->data['InoutWarehouse']['store_id']==$this->request->data['InoutWarehouse']['store_receive_id']){
+                    $this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
+                    $cont = false;
                 }
+            }
+            if($cont){
+                if(isset($this->request->data['ProductList'])){
+                    $this->InoutWarehouse->create ();
+                    if(empty($this->request->data['InoutWarehouse']['code']))
+                        $this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
+                    $summary = 0;
+                    foreach($this->request->data['ProductList'] as $pItem){
+                        $data = json_decode($pItem['Product']['data'],true);
+                        $summary += $data['price']*$pItem['Product']['qty'];
+                    }
+                    $this->request->data['InoutWarehouse']['total'] = $summary;
+                    if ($this->InoutWarehouse->save ($this->request->data)) {
+                        $arrStore = array ();
 
-				$this->InoutWarehouse->InoutWarehouseDetail->saveMany ($arrStore['InoutWarehouseDetail']);
-				$this->Session->setFlash (__ ('The inout warehouse has been saved.'));
+                        foreach($this->request->data['ProductList'] as $pItem){
+                            $data = json_decode($pItem['Product']['data'],true);
+                            $total = $data['price']*$pItem['Product']['qty'];
+                            $temp = array();
+                            $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
+                            $temp['product_id'] = $data['id'];
+                            $temp['sku'] = $data['sku'];
+                            $temp['qty'] = $pItem['Product']['qty'];
+                            $temp['price'] = $data['price'];
+                            $temp['total'] = $total;
+                            $temp['options'] = implode(',',json_decode($pItem['Product']['option']));
+                            $temp['option_names'] = implode(',',json_decode($pItem['Product']['optionName']));
+                            $temp['name'] = $data['name'];
+                            $arrStore['InoutWarehouseDetail'][] = $temp;
+                        }
 
-				return $this->redirect (array ('action' => 'in'));
-			} else {
-				$this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
-			}
-            }else{
-                $this->Session->setFlash (__ ('Vui lòng thêm hàng'));
+                        $this->InoutWarehouse->InoutWarehouseDetail->saveMany ($arrStore['InoutWarehouseDetail']);
+                        $this->Session->setFlash (__ ('The inout warehouse has been saved.'));
+                        if($type==1)
+                            return $this->redirect (array ('action' => 'index'));
+                        else
+                            return $this->redirect (array ('action' => 'in'));
+                    } else {
+                        $this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
+                    }
+                }else{
+                    $this->Session->setFlash (__ ('Vui lòng thêm hàng'));
+                }
             }
 		}
 		$stores = $this->InoutWarehouse->Store->find ('list');
@@ -152,7 +175,67 @@ class InoutWarehousesController extends AppController {
 		$options = $this->OptionGroup->getOptions();
 		$this->set (compact ('stores', 'customers','type','options'));
 	}
+    public function admin_transferred () {
+        $type = 1;
+        if ($this->request->is ('post')) {
+            $cont = true;
+            if($this->request->data['InoutWarehouse']['store_id']==$this->request->data['InoutWarehouse']['store_receive_id']){
+                $this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
+                $cont = false;
+            }
+            if($cont){
+                if(isset($this->request->data['ProductList'])){
+                    $this->InoutWarehouse->create ();
+                    if(empty($this->request->data['InoutWarehouse']['code']))
+                        $this->request->data['InoutWarehouse']['code'] = 'DN' . date ("Ymdhis");
+                    $summary = 0;
+                    foreach($this->request->data['ProductList'] as $pItem){
+                        $data = json_decode($pItem['Product']['data'],true);
+                        $summary += $data['price']*$pItem['Product']['qty'];
+                    }
+                    $this->request->data['InoutWarehouse']['total'] = $summary;
+                    if ($this->InoutWarehouse->save ($this->request->data)) {
+                        $arrStore = array ();
+                        $arrWarehouse = array();
+                        foreach($this->request->data['ProductList'] as $pItem){
+                            $data = json_decode($pItem['Product']['data'],true);
+                            $total = $data['price']*$pItem['Product']['qty'];
+                            $temp = array();
+                            $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
+                            $temp['product_id'] = $data['id'];
+                            $temp['sku'] = $data['sku'];
+                            $temp['qty'] = $pItem['Product']['qty'];
+                            $temp['price'] = $data['price'];
+                            $temp['total'] = $total;
+                            $temp['options'] = $pItem['Product']['option'];
+                            $temp['option_names'] = $pItem['Product']['optionName'];
+                            $temp['name'] = $data['name'];
+                            $arrStore['InoutWarehouseDetail'][] = $temp;
 
+                            $temp2 = array();
+                            $temp2['id'] = $pItem['Product']['warehouse'];
+                            $temp2['qty'] = $pItem['Product']['limit'] - $pItem['Product']['qty'] ;
+                            $arrWarehouse[] = $temp2;
+                        }
+                        $this->InoutWarehouse->InoutWarehouseDetail->saveMany ($arrStore['InoutWarehouseDetail']);
+                        $this->loadModel('Warehouse');
+                        $this->Warehouse->saveMany($arrWarehouse);
+                        $this->Session->setFlash (__ ('The inout warehouse has been saved.'));
+                        return $this->redirect (array ('action' => 'index'));
+                    } else {
+                        $this->Session->setFlash (__ ('The inout warehouse could not be saved. Please, try again.'));
+                    }
+                }else{
+                    $this->Session->setFlash (__ ('Vui lòng thêm hàng'));
+                }
+            }
+        }
+        $stores = $this->InoutWarehouse->Store->find ('list');
+        $customers = $this->InoutWarehouse->Customer->find ('list');
+        $this->loadModel('OptionGroup');
+        $options = $this->OptionGroup->getOptions();
+        $this->set (compact ('stores', 'customers','type','options'));
+    }
 	/**
 	 * edit method
 	 *
@@ -229,29 +312,29 @@ class InoutWarehousesController extends AppController {
 					$warehouse = array();
 					$storeId = $this->Session->read ('Auth.User.store_id');
 
-					foreach($arrStore['InoutWarehouseDetail'] as $item){
-						$oldData = $this->Warehouse->find('first', array(
-															 'conditions'=> array(
-																 'Warehouse.store_id'=>$storeId,
-																 'Warehouse.product_id'=>$item['product_id'],
-																 'Warehouse.options'=>$item['options']
-															 ),
-															 'recursive' =>-1
-														));
+                        foreach($arrStore['InoutWarehouseDetail'] as $item){
+                            $oldData = $this->Warehouse->find('first', array(
+                                'conditions'=> array(
+                                    'Warehouse.store_id'=>$storeId,
+                                    'Warehouse.product_id'=>$item['product_id'],
+                                    'Warehouse.options'=>$item['options']
+                                ),
+                                'recursive' =>-1
+                            ));
 
-						$t = array(
-							'store_id'=>$storeId,
-							'product_id'=>$item['product_id'],
-							'options'=>$item['options'],
-							'price'=>$item['price'],
-						);
-						if(isset($oldData['Warehouse'])){
-							$t['id'] = $oldData['Warehouse']['id'];
-							$t['qty'] = $item['qty'] + $oldData['Warehouse']['qty'];
-						}else{
-							$t['qty'] = $item['qty'];
-						}
-						$warehouse[] = $t;
+                            $t = array(
+                                'store_id'=>$storeId,
+                                'product_id'=>$item['product_id'],
+                                'options'=>$item['options'],
+                                'price'=>$item['price'],
+                            );
+                            if(isset($oldData['Warehouse'])){
+                                $t['id'] = $oldData['Warehouse']['id'];
+                                $t['qty'] = $item['qty'] + $oldData['Warehouse']['qty'];
+                            }else{
+                                $t['qty'] = $item['qty'];
+                            }
+                            $warehouse[] = $t;
 //						debug($oldData);
 
 					}

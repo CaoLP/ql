@@ -94,7 +94,7 @@ class InoutWarehouse extends AppModel {
 		),
 		'ReceiveStore' => array(
 			'className' => 'Store',
-			'foreignKey' => 'store_receive',
+			'foreignKey' => 'store_receive_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

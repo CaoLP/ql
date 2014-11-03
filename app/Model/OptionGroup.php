@@ -48,7 +48,6 @@ class OptionGroup extends AppModel {
 			'counterQuery' => ''
 		)
 	);
-
 	public function getOptions () {
 		$result = $this->find('all');
 		return $result;

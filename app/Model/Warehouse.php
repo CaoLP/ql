@@ -80,5 +80,27 @@ class Warehouse extends AppModel {
 			'order' => ''
 		)
 	);
-
+    public function filterData($input,$store_id)
+    {
+        $this->belongsTo = array(
+            'Product' => array(
+            'className' => 'Product',
+            'foreignKey' => 'product_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ));
+        $result = $this->find('all', array(
+            'fields'=>'Product.sku,Product.name,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.id',
+            'conditions' => array(
+                'Warehouse.qty > '=>'0',
+                'Warehouse.store_id'=> $store_id,
+                'OR' => array(
+                    'Product.name like' => '%' . $input . '%',
+                    'Product.sku like' => '%' . $input . '%'
+                ),
+            )
+        ));
+        return $result;
+    }
 }

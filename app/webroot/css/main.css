@@ -2933,6 +2933,7 @@ form input[type=checkbox]{
     position: absolute;
     right: 8px;
     cursor: pointer;
+    z-index: 10;
 }
 .content-1{
     min-height: 230px;
@@ -2966,4 +2967,14 @@ form input[type=checkbox]{
 .price-text{
     color: red;
     font-weight: bold;
+}
+.right-bar{
+
+}
+.right-bar .input-group-addon:first-child {
+    border-right: 0;
+    width: 115px;
+}
+.right-bar .input-group {
+    width: 100%;
 }
