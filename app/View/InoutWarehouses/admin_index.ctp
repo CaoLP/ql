@@ -117,12 +117,20 @@ setlocale(LC_MONETARY, "vi_VN");
                                                                 <strong>Ngày chuyển</strong>
                                                             </td>
                                                             <td>
+                                                                <?php
+                                                                if($this->Session->read('Auth.User.group_id') == 1){
+                                                                ?>
                                                                 <input type="text"
                                                                        class="input-time datepicker"
                                                                        id="time<?php echo $key;?>"
                                                                        name="data[InoutWarehouse][tranfered]"
 																	   readonly="readonly"
                                                                        value="<?php echo date('Y-m-d',strtotime($inoutWarehouse['InoutWarehouse']['tranfered'])); ?>">
+                                                                 <?php }else{
+                                                                    ?>
+                                                                    <div class="form-control input-sm"><?php echo date('Y-m-d',strtotime($inoutWarehouse['InoutWarehouse']['tranfered']));?></div>
+                                                                <?php
+                                                                } ?>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -158,7 +166,16 @@ setlocale(LC_MONETARY, "vi_VN");
                                                                 $tempStore = $stores;
                                                                 unset($tempStore[$inoutWarehouse['InoutWarehouse']['store_id']])
                                                                 ?>
-                                                                <?php echo $this->Form->input('store_receive_id', array('class' => 'input-sm', 'options' => $tempStore, 'selected' => $inoutWarehouse['InoutWarehouse']['store_receive_id'], 'label' => false, 'div' => false)) ?>
+                                                                <?php
+                                                                if($this->Session->read('Auth.User.group_id') == 1)
+                                                                echo $this->Form->input('store_receive_id', array('class' => 'input-sm', 'options' => $tempStore, 'selected' => $inoutWarehouse['InoutWarehouse']['store_receive_id'], 'label' => false, 'div' => false));
+                                                                else{
+                                                                    ?>
+                                                                    <div class="form-control input-sm"><?php echo $inoutWarehouse['ReceiveStore']['name']?></div>
+                                                                <?php
+                                                                }
+                                                                ?>
+
                                                             </td>
                                                         </tr>
 
@@ -166,7 +183,12 @@ setlocale(LC_MONETARY, "vi_VN");
                                                     </table>
                                                 </div>
                                                 <div class="col-md-3 p-0">
-													<?php echo $this->Form->input('note', array('class' => 'form-control','placeholder'=>'Ghi chú','label' => false, 'div' => false,'value'=> $inoutWarehouse['InoutWarehouse']['note'])) ?>
+													<?php
+                                                    if($this->Session->read('Auth.User.group_id') == 1)
+                                                    echo $this->Form->input('note', array('class' => 'form-control','placeholder'=>'Ghi chú','label' => false, 'div' => false,'value'=> $inoutWarehouse['InoutWarehouse']['note']));
+                                                    else
+                                                    echo $this->Form->input('note', array('class' => 'form-control','placeholder'=>'Ghi chú','label' => false,'readonly'=>'readonly' ,'div' => false,'value'=> $inoutWarehouse['InoutWarehouse']['note']));
+                                                    ?>
 
                                                 </div>
                                             </div>
@@ -178,6 +200,9 @@ setlocale(LC_MONETARY, "vi_VN");
                                                     <th>Mã hàng hóa</th>
                                                     <th>Tên hàng hóa</th>
                                                     <th>Số lượng</th>
+                                                    <?php
+                                                    if($inoutWarehouse['InoutWarehouse']['status']==1) echo '<th>Đã nhận</th>';
+                                                    ?>
                                                     <th>Thuộc tính</th>
                                                 </tr>
                                                 </thead>
@@ -187,6 +212,9 @@ setlocale(LC_MONETARY, "vi_VN");
                                                         <td><?php echo $detail['sku']; ?></td>
                                                         <td><?php echo $detail['name']; ?></td>
                                                         <td><?php echo $detail['qty']; ?></td>
+                                                        <?php
+                                                        if($inoutWarehouse['InoutWarehouse']['status']==1) echo '<td>'.$detail['qty_received'].'</td>';
+                                                        ?>
                                                         <td><?php echo $detail['option_names']; ?></td>
                                                     </tr>
                                                 <?php
@@ -197,7 +225,9 @@ setlocale(LC_MONETARY, "vi_VN");
                                         </div>
                                     </div>
                                     <div class="panel-footer text-right">
-                                        <?php echo $this->Form->postLink(
+                                        <?php
+                                        if($inoutWarehouse['InoutWarehouse']['status'] != 1)
+                                        echo $this->Form->postLink(
                                             '<i class="icon-remove"></i> Huỷ bỏ',
                                             array('action' => 'delete',
                                                 $inoutWarehouse['InoutWarehouse']['id']),
@@ -208,7 +238,10 @@ setlocale(LC_MONETARY, "vi_VN");
                                         <a href="javascript:;" class="btn btn-warning"><i class="icon-print"></i> In</a>
                                         <a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
                                             Xuất file</a>
-                                        <?php echo $this->Html->link('<i class="icon-storage"></i> Lưu',array('#'),array('class'=>'btn btn-success','id'=>'clickInoutWarehouse'.$key,'escape'=>false,'div'=>false)); ?>
+                                        <?php
+                                        if($inoutWarehouse['InoutWarehouse']['status'] != 1)
+                                            if($this->Session->read('Auth.User.group_id') == 1)
+                                            echo $this->Html->link('<i class="icon-storage"></i> Lưu',array('#'),array('class'=>'btn btn-success','id'=>'clickInoutWarehouse'.$key,'escape'=>false,'div'=>false)); ?>
                                         <?php echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu',array('action'=>'view', $inoutWarehouse['InoutWarehouse']['id']),array('class'=>'btn btn-success','escape'=>false,'div'=>false)); ?>
                                         <script>
                                             $(document).ready(function(){

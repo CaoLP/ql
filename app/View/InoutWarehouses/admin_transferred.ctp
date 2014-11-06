@@ -127,6 +127,8 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon">Cửa hàng</span>
                                     <?php
+                                    if($this->Session->read('Auth.User.group_id') != 1)
+                                        unset($stores[$this->Session->read('Auth.User.store_id')]);
                                     echo $this->Form->input('store_id', array('label' => false, 'div' => false, 'class' => 'form-control'));
                                     ?>
                                 </div>

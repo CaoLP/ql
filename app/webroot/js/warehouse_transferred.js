@@ -41,7 +41,7 @@ $(document).ready(function () {
         pOptionsName = $("#p-optionsName"),
         allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName).add(pOptions).add(pOptionsName),
         tips = $(".validateTips");
-
+    updatePrice();
     var store_id = '';
     $('#InoutWarehouseStoreId').on('change',function(){
         store_id = $(this).val();
@@ -134,11 +134,19 @@ $(document).ready(function () {
             updatePrice();
         }
     });
+    $(document).on('keypress','#product-list tr .hidden-qty',function(e) {
+        e = e || window.event;
+        var charCode = (typeof e.which == "undefined") ? e.keyCode : e.which;
+        var charStr = String.fromCharCode(charCode);
+        if (!/\d/.test(charStr)) {
+            return false;
+        }
+    });
     $(document).on('keyup mouseup change', '#product-list tr .hidden-qty', function (e) {
         var qty = $(this).val();
         var limit = $(this).data('limit');
-        if (qty < 1) {
-            $(this).val(1);
+        if (qty < 0) {
+            $(this).val(0);
             $(this).change();
             return false;
         }
@@ -150,7 +158,7 @@ $(document).ready(function () {
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
             var total = $(this).val() * sPrice;
-            $(this).closest('tr').find('.total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+            $(this).closest('tr').find('.new-total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
             updatePrice();
         } else {
             e.preventDefault();
@@ -206,7 +214,7 @@ $(document).ready(function () {
                     //$(this).find('.hidden-qty-text').text(hiddenQty.val());
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
-                    $(this).find('.total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    $(this).find('.new-total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
                     return false;
                 }
             });
@@ -229,7 +237,7 @@ $(document).ready(function () {
                     '<td class="hidden-qty-text">' +
                     '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-limit="' + pLimit.val() + '" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
-                    '<td><span class="price-text total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td><span class="price-text new-total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
                     '</tr>' +
                     '<tr class="last-tr row' + uuid + '">' +
                     '<td class="text-left"><a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '"><i class="icon icon-close"></i></a></td>' +
@@ -297,7 +305,7 @@ $(document).ready(function () {
             var qty = $(this).val();
             summary += parseInt(price)* parseInt(qty);
         });
-        $('#summary-total').val(summary.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        $('#summary-total').text(summary.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
     }
 
     function uniqId() {

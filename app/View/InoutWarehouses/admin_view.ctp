@@ -5,7 +5,12 @@ if ($showBtn)
 else
     $this->Html->addCrumb('<li>' . $title_for_layout . '</li>', array('action' => 'index'), array('escape' => false));
 $this->Html->addCrumb('<li>' . $inoutWarehouse['InoutWarehouse']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
-echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
+
+echo $this->Html->script(array('warehouse_transferred'), array('inline' => false));
+
+echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal','url'=>array(
+    'controller'=>'inout_warehouses','action'=>'approve_transfer'
+)));
 echo $this->Form->hidden('received');
 ?>
     <div class="row">
@@ -37,19 +42,19 @@ echo $this->Form->hidden('received');
                                 <td><span
                                         class="price-text"><?php echo number_format($item['price'], 2, '.', ','); ?></span>
                                 </td>
-                                <td class="hidden-qty-text">
+                                <td class="hidden-qty-text text-center">
                                     <?php echo $item['qty'] ?>
                                 </td>
-                                <td><span
+                                <td class="text-right"><span
                                         class="price-text total-price"><?php echo number_format($summary, 2, '.', ','); ?></span>
                                 </td>
                                 <td class="hidden-qty-text">
-                                    <input type="text" class="hidden-qty" data-qty="<?php echo $item['qty'] ?>" data-price="<?php echo $item['price'] ?>"
+                                    <input type="text" class="hidden-qty" data-limit="<?php echo $item['qty'] ?>" data-price="<?php echo $item['price'] ?>"
                                            name="data[InoutWarehouseDetail][<?php echo $key ?>][qty_received]"
-                                           value="<?php echo $item['qty_received']?$item['qty_received']:0;?>">
+                                            value="<?php echo $item['qty_received']?$item['qty_received']:0;?>">
                                 </td>
-                                <td><span
-                                        class="price-text total-price"><?php echo number_format($summary, 2, '.', ','); ?></span>
+                                <td class="text-right"><span
+                                        class="price-text new-total-price"><?php echo number_format(($item['qty_received'] * $item['price']), 2, '.', ','); ?></span>
                                 </td>
                             </tr>
                             <tr class="last-tr row<?php echo $key ?>">
@@ -63,11 +68,18 @@ echo $this->Form->hidden('received');
                                 <td> </td>
                                 <td><?php
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.id',array('value'=>$item['id']));
+                                    echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.product_id',array('value'=>$item['product_id']));
+                                    echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.options',array('value'=>$item['options']));
+                                    echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.price',array('value'=>$item['price']));
                                     ?></td>
                             </tr>
                         <?php
                         }
                     ?>
+                    <tr class="first-tr last-tr">
+                        <td colspan="5" class="text-right"><span class="price-text"><?php echo number_format($this->request->data['InoutWarehouse']['total'], 2, '.', ','); ?></span></td>
+                        <td colspan="2" class="text-right"><span id="summary-total" class="price-text"></span></td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -111,7 +123,10 @@ echo $this->Form->hidden('received');
                                     <tr>
                                         <td><?php echo __ ('Cửa hàng nhập'); ?></td>
                                         <td>
-                                            <?php echo $this->Html->link ($inoutWarehouse['ReceiveStore']['name'], array ('controller' => 'stores', 'action' => 'view', $inoutWarehouse['ReceiveStore']['id'])); ?>
+                                            <?php
+                                            echo $this->Html->link ($inoutWarehouse['ReceiveStore']['name'], array ('controller' => 'stores', 'action' => 'view', $inoutWarehouse['ReceiveStore']['id']));
+                                            echo $this->Form->hidden('InoutWarehouse.store_receive_id',array('value'=>$inoutWarehouse['InoutWarehouse']['store_receive_id']));
+                                            ?>
                                             &nbsp;
                                         </td>
                                     </tr>
@@ -187,6 +202,18 @@ echo $this->Form->hidden('received');
                                         &nbsp;
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2"><?php echo __ ('Ghi chú nhận hàng'); ?></td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <?php
+                                        echo $this->Form->input('InoutWarehouse.receive_note',array('label'=>false,'div'=>false,'class'=>'form-control','col'=>'8'));
+                                        ?>
+                                        &nbsp;
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -199,7 +226,10 @@ echo $this->Form->hidden('received');
                             <div class="btn-group">
                                 <a class="btn btn-danger" onclick="history.back()">Trở về</a>
                                 <!--<a class="btn btn-warning" id="temp-save">Lưu tạm</a>-->
-                                <button type="submit" class="btn btn-success" id="save">Nhận hàng</button>
+                                <?php
+                                if($this->request->data['InoutWarehouse']['status']!=1)
+                                    echo '<button type="submit" class="btn btn-success" id="save">Nhận hàng</button>';
+                                ?>
                             </div>
                         </li>
                     </ul>
