@@ -2978,3 +2978,107 @@ form input[type=checkbox]{
 .right-bar .input-group {
     width: 100%;
 }
+
+.order-w-b{
+    height: 350px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.25) !important;
+    margin-top: 15px;
+}
+.order-w-b-s{
+    height: 350px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.25) !important;
+    margin-top: 15px;
+    padding: 2px !important;
+    border: none !important;
+}
+.order-w-b-s .col-md-12{
+    padding: 0;
+}
+.order-w-b-s .list-group-item{
+    padding: 2px 0 2px 0;
+    border: none;
+}
+.order-w-b-s .input-group-addon{
+    width: 100px;
+    text-align: left;
+}
+.order-w-b-s .input-group{
+    width: 100%;
+}
+.bt-done{
+    margin-top: 10px;
+}
+.bt-done a{
+    line-height: 56px;
+}
+.bt-done .btn{
+    height: 70px;
+}
+.content-2 {
+    height: 95px;
+}
+.row-item{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+/**/
+
+
+#order-product{
+
+}
+#order-product table{
+    vertical-align: top;
+    border: none;
+    border-collapse: collapse;
+    font-weight: bold!important;
+    width: 100%;
+}
+#order-product table td {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+    word-break: break-word;
+}
+.ipt{
+    width: 90px;
+    padding: 4px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    background: #f4f4f4;
+}
+#order-product .opt{
+    font-size: 11px;
+    font-style: italic;
+    font-weight: normal;
+}
+#order-product .qty{
+    text-align: center;
+    width: 40px;
+    border-color: #cacaca;
+    background: #f4f4f4;
+    border: 1px solid #d4d4d4;
+    color: #5e5e5e;
+    margin: 0;
+    padding: 5px 8px;
+    overflow: visible;
+    resize: inherit;
+    font-size: 12px;
+    -moz-border-radius: 0!important;
+    -webkit-border-radius: 0!important;
+    -khtml-border-radius: 0!important;
+    border-radius: 0!important;
+}
+#info-total input{
+    font-weight: bold;
+    color: red;
+    text-align: right;
+    font-size: 22px;
+    padding: 0 10px 0 10px;
+    background-color: #fff;
+}

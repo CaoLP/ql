@@ -58,6 +58,7 @@ class OrdersController extends AppController {
 		}
 		$customers = $this->Order->Customer->find('list');
 		$promotes = $this->Order->Promote->find('list');
+        $this->layout = 'order';
 		$this->set(compact('customers', 'users', 'promotes'));
 	}
 
