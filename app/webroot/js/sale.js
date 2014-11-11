@@ -162,7 +162,7 @@ $(document).ready(function () {
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
             var total = $(this).val() * sPrice;
-            $(this).closest('tr').find('.new-total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+            $(this).closest('tr').find('.new-total-price').text(digits(total));
             updatePrice();
         } else {
             e.preventDefault();
@@ -186,7 +186,7 @@ $(document).ready(function () {
                     hiddenQty.val(to);
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice;
-                    $(this).find('.new-total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    $(this).find('.new-total-price').text(digits(newPrice));
                     return false;
                 }
             });
@@ -211,7 +211,7 @@ $(document).ready(function () {
                     '<br><span class="opt">'+optionNames+'</span>' +
                     '</td>' +
                     '<td class="text-right">' +
-                    '<span class="price-text">'+pPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</span>' +
+                    '<span class="price-text">'+ digits(pPrice) +'</span>' +
                     '</td>' +
                     '<td class="text-right">' +
                     '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
@@ -219,7 +219,7 @@ $(document).ready(function () {
                     '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
                     '<td class="text-right">' +
-                    '<span class="new-total-price price-text">'+pPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</span>' +
+                    '<span class="new-total-price price-text">'+digits(pPrice)+'</span>' +
                     '<textarea type="hidden" style="display: none" name="data[OrderDetails]['+uuid+'][data]">'+pData+'</textarea>' +
                     '</td>' +
                     '</tr>';
@@ -255,4 +255,7 @@ $(document).ready(function () {
         return number;
     }
 
+    function digits(number){
+        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
 });
