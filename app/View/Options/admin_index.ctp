@@ -16,6 +16,8 @@
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name','Tên thuộc tính'); ?></th>
 			<th><?php echo $this->Paginator->sort('option_group_id','Tên nhóm'); ?></th>
+			<th><?php echo $this->Paginator->sort('code','Mã nhóm'); ?></th>
+			<th><?php echo $this->Paginator->sort('other','Mở rộng'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -27,6 +29,8 @@
 		<td>
 			<?php echo $this->Html->link($option['OptionGroup']['name'], array('controller' => 'option_groups', 'action' => 'view', $option['OptionGroup']['id'])); ?>
 		</td>
+        <td><?php echo h($option['Option']['code']); ?>&nbsp;</td>
+        <td><?php echo h($option['Option']['other']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $option['Option']['id']), array('escape' => false,'title'=>'Xem thông tin')); ?>
 			<?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $option['Option']['id']), array('escape' => false,'title'=>'Thay đổi thông tin')); ?>

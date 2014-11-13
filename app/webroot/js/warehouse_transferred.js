@@ -47,6 +47,14 @@ $(document).ready(function () {
         store_id = $(this).val();
     });
     $('#InoutWarehouseStoreId').trigger('change');
+
+    $('input,select').on("keyup keypress", function(e) {
+        var code = e.keyCode || e.which;
+        if (code  == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
     dialog = $("#dialog-form").dialog({
         autoOpen: false,
         height: 200,
@@ -96,7 +104,7 @@ $(document).ready(function () {
         select: function (event, ui) {
 //            this.value = (ui.item ? ui.item.Product.name : '');
             pId.val(ui.item.Product.id);
-            pSku.val(ui.item.Product.sku);
+            pSku.val(ui.item.Product.code);
             pName.val(ui.item.Product.name);
             pPrice.val(ui.item.Product.price);
             pData.val(JSON.stringify(ui.item.Product));
@@ -105,12 +113,17 @@ $(document).ready(function () {
             pWarehouse.val(ui.item.Product.warehouse);
             pOptionsName.val(ui.item.Product.optionsName);
             dialog.dialog("open");
+            $("#p-search").val('');
+            qty.focus();
             return false;
         },
 
         // The rest of the options are for configuring the ajax webservice call.
         minLength: 1,
         autoFocus: true,
+        focus: function( event, ui ) { event.preventDefault();
+            $(".ui-menu-item:first a").click();
+        },
         source: function (request, response) {
             $.ajax({
                 url: ajax_url+'/'+store_id,
@@ -158,7 +171,7 @@ $(document).ready(function () {
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
             var total = $(this).val() * sPrice;
-            $(this).closest('tr').find('.new-total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+            $(this).closest('tr').find('.new-total-price').text(digits(total));
             updatePrice();
         } else {
             e.preventDefault();
@@ -214,7 +227,7 @@ $(document).ready(function () {
                     //$(this).find('.hidden-qty-text').text(hiddenQty.val());
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
-                    $(this).find('.new-total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    $(this).find('.new-total-price').text(digits(newPrice));
                     return false;
                 }
             });
@@ -232,12 +245,12 @@ $(document).ready(function () {
                 var template = '<tr class="first-tr row' + uuid + '" data-id="' + pId.val() + '" data-options=\'' + optionIds + '\'>' +
                     '<td>' + pSku.val() + '</td>' +
                     '<td>' + pName.val() + '</td>' +
-                    '<td><span class="price-text">' + subPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td><span class="price-text">' + digits(subPrice) + '</span></td>' +
                     '<td>' + pLimit.val() + '</td>' +
                     '<td class="hidden-qty-text">' +
                         '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-limit="' + pLimit.val() + '" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
-                    '<td><span class="price-text new-total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td><span class="price-text new-total-price">' + digits(price) + '</span></td>' +
                     '</tr>' +
                     '<tr class="last-tr row' + uuid + '">' +
                     '<td class="text-left"><a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '"><i class="icon icon-close"></i></a></td>' +
@@ -247,6 +260,7 @@ $(document).ready(function () {
                     '</td>' +
                     '<td>' +
                     '<input type="hidden" name="data[ProductList][' + uuid + '][Product][limit]" value="' + pLimit.val() + '">' +
+                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][code]" value="' + pSku.val() + '">' +
                     '<input type="hidden" name="data[ProductList][' + uuid + '][Product][warehouse]" value="' + pWarehouse.val() + '">' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][data]">' + pData.val() + '</textarea>' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + optionIds + '</textarea>' +
@@ -305,13 +319,15 @@ $(document).ready(function () {
             var qty = $(this).val();
             summary += parseInt(price)* parseInt(qty);
         });
-        $('#summary-total').text(summary.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        $('#summary-total').val(digits(summary));
     }
 
     function uniqId() {
         return Math.round(new Date().getTime() + (Math.random() * 100));
     }
-
+    function digits(number){
+        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
 //    $("#p-search").on('keypress',function(event){
 //            if (e.which == 13 && $('ul.ui-autocomplete').is(':visible')){
 //                var li = $('li.ui-menu-item:first')[0];

@@ -65,12 +65,16 @@ $(document).ready(function () {
                 ui.item.Product.price,
                 JSON.stringify(ui.item.Product)
             )
+            $("#p-search").val('');
             return false;
         },
 //pId,pSku,pName,pOptions,limit,optionNames,pPrice,pData
         // The rest of the options are for configuring the ajax webservice call.
         minLength: 1,
         autoFocus: true,
+        focus: function( event, ui ) { event.preventDefault();
+            $(".ui-menu-item:first a").click();
+        },
         source: function (request, response) {
             $.ajax({
                 url: ajax_url+'/'+store_id,
@@ -89,6 +93,14 @@ $(document).ready(function () {
         });
 
     $(":input").inputmask();
+
+    $('input,select').on("keyup keypress", function(e) {
+        var code = e.keyCode || e.which;
+        if (code  == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     $(document).on('keypress','.qty',function(e) {
         e = e || window.event;

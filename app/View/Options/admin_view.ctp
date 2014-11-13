@@ -16,6 +16,16 @@
 			<?php echo $this->Html->link($option['OptionGroup']['name'], array('controller' => 'option_groups', 'action' => 'view', $option['OptionGroup']['id'])); ?>
 			&nbsp;
 		</dd>
+        <dt><?php echo __('Code'); ?></dt>
+        <dd>
+            <?php echo h($option['Option']['code']); ?>
+            &nbsp;
+        </dd>
+        <dt><?php echo __('Other'); ?></dt>
+        <dd>
+            <?php echo h($option['Option']['other']); ?>
+            &nbsp;
+        </dd>
 	</dl>
 </div>
 <div class="actions">

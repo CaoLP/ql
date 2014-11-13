@@ -168,6 +168,14 @@ class Product extends AppModel
             'conditions' => '',
             'fields' => '',
             'order' => ''
+        ),
+        'Provider' => array(
+            'className' => 'Provider',
+            'foreignKey' => 'provider_id',
+            'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
         )
     );
 
@@ -193,8 +201,9 @@ class Product extends AppModel
 		  	'fields'=>'Product.sku,Product.name,Product.id,Product.price',
             'conditions' => array(
                 'OR' => array(
-                    'Product.name like' => '%' . $input . '%',
-                    'Product.sku like' => '%' . $input . '%'
+//                    'Product.name like' => '%' . $input . '%',
+//                    'Product.sku like' => '%' . $input . '%'
+                    'Product.sku' =>  $input
                 ),
             ),
             'contain' => array(

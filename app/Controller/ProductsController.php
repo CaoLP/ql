@@ -78,6 +78,8 @@ class ProductsController extends AppController {
  * @return void
  */
 	public function admin_add() {
+        $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
+        $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
 		if ($this->request->is('post')) {
 			$this->Product->create();
 			if ($this->Product->save($this->request->data)) {
@@ -85,7 +87,8 @@ class ProductsController extends AppController {
 				$option_data = $this->request->data['ProductOption']['option_id'];
 				$options = array();
 				foreach($option_data as $op){
-					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op);
+                    $code = $this->request->data['Product']['sku'].'-'.$providersDataCode[$this->request->data['Product']['provider_id']];
+					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
 				$this->Product->ProductOption->saveMany($options['ProductOption']);
 				$this->Session->setFlash(__('The product has been saved.'));
@@ -98,8 +101,12 @@ class ProductsController extends AppController {
 		$this->set(compact( 'selected'));
 		$categories = $this->Product->Category->find('list');
 		$options = $this->Product->ProductOption->Option->find('all');
-		$options = Set::combine($options,'{n}.Option.id','{n}.Option.name','{n}.OptionGroup.name');
-		$this->set(compact( 'categories','options'));
+
+        $providers = Set::combine($providersData,'{n}.Provider.id','{n}.Provider.name');
+		$options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
+        $this->set(compact( 'categories','options','providers','providersData'));
+        $optionGroups = $this->Product->ProductOption->Option->OptionGroup->find('list');
+        $this->set(compact('optionGroups'));
 	}
 
 /**
@@ -113,7 +120,9 @@ class ProductsController extends AppController {
 		if (!$this->Product->exists($id)) {
 			throw new NotFoundException(__('Invalid product'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+        $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
+        $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
+        if ($this->request->is(array('post', 'put'))) {
 		
 			if ($this->Product->save($this->request->data)) {
 				$product_id = $this->request->data['Product']['id'];
@@ -121,7 +130,8 @@ class ProductsController extends AppController {
 				$this->Product->ProductOption->deleteAll(array('product_id' => $product_id), false);
 				$options = array();
 				foreach($option_data as $op){
-					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op);
+                    $code = $this->request->data['Product']['sku'].'-'.$providersDataCode[$this->request->data['Product']['provider_id']];
+                    $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
 				$this->Product->ProductOption->saveMany($options['ProductOption']);
 				$this->Session->setFlash(__('The product has been saved.'));
@@ -137,8 +147,10 @@ class ProductsController extends AppController {
 		}
 		$categories = $this->Product->Category->find('list');
 		$options = $this->Product->ProductOption->Option->find('all');
-		$options = Set::combine($options,'{n}.Option.id','{n}.Option.name','{n}.OptionGroup.name');
-		$this->set(compact( 'categories','options'));
+
+        $providers = Set::combine($providersData,'{n}.Provider.id','{n}.Provider.name');
+        $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
+        $this->set(compact( 'categories','options','providers','providersData'));
 	}
 
 /**

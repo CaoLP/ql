@@ -83,18 +83,27 @@ $(document).ready(function () {
         select: function (event, ui) {
 //            this.value = (ui.item ? ui.item.Product.name : '');
             pId.val(ui.item.Product.id);
-            pSku.val(ui.item.Product.sku);
+            if(ui.item.ProductOption.length > 0){
+                pSku.val(ui.item.ProductOption[0].code);
+            }else{
+                pSku.val(ui.item.Product.sku);
+            }
             pName.val(ui.item.Product.name);
             pPrice.val(ui.item.Product.price);
             pData.val(JSON.stringify(ui.item.Product));
             buildOptions(ui.item.ProductOption);
             dialog.dialog("open");
+            $("#p-search").val('');
+            qty.focus();
             return false;
         },
 
         // The rest of the options are for configuring the ajax webservice call.
         minLength: 1,
         autoFocus: true,
+        focus: function( event, ui ) { event.preventDefault();
+            $(".ui-menu-item:first a").click();
+        },
         source: function (request, response) {
             $.ajax({
                 url: ajax_url + '/index',
@@ -111,6 +120,15 @@ $(document).ready(function () {
     }).click(function () {
             $(this).mcautocomplete("search");
         });
+
+    $('input,select').on("keyup keypress", function(e) {
+        var code = e.keyCode || e.which;
+        if (code  == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
     $(document).on('click', '.remove-row', function () {
         if (confirm("Bạn có muốn xoá sản phẩm này không?")) {
             var id = $(this).data('needremove');
@@ -118,6 +136,7 @@ $(document).ready(function () {
             updatePrice();
         }
     });
+
     $(document).on('keyup mouseup change', '#product-list tr .hidden-qty', function (e) {
         var qty = $(this).val();
         if (qty < 1) {
@@ -128,7 +147,7 @@ $(document).ready(function () {
         if (!isNaN(qty) && qty != '') {
             var sPrice = $(this).data('price');
             var total = $(this).val() * sPrice;
-            $(this).closest('tr').find('.total-price').text(total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+            $(this).closest('tr').find('.total-price').text(digits(total));
             updatePrice();
         } else {
             e.preventDefault();
@@ -161,7 +180,7 @@ $(document).ready(function () {
         allFields.removeClass("ui-state-error");
         valid = valid && checkRegexp(qty, /^[0-9]+$/i, "Số lượng chỉ có thể là số");
         if (valid) {
-            var qtyVal, optionNames = [], optionIds = [], price, subPrice;
+            var qtyVal, optionNames = [], optionIds = [], price, subPrice,extendCode='';
             qtyVal = qty.val();
             subPrice = pPrice.val() * 1;
             price = qtyVal * subPrice;
@@ -169,6 +188,7 @@ $(document).ready(function () {
                 if ($(this).is(':checked')) {
                     optionNames.push($(this).data('name'));
                     optionIds.push($(this).val());
+                    extendCode+=$(this).data('code');
                 }
             });
             var duplicated = false;
@@ -183,20 +203,20 @@ $(document).ready(function () {
                     //$(this).find('.hidden-qty-text').text(hiddenQty.val());
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
-                    $(this).find('.total-price').text(newPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    $(this).find('.total-price').text(digits(newPrice));
                     return false;
                 }
             });
             if (!duplicated) {
                 var uuid = uniqId();
                 var template = '<tr class="first-tr row' + uuid + '" data-id="' + pId.val() + '" data-options=\'' + JSON.stringify(optionIds) + '\'>' +
-                    '<td>' + pSku.val() + '</td>' +
+                    '<td>' + pSku.val()+'-'+ extendCode + '</td>' +
                     '<td>' + pName.val() + '</td>' +
-                    '<td><span class="price-text">' + subPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td><span class="price-text">' + digits(subPrice) + '</span></td>' +
                     '<td class="hidden-qty-text">' +
                     '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a><input type="text" class="hidden-qty" data-price="' + subPrice + '" name="data[ProductList][' + uuid + '][Product][qty]" value="' + qtyVal + '"><a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                     '</td>' +
-                    '<td><span class="price-text total-price">' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + '</span></td>' +
+                    '<td><span class="price-text total-price">' + digits(price) + '</span></td>' +
                     '</tr>' +
                     '<tr class="last-tr row' + uuid + '">' +
                     '<td class="text-left"><a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '"><i class="icon icon-close"></i></a></td>' +
@@ -205,6 +225,7 @@ $(document).ready(function () {
                     '<span class="options">' + optionNames + '</span>' +
                     '</td>' +
                     '<td>' +
+                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][code]" value="' + pSku.val()+'-'+ extendCode + '">'+
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][data]">' + pData.val() + '</textarea>' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + JSON.stringify(optionIds) + '</textarea>' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][optionName]">' + JSON.stringify(optionNames) + '</textarea>' +
@@ -230,13 +251,14 @@ $(document).ready(function () {
                 var radio = '';
                 var compare_id = this[key]['id'];
                 var name = this[key]['name'];
+                var code = this[key]['code'];
                 var group_id = this[key]['option_group_id'];
                 Object.keys(itemOptions).forEach(function (key, index) {
                     if (compare_id == this[key]['option_id']) {
                         if (check)
                             check = 'checked="checked"';
                         radio += '<li style="display: inline; padding: 5px">' +
-                            '<input class="radio-op" data-name="' + name + '" type="radio" name="radio' + group_id + '" value="' + this[key]['option_id'] + '" ' + check + '>' +
+                            '<input class="radio-op"  data-code="' + code + '" data-name="' + name + '" type="radio" name="radio' + group_id + '" value="' + this[key]['option_id'] + '" ' + check + '>' +
                             '<span style="margin-left: 3px">' + name + '</span>' +
                             '</li>';
                         renderIt = true;
@@ -295,13 +317,15 @@ $(document).ready(function () {
             var qty = $(this).val();
             summary += parseInt(price)* parseInt(qty);
         });
-        $('#summary-total').val(summary.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        $('#summary-total').val(digits(summary));
     }
 
     function uniqId() {
         return Math.round(new Date().getTime() + (Math.random() * 100));
     }
-
+    function digits(number){
+        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
 //    $("#p-search").on('keypress',function(event){
 //            if (e.which == 13 && $('ul.ui-autocomplete').is(':visible')){
 //                var li = $('li.ui-menu-item:first')[0];

@@ -7,7 +7,6 @@ if ($this->request->params['action'] == 'admin_add') {
 }
 echo $this->Html->script(array('warehouse'), array('inline' => false)
 );
-echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
 ?>
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'products','action'=>'index'))?>';
@@ -21,6 +20,9 @@ echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
             </div>
             <h3>Nhập hàng</h3>
         </div>
+        <?php
+        echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal'));
+        ?>
         <div class="widget-body">
             <table class="table table-condensedtable-hover no-margin">
                 <thead>

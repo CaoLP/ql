@@ -91,13 +91,14 @@ class Warehouse extends AppModel {
             'order' => ''
         ));
         $result = $this->find('all', array(
-            'fields'=>'Product.sku,Product.name,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.id',
+            'fields'=>'Product.sku,Product.name,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
             'conditions' => array(
                 'Warehouse.qty > '=>'0',
                 'Warehouse.store_id'=> $store_id,
                 'OR' => array(
-                    'Product.name like' => '%' . $input . '%',
-                    'Product.sku like' => '%' . $input . '%'
+//                    'Product.name like' => '%' . $input . '%',
+//                    'Product.sku like' => '%' . $input . '%'
+                    'Warehouse.code' => $input
                 ),
             )
         ));

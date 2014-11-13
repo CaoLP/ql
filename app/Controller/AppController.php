@@ -65,31 +65,35 @@ class AppController extends Controller {
 //        return true;
     }
 	public function render($view = null, $layout = null) {
-		list($plugin, ) = pluginSplit(App::location(get_parent_class($this)));
-		if ($plugin) {
-			App::build(array(
-							'View' => array(
-								CakePlugin::path($plugin) . 'View' . DS,
-							),
-					   ), App::APPEND);
-		}
+        if(!$this->request->isAjax()){
+            list($plugin, ) = pluginSplit(App::location(get_parent_class($this)));
+            if ($plugin) {
+                App::build(array(
+                    'View' => array(
+                        CakePlugin::path($plugin) . 'View' . DS,
+                    ),
+                ), App::APPEND);
+            }
 
-		if (strpos($view, '/') !== false || $this instanceof CakeErrorController) {
-			return parent::render($view, $layout);
-		}
-		$viewPaths = App::path('View', $this->plugin);
-		$rootPath = $viewPaths[0] . $this->viewPath . DS;
-		$requested = $rootPath . $view . '.ctp';
-		if (in_array($this->request->action, array('admin_edit', 'admin_add', 'edit', 'add'))) {
-			$viewPath = $rootPath . $this->request->action . '.ctp';
-			if (!file_exists($requested) && !file_exists($viewPath)) {
-				if (strpos($this->request->action, 'admin_') === false) {
-					$view = 'form';
-				} else {
-					$view = 'admin_form';
-				}
-			}
-		}
-		return parent::render($view, $layout);
+            if (strpos($view, '/') !== false || $this instanceof CakeErrorController) {
+                return parent::render($view, $layout);
+            }
+            $viewPaths = App::path('View', $this->plugin);
+            $rootPath = $viewPaths[0] . $this->viewPath . DS;
+            $requested = $rootPath . $view . '.ctp';
+            if (in_array($this->request->action, array('admin_edit', 'admin_add', 'edit', 'add'))) {
+                $viewPath = $rootPath . $this->request->action . '.ctp';
+                if (!file_exists($requested) && !file_exists($viewPath)) {
+                    if (strpos($this->request->action, 'admin_') === false) {
+                        $view = 'form';
+                    } else {
+                        $view = 'admin_form';
+                    }
+                }
+            }
+            return parent::render($view, $layout);
+        }else{
+            return parent::render($view, $layout);
+        }
 	}
 }

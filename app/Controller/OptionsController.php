@@ -48,17 +48,28 @@ class OptionsController extends AppController {
  * @return void
  */
 	public function admin_add() {
-		if ($this->request->is('post')) {
-			$this->Option->create();
-			if ($this->Option->save($this->request->data)) {
-				$this->Session->setFlash(__('The option has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The option could not be saved. Please, try again.'));
-			}
-		}
-		$optionGroups = $this->Option->OptionGroup->find('list');
-		$this->set(compact('optionGroups'));
+        if($this->request->isAjax()){
+            $this->layout = 'ajax';
+            $this->Option->create();
+            $this->Option->save($this->request->data);
+
+            $options = $this->Option->find('all');
+            $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
+            $this->set(compact('options'));
+            $this->view = 'admin_index_ajax';
+        }else{
+            if ($this->request->is('post')) {
+                $this->Option->create();
+                if ($this->Option->save($this->request->data)) {
+                    $this->Session->setFlash(__('The option has been saved.'));
+                    return $this->redirect(array('action' => 'index'));
+                } else {
+                    $this->Session->setFlash(__('The option could not be saved. Please, try again.'));
+                }
+            }
+            $optionGroups = $this->Option->OptionGroup->find('list');
+            $this->set(compact('optionGroups'));
+        }
 	}
 
 /**

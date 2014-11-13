@@ -60,6 +60,7 @@ class WarehousesController extends AppController
             $sub['options'] = $item['Warehouse']['options'];
             $sub['qty'] = $item['Warehouse']['qty'];
             $sub['warehouse'] = $item['Warehouse']['id'];
+            $sub['code'] = $item['Warehouse']['code'];
             $opts = explode(',',$item['Warehouse']['options']);
             $optsName = array();
             foreach($opts as $op){

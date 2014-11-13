@@ -153,7 +153,7 @@ class InoutWarehousesController extends AppController
                             $temp = array();
                             $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
                             $temp['product_id'] = $data['id'];
-                            $temp['sku'] = $data['sku'];
+                            $temp['sku'] = $pItem['Product']['code'];
                             $temp['qty'] = $pItem['Product']['qty'];
                             $temp['price'] = $data['price'];
                             $temp['total'] = $total;
@@ -213,7 +213,7 @@ class InoutWarehousesController extends AppController
                             $temp = array();
                             $temp['inout_warehouse_id'] = $this->InoutWarehouse->id;
                             $temp['product_id'] = $data['id'];
-                            $temp['sku'] = $data['sku'];
+                            $temp['sku'] = $pItem['Product']['code'];
                             $temp['qty'] = $pItem['Product']['qty'];
                             $temp['price'] = $data['price'];
                             $temp['total'] = $total;
@@ -340,6 +340,7 @@ class InoutWarehousesController extends AppController
                     'product_id' => $item['product_id'],
                     'options' => $item['options'],
                     'price' => $item['price'],
+                    'code' => $item['sku'],
                 );
                 if (isset($oldData['Warehouse'])) {
                     $t['id'] = $oldData['Warehouse']['id'];
