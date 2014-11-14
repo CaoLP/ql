@@ -102,7 +102,7 @@ $(document).ready(function () {
         minLength: 1,
         autoFocus: true,
         focus: function( event, ui ) { event.preventDefault();
-            $(".ui-menu-item:first a").click();
+            //$(".ui-menu-item:first a").click();
         },
         source: function (request, response) {
             $.ajax({

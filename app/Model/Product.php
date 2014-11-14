@@ -201,9 +201,9 @@ class Product extends AppModel
 		  	'fields'=>'Product.sku,Product.name,Product.id,Product.price',
             'conditions' => array(
                 'OR' => array(
-//                    'Product.name like' => '%' . $input . '%',
-//                    'Product.sku like' => '%' . $input . '%'
-                    'Product.sku' =>  $input
+                    'Product.name like' => '%' . $input . '%',
+                    'Product.sku like' => '%' . $input . '%'
+//                    'Product.sku' =>  $input
                 ),
             ),
             'contain' => array(

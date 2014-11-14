@@ -57,7 +57,7 @@ $(document).ready(function () {
         select: function (event, ui) {
             addProduct(
                 ui.item.Product.id,
-                ui.item.Product.sku,
+                ui.item.Product.code,
                 ui.item.Product.name,
                 ui.item.Product.options,
                 ui.item.Product.qty,
@@ -72,12 +72,13 @@ $(document).ready(function () {
         // The rest of the options are for configuring the ajax webservice call.
         minLength: 1,
         autoFocus: true,
-        focus: function( event, ui ) { event.preventDefault();
+        focus: function (event, ui) {
+            event.preventDefault();
             $(".ui-menu-item:first a").click();
         },
         source: function (request, response) {
             $.ajax({
-                url: ajax_url+'/'+store_id,
+                url: ajax_url + '/' + store_id,
                 dataType: 'json',
                 data: {
                     term: request.term
@@ -94,15 +95,15 @@ $(document).ready(function () {
 
     $(":input").inputmask();
 
-    $('input,select').on("keyup keypress", function(e) {
+    $('input,select').on("keyup keypress", function (e) {
         var code = e.keyCode || e.which;
-        if (code  == 13) {
+        if (code == 13) {
             e.preventDefault();
             return false;
         }
     });
 
-    $(document).on('keypress','.qty',function(e) {
+    $(document).on('keypress', '.qty', function (e) {
         e = e || window.event;
         var charCode = (typeof e.which == "undefined") ? e.keyCode : e.which;
         var charStr = String.fromCharCode(charCode);
@@ -119,7 +120,7 @@ $(document).ready(function () {
     });
     $(document).on('click', '.price-down', function () {
         var Qty = $(this).parent().find('.qty');
-        if (parseInt(Qty.val()) > 1){
+        if (parseInt(Qty.val()) > 1) {
             Qty.val(parseInt(Qty.val()) - 1);
             Qty.trigger('change');
         }
@@ -131,27 +132,44 @@ $(document).ready(function () {
     });
 
     $(document).on('keyup change', '#OrderReceive', function (e) {
-        var receive =  parseNumber($(this).val());
-        var amount =  parseNumber($('#OrderAmount').val());
+        var receive = parseNumber($(this).val());
+        var amount = parseNumber($('#OrderAmount').val());
         var refund = $('#OrderRefund');
 
         var result = 0;
 
-        if(receive >= amount){
+        if (receive >= amount) {
             result = receive - amount;
         }
         refund.val(result);
     });
     $(document).on('change', '#OrderPromoteId', function (e) {
-        var promote = $('#OrderTotalPromote');
+        if (typeof promotes[$(this).val()] != 'undefined'){
+            var type = promotes[$(this).val()].Promote.type;
+            var value = promotes[$(this).val()].Promote.value;
+            $('#OrderPromoteValue').val(value);
+            $('#OrderPromoteType').val(type);
+            $('#summary-total').change();
+        }
     });
 
     $(document).on('change', '#summary-total', function (e) {
         var amount = $('#OrderAmount');
-        var promote = parseNumber($('#OrderTotalPromote').val());
+        var promote_val =  $('#OrderPromoteValue').val();
+        var promote_type = $('#OrderPromoteType').val();
         var result = 0;
-        var total=parseNumber($(this).val());
-        if(total >= promote){
+        var total = parseNumber($(this).val());
+        if(promote_type == 0){
+            $('#OrderTotalPromote').val(promote_val);
+        }else
+        if(promote_type == 1){
+            promote_val = total * (parseNumber(promote_val)/100);
+            $('#OrderTotalPromote').val(promote_val);
+        }else{
+            $('#OrderTotalPromote').val(0);
+        }
+        var promote = parseNumber($('#OrderTotalPromote').val());
+        if (total >= promote) {
             result = total - promote;
         }
         amount.val(result);
@@ -166,7 +184,7 @@ $(document).ready(function () {
             $(this).change();
             return false;
         }
-        if(qty > parseInt(limit)){
+        if (qty > parseInt(limit)) {
             alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
             qty = limit;
             $(this).val(qty);
@@ -181,64 +199,65 @@ $(document).ready(function () {
             return false;
         }
     });
-    function addProduct(pId,pSku,pName,pOptions,limit,optionNames,pPrice,pData) {
-        var  duplicated = false;
-            $('#order-product-list tr').each(function () {
-                var listId = $(this).data('id'),
-                    listOptions = $(this).data('options');
-                if (pId == listId && pOptions == listOptions) {
-                    duplicated = true;
-                    var hiddenQty = $(this).find('.qty');
-                    var to = parseInt(hiddenQty.val()) + 1;
-                    if(to > parseInt(limit)){
-                        alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
-                        to = limit;
-                        return false;
-                    }
-                    hiddenQty.val(to);
-                    var newPrice = hiddenQty.val();
-                    newPrice = newPrice * pPrice;
-                    $(this).find('.new-total-price').text(digits(newPrice));
-                    return false;
-                }
-            });
-            if (!duplicated) {
-                if(parseInt(limit) < 1){
+    function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
+        var duplicated = false;
+        $('#order-product-list tr').each(function () {
+            var listId = $(this).data('id'),
+                listOptions = $(this).data('options');
+            if (pId == listId && pOptions == listOptions) {
+                duplicated = true;
+                var hiddenQty = $(this).find('.qty');
+                var to = parseInt(hiddenQty.val()) + 1;
+                if (to > parseInt(limit)) {
                     alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+                    to = limit;
                     return false;
                 }
-                var uuid = uniqId();
-                pPrice = pPrice *1;
-                var template = '<tr class="row' + uuid + '" data-id="'+pId+'" data-options="'+pOptions+'">' +
-                    '<td>' +
-                    '<a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '">' +
-                    '<i class="icon-close"></i>' +
-                    '</a>' +
-                    '</td>' +
-                    '<td>' +
-                    '<span>'+pSku+'</span>' +
-                    '</td>' +
-                    '<td>' +
-                    '<span>'+pName+'</span>' +
-                    '<br><span class="opt">'+optionNames+'</span>' +
-                    '</td>' +
-                    '<td class="text-right">' +
-                    '<span class="price-text">'+ digits(pPrice) +'</span>' +
-                    '</td>' +
-                    '<td class="text-right">' +
-                    '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-                    '<input class="qty" name="data[OrderDetails]['+uuid+'][qty]" data-limit="'+limit+'" data-price="'+pPrice+'" value="1">' +
-                    '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
-                    '</td>' +
-                    '<td class="text-right">' +
-                    '<span class="new-total-price price-text">'+digits(pPrice)+'</span>' +
-                    '<textarea type="hidden" style="display: none" name="data[OrderDetails]['+uuid+'][data]">'+pData+'</textarea>' +
-                    '</td>' +
-                    '</tr>';
-                $('#order-product-list').append(template);
+                hiddenQty.val(to);
+                var newPrice = hiddenQty.val();
+                newPrice = newPrice * pPrice;
+                $(this).find('.new-total-price').text(digits(newPrice));
+                return false;
             }
-            updatePrice();
+        });
+        if (!duplicated) {
+            if (parseInt(limit) < 1) {
+                alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+                return false;
+            }
+            var uuid = uniqId();
+            pPrice = pPrice * 1;
+            var template = '<tr class="row' + uuid + '" data-id="' + pId + '" data-options="' + pOptions + '">' +
+                '<td>' +
+                '<a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '">' +
+                '<i class="icon-close"></i>' +
+                '</a>' +
+                '</td>' +
+                '<td>' +
+                '<span>' + pSku + '</span>' +
+                '</td>' +
+                '<td>' +
+                '<span>' + pName + '</span>' +
+                '<br><span class="opt">' + optionNames + '</span>' +
+                '</td>' +
+                '<td class="text-right">' +
+                '<span class="price-text">' + digits(pPrice) + '</span>' +
+                '</td>' +
+                '<td class="text-right">' +
+                '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
+                '<input class="qty" name="data[OrderDetails][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
+                '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
+                '</td>' +
+                '<td class="text-right">' +
+                '<span class="new-total-price price-text">' + digits(pPrice) + '</span>' +
+                '<textarea type="hidden" style="display: none" name="data[OrderDetails][' + uuid + '][data]">' + pData + '</textarea>' +
+                '</td>' +
+                '</tr>';
+            $('#order-product-list').append(template);
+        }
+        updatePrice();
     }
+
     function removeRow(row) {
         $(row).remove();
         updatePrice();
@@ -250,24 +269,26 @@ $(document).ready(function () {
         $('#order-product-list .qty').each(function () {
             var price = $(this).data('price');
             var qty = $(this).val();
-            summary += parseInt(price)* parseInt(qty);
+            summary += parseInt(price) * parseInt(qty);
         });
         $('#summary-total').val(summary);
         $('#summary-total').change();
 
     }
+
     function uniqId() {
         return Math.round(new Date().getTime() + (Math.random() * 100));
     }
-    function parseNumber(number){
-        number = number.replace(/\..+/g,'');
-        number = number.replace(/,/g,'');
+
+    function parseNumber(number) {
+        number = number.replace(/\..+/g, '');
+        number = number.replace(/,/g, '');
         number = parseInt(number);
-        if(isNaN(number)) number = 0;
+        if (isNaN(number)) number = 0;
         return number;
     }
 
-    function digits(number){
+    function digits(number) {
         return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
 });

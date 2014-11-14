@@ -57,9 +57,11 @@ class OrdersController extends AppController {
 			}
 		}
 		$customers = $this->Order->Customer->find('list');
-		$promotes = $this->Order->Promote->find('list');
+		$promoteData = $this->Order->Promote->find('all',array('recursive'=>-1));
+		$promotes = Set::combine($promoteData,'{n}.Promote.id','{n}.Promote.name');
+        $promoteData = Set::combine($promoteData,'{n}.Promote.id','{n}');
         $this->layout = 'order';
-		$this->set(compact('customers', 'users', 'promotes'));
+		$this->set(compact('customers', 'users', 'promotes','promoteData'));
 	}
 
 /**
