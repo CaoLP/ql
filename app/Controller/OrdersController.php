@@ -48,8 +48,59 @@ class OrdersController extends AppController {
  */
 	public function admin_add() {
 		if ($this->request->is('post')) {
+
 			$this->Order->create();
-			if ($this->Order->save($this->request->data)) {
+            $total = 0;
+            $amount = 0;
+            $order_detail = $this->request->data['OrderDetails'];
+
+
+
+            foreach($order_detail as $detail){
+                $data = json_decode($detail['data'],true);
+                $total+= $detail['qty'] * $data['price'];
+            }
+            $promote = $this->request->data['Order']['promote_value'];
+            if($this->request->data['Order']['promote_type'] == 1){
+                $promote = $total * ($promote /100);
+            }
+            $amount = $total - $promote;
+            $saveData = array(
+                'Order' => array(
+                    'customer_id' => $this->request->data['Order']['customer_id'],
+                    'promote_id' => $this->request->data['Order']['promote_id'],
+                    'promote_value' => $this->request->data['Order']['promote_value'],
+                    'promote_type' => $this->request->data['Order']['promote_type'],
+                    'note' => $this->request->data['Order']['note'],
+                    'store_id' => $this->request->data['Order']['store_id'],
+
+                    'total' => $total,
+                    'total_promote' => $promote,
+                    'amount' => $amount,
+                    'receive' => str_replace(',','',$this->request->data['Order']['receive']),
+                    'refund' => str_replace(',','',$this->request->data['Order']['refund']),
+                )
+            );
+
+			if ($this->Order->save($saveData)) {
+                $storeDetail = array();
+
+                $id = $this->Order->id;
+                //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
+
+                foreach($order_detail as $detail){
+                    $data = json_decode($detail['data'],true);
+                    $storeDetail[] =  array(
+                        'order_id' => $id,
+                        'product_id'=>$data['id'],
+                        'name'=>$data['name'],
+                        'price'=>$data['price'],
+                        'sku'=>$data['sku'],
+                        'qty'=>$detail['qty'],
+                        'code'=>$data['code'],
+                    );
+                }
+                $this->Order->OrderDetail->saveMany($storeDetail);
 				$this->Session->setFlash(__('The order has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -57,6 +108,11 @@ class OrdersController extends AppController {
 			}
 		}
 		$customers = $this->Order->Customer->find('list');
+        $temp = array();
+        foreach($customers as $key=>$val){
+            $temp[] = array('value'=>$key,'label'=>$val);
+        }
+        $customers = $temp;
 		$promoteData = $this->Order->Promote->find('all',array('recursive'=>-1));
 		$promotes = Set::combine($promoteData,'{n}.Promote.id','{n}.Promote.name');
         $promoteData = Set::combine($promoteData,'{n}.Promote.id','{n}');

@@ -81,6 +81,19 @@ class CustomersController extends AppController {
  * @return void
  */
 	public function admin_add() {
+        if($this->request->isAjax()){
+            $this->layout = 'ajax';
+            $this->Customer->create();
+            $this->Customer->save($this->request->data);
+            $customers = $this->Customer->find('list');
+            $temp = array();
+            foreach($customers as $key=>$val){
+                $temp[] = array('value'=>$key,'label'=>$val);
+            }
+            $customers = $temp;
+            $this->set(compact('customers'));
+            $this->view = 'admin_index_ajax';
+        }else{
 		if ($this->request->is('post')) {
 			$this->Customer->create();
 			if ($this->Customer->save($this->request->data)) {
@@ -89,6 +102,7 @@ class CustomersController extends AppController {
 			} else {
 				$this->Session->setFlash(__('The customer could not be saved. Please, try again.'));
 			}
+		}
 		}
 	}
 

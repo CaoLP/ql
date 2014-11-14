@@ -1,5 +1,6 @@
 $(document).ready(function () {
     $('#submit-provider').on('click', function () {
+        if($('#ProviderName').val() == '' || $('#ProviderCode').val() == '') return false;
         $.ajax({
             url: '/admin/providers/add',
             type: 'POST',
@@ -21,6 +22,7 @@ $(document).ready(function () {
         $('input:checkbox:checked').each(function() {
             option_id.push($(this).val());
         });
+        if($('#OptionName').val() == '' || $('#OptionCode').val() == '') return false;
         $.ajax({
             url: '/admin/options/add',
             type: 'POST',

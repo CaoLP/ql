@@ -77,6 +77,13 @@ class Order extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
+        'Store' => array(
+            'className' => 'Store',
+            'foreignKey' => 'store_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
 		'Promote' => array(
 			'className' => 'Promote',
 			'foreignKey' => 'promote_id',
