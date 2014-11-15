@@ -3,8 +3,8 @@ setlocale(LC_MONETARY, "vi_VN");
 if ($this->request->action == 'admin_add')
     $this->Html->addCrumb('<li>Bán hàng</li>', array('action' => 'add'), array('escape' => false));
 else
-    $this->Html->addCrumb('<li>' . $order['Order']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
-echo $this->Html->script(array('sale', 'jquery.inputmask','customer'), array('inline' => false));
+    $this->Html->addCrumb('<li>' . $this->request->data['Order']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
+echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('inline' => false));
 ?>
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
@@ -26,7 +26,50 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','customer'), array('in
             ?>
             <div class="widget-body order-w-b" id="order-product">
                 <table id="order-product-list">
-
+                    <?php
+                    if($this->request->action == 'admin_edit')
+                    if($this->request->data['OrderDetail']){
+                        ?>
+                        <tr>
+                            <th>Stt</th>
+                            <th class="text-left">Mã hàng</th>
+                            <th class="text-left">Tên hàng</th>
+                            <th class="text-right">Giá</th>
+                            <th class="text-right">Số lượng</th>
+                            <th class="text-right">Thành tiền</th>
+                        </tr>
+                        <?php
+                        foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
+                            ?>
+                            <tr class="row<?php echo $key?>">
+                                <td>
+                                    <?php echo $key+1?>
+                                </td>
+                                <td class="text-left"><span><?php echo $order_detail['code']?></span></td>
+                                <td class="text-left"><span>Áo demo</span><br><span class="opt">
+                                    <?php
+                                    $opts = explode(',',$order_detail['product_options']);
+                                    $temp = array();
+                                    foreach($opts as $opt){
+                                        $temp[] = $options[$opt];
+                                    }
+                                    $op = implode(',',$temp);
+                                    echo $op;
+                                    ?></span></td>
+                                <td class="text-right"><span class="price-text"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></span></td>
+                                <td class="text-right">
+                                    <?php echo $order_detail['qty']?>
+                                </td>
+                                <td class="text-right">
+                                    <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    <?php
+                    }
+                    ?>
                 </table>
             </div>
         </div>
@@ -52,7 +95,10 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','customer'), array('in
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
                                         ?>
-                                        <input id="input-customer" class="form-control">
+                                        <input id="input-customer" class="form-control" value="<?php
+                                        if(isset($this->request->data['Order']['customer_id']))
+                                        echo $customersl[$this->request->data['Order']['customer_id']];
+                                        ?>">
                                         <input type="hidden" name="data[Order][customer_id]" id="input-customer-id">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" data-toggle="modal"

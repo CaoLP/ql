@@ -3094,3 +3094,17 @@ form input[type=checkbox]{
 .modal-body .input-group input{
     width: 100%;
 }
+@media print {
+    header, .container, footer{
+        display: none;
+    }
+    #print-form{
+        display: block;
+    }
+    #print-form table{
+        width: 100%;
+    }
+}
+#print-form table{
+    display: none;
+}
