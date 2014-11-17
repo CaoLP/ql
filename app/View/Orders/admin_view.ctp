@@ -1,6 +1,7 @@
 <?php
 setlocale(LC_MONETARY, "vi_VN");
 $this->Html->addCrumb('<li>' . $this->request->data['Order']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
+echo $this->Html->css(array('bill'), array('inline' => false));
 echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('inline' => false));
 ?>
 <script>
@@ -226,98 +227,4 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
 <form action="" id="cancel-form" method="post">
     <input type="hidden" name="status" value="3">
 </form>
-<div class="row" id="print-form">
-    <table>
-        <tr>
-            <td colspan="2">
-                <?php echo $this->Session->read('Auth.Store.name')?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <?php echo $this->Session->read('Auth.Store.address')?>
-            </td colspan="2">
-        </tr>
-        <tr>
-            <td colspan="2">
-                <?php echo $this->Session->read('Auth.Store.phone')?>
-            </td>
-        </tr>
-        <tr><td colspan="2">PHIẾU BÁN LẺ</td></tr>
-        <tr><td colspan="2"><hr></td></tr>
-        <tr>
-            <td><?php echo 'Mã HĐ: '. $this->request->data['Order']['code']?></td>
-            <td><?php echo 'Ngày: '. date('d-m-Y',strtotime($this->request->data['Order']['created']))?></td>
-        </tr>
-        <tr>
-            <td colspan="2">Nhân viên: <?php echo $this->request->data['Creater']['name']?></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>TT</th>
-                        <th>Tên hàng</th>
-                        <th>SL</th>
-                        <th>Đơn giá</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
-                        ?>
-                        <tr>
-                            <td><?php echo $key+1;?></td>
-                            <td>
-                                <span><?php
-                                    echo $order_detail['name']
-                                    ?></php></span><br><span class="opt">
-                                    <?php
-                                    $opts = explode(',',$order_detail['product_options']);
-                                    $temp = array();
-                                    foreach($opts as $opt){
-                                        $temp[] = $options[$opt];
-                                    }
-                                    $op = implode(',',$temp);
-                                    echo $op;
-                                    ?></span>
-                            </td>
-                            <td><?php echo $order_detail['qty']?></td>
-                            <td><?php echo number_format($order_detail['price'], 0, '.', ','); ?></td>
-                            <td><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></td>
-                        </tr>
-                    <?php
-                    }?>
-
-                    <tr>
-                        <td colspan="2">Tổng cộng</td>
-                        <td colspan="1"></td>
-                        <td colspan="2"><?php echo number_format($this->request->data['Order']['total'], 0, '.', ',');?></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>Giảm giá</td>
-            <td><?php echo number_format($this->request->data['Order']['total_promote'], 0, '.', ',');?></td>
-        </tr>
-        <tr>
-            <td>Số tiền phải thanh toán</td>
-            <td><?php echo number_format($this->request->data['Order']['amount'], 0, '.', ',');?></td>
-        </tr>
-        <tr>
-            <td>Khách trả</td>
-            <td><?php echo number_format($this->request->data['Order']['receive'], 0, '.', ',');?></td>
-        </tr>
-        <tr>
-            <td>Tiền thừa</td>
-            <td><?php echo number_format($this->request->data['Order']['refund'], 0, '.', ',');?></td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-        </tr>
-    </table>
-</div>
+<?php echo $this->element('bill_print');?>

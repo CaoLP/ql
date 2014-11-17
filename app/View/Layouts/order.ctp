@@ -57,9 +57,7 @@ setlocale(LC_MONETARY,"vi_VN");
 
 <!-- Header start -->
 <header>
-
     <?php echo $this->element('header')?>
-
 </header>
 <!-- Header end -->
 <!-- Main Container start -->
