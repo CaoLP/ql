@@ -3103,6 +3103,7 @@ form input[type=checkbox]{
     }
     #print-form table{
         width: 100%;
+        display: table !important;
     }
 }
 #print-form table{
