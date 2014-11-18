@@ -9,8 +9,16 @@ setlocale(LC_MONETARY, "vi_VN");
 			<h3>Tìm kiếm</h3>
 		</div>
 		<div class="widget-body">
-			<form action="" method="get">
-				<input class="form-control" placeholder="Theo mã phiếu chuyển">
+			<form method="post">
+				<input class="form-control" name="data[q]" value="<?php
+                    if(isset($this->request->data['q'])) echo $this->request->data['q'];
+                ?>" placeholder="Theo mã phiếu chuyển">
+                <input type="hidden" name="data[from]"  value="<?php
+                if (isset($this->request->data['from'])) echo $this->request->data['from'];
+                ?>">
+                <input type="hidden" name="data[to]"  value="<?php
+                if (isset($this->request->data['to'])) echo $this->request->data['to'];
+                ?>">
 			</form>
 		</div>
 	</div>
@@ -19,31 +27,58 @@ setlocale(LC_MONETARY, "vi_VN");
 			<h3>Lọc thời gian</h3>
 		</div>
 		<div class="widget-body">
-			<div class="radio">
-				<label>
-					<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-					Toàn thời gian
-				</label>
-			</div>
-			<div class="radio">
-				<label>
-					<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-					Hôm nay
-				</label>
-			</div>
-			<div class="radio">
-				<label>
-					<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-					Tuần này
-				</label>
-			</div>
-			<div class="radio">
-				<label>
-					<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-					Tháng này
-				</label>
-			</div>
-			<a href="javascript:;">Lựa chọn khác »</a>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRadios" class="radio-filter" value="1">
+                    Toàn thời gian
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRadios" class="radio-filter" value="2">
+                    Hôm nay
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRadios" class="radio-filter" value="3">
+                    Tuần này
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRadios" class="radio-filter" value="4">
+                    Tháng này
+                </label>
+            </div>
+            <div>
+                <form method="post">
+                    <input type="hidden" class="form-control" name="data[q]" value="<?php
+                    if (isset($this->request->data['q'])) echo $this->request->data['q'];
+                    ?>">
+                    <ul class="list-group no-margin">
+                        <li class="list-group-item no-padding">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">--Từ ngày-</span>
+                                <input name="data[from]"  value="<?php
+                                if (isset($this->request->data['from'])) echo $this->request->data['from'];
+                                ?>" class="form-control datepicker2" readonly="readonly">
+                            </div>
+                        </li>
+                        <li class="list-group-item no-padding">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">Đến ngày-</span>
+                                <input name="data[to]" value="<?php
+                                if (isset($this->request->data['to'])) echo $this->request->data['to'];
+                                ?>" class="form-control datepicker2" readonly="readonly">
+                            </div>
+                        </li>
+                        <li class="list-group-item no-padding">
+                            <button class="form-control"><i class="icon-search"></i> Tìm</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
 		</div>
 	</div>
 </div>
@@ -186,8 +221,11 @@ setlocale(LC_MONETARY, "vi_VN");
 										array('escape'=>false,'class'=>'btn btn-danger'),
 										__('Bạn có muốn huỷ đơn nhập hàng # %s này không?',
 										   $inoutWarehouse['InoutWarehouse']['code'])); ?>
-
-									<a href="javascript:;" class="btn btn-warning"><i class="icon-print"></i> In</a>
+                                        <a href="<?php echo $this->Html->url(array(
+                                            'controller'=>'print',
+                                            'action'=>'fillwarehouse',
+                                            $inoutWarehouse['InoutWarehouse']['id']
+                                        ));?>" target="_blank" class="btn btn-warning"><i class="icon-print"></i> In</a>
 									<a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
 										Xuất file</a>
                                     <?php
@@ -209,24 +247,26 @@ setlocale(LC_MONETARY, "vi_VN");
 
 			</tbody>
 		</table>
-		<div class="dataTables_info" id="data-table_info">
-			<?php
-			echo $this->Paginator->counter(array(
-												'format' => __('Showing {:start} to {:end} {:count} entries')
-										   ));
-			?>
-		</div>
-		<div class="row">
-			<div class="col-md-12 p-r-15">
-				<ul class="pagination f-right">
-					<?php
-					echo $this->Paginator->prev(__('&laquo;'), array('tag' => 'li', 'escape' => false), null, array('tag' => 'li', 'class' => 'disabled', 'disabledTag' => 'a', 'escape' => false));
-					echo $this->Paginator->numbers(array('separator' => '', 'currentTag' => 'a', 'currentClass' => 'active', 'tag' => 'li', 'first' => 1));
-					echo $this->Paginator->next(__('&raquo;'), array('tag' => 'li', 'currentClass' => 'disabled', 'escape' => false), null, array('tag' => 'li', 'class' => 'disabled', 'disabledTag' => 'a', 'escape' => false));
-					?>
-				</ul>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class=" pull-right">
+                    <div class="dataTables_info" id="data-table_info">
+                        <?php
+                        echo $this->Paginator->counter(array(
+                            'format' => __('Showing {:start} to {:end} {:count} entries')
+                        ));
+                        ?>
+                    </div>
+                    <ul class="pagination pull-right">
+                        <?php
+                        echo $this->Paginator->prev(__('&laquo;'), array('tag' => 'li','escape'=>false), null, array('tag' => 'li','class' => 'disabled','disabledTag' => 'a','escape'=>false));
+                        echo $this->Paginator->numbers(array('separator' => '','currentTag' => 'a', 'currentClass' => 'active','tag' => 'li','first' => 1));
+                        echo $this->Paginator->next(__('&raquo;'), array('tag' => 'li','currentClass' => 'disabled','escape'=>false), null, array('tag' => 'li','class' => 'disabled','disabledTag' => 'a','escape'=>false));
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 </div>

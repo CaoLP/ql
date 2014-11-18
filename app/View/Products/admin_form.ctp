@@ -154,6 +154,7 @@ echo $this->Html->script(
                     </div>
                     <?php
                     echo $this->Form->input('price', array('label' => array('text' => 'Giá tiền', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('source_price', array('label' => array('text' => 'Giá tiền gốc', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('excert', array('label' => array('text' => 'Tóm tắt', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('descriptions', array('label' => array('text' => 'Nội dung', 'class' => 'col-lg-2 control-label')));
                     //					echo $this->Form->input ('status', array ('label' => array ('text' => 'status', 'class' => 'col-lg-2 control-label')));

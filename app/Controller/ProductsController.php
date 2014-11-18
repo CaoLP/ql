@@ -31,6 +31,17 @@ class ProductsController extends AppController {
 			$this->layout = 'ajax';
 			$this->view = 'admin_ajax_pro';
 		}else{
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $this->Paginator->settings = array(
+                    'conditions' => array(
+                        'OR' => array(
+                            'Product.name like' => '%' . $input . '%',
+                            'Product.sku like' => '%' . $input . '%'
+                        ),
+                    ),
+                );
+            }
             $this->Product->recursive = 0;
             $this->set('products', $this->Paginator->paginate());
 		}

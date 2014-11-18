@@ -50,6 +50,15 @@ class InoutWarehousesController extends AppController
                 'InoutWarehouse.type' => '1',
             )
         );
+        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
+            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
+        }
+        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
+            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
+                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+            }
+        }
         if ($this->Session->read('Auth.User.group_id') != 1) {
             $conds['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
             $conds['conditions']['OR']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.Store.id');
@@ -74,6 +83,16 @@ class InoutWarehousesController extends AppController
                 'InoutWarehouse.type' => '0',
             )
         );
+        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
+            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
+        }
+        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
+            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
+                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+            }
+        }
+
         if ($this->Session->read('Auth.User.group_id') != 1) {
             $conds['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
         }

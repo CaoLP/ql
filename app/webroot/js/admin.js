@@ -24,5 +24,12 @@ $(document).ready(function(){
            });
            tag.addClass('tb-expanded');
        }
-   })
+   });
+    $( ".datepicker2" ).datepicker({
+        showOn: "button",
+        buttonImage: "/img/dateIcon.png",
+        buttonImageOnly: true,
+        buttonText: 'Chọn ngày',
+        dateFormat : 'yy-mm-dd'
+    });
 });

@@ -3094,3 +3094,6 @@ form input[type=checkbox]{
 .modal-body .input-group input{
     width: 100%;
 }
+.ui-datepicker{
+    z-index: 10 !important;
+}

@@ -1,92 +1,109 @@
+<?php
+setlocale(LC_MONETARY, "vi_VN");
+echo $this->Html->css('product',array('inline'=>false));
+?>
 <!-- Row start -->
 <div class="row">
-	<div class="col-md-12">
-		<div class="widget">
-			<div class="widget-header">
-				<div class="title">
-					<?php echo $this->Html->link('Tạo mới',array('action'=>'add'),array(
-																					   'class'=>'btn btn-sm btn-success'
-																				  ));?>
-				</div>
-			</div>
-			<div class="widget-body">
-				<table class="table table-condensed table-bordered table-hover no-margin">
-	<thead>
-	<tr>
-			<th width="80">Ảnh đại diện</th>
-			<th><?php echo $this->Paginator->sort('sku'); ?></th>
-			<th><?php echo $this->Paginator->sort('name','Tên Sản phẩm'); ?></th>
-			<th><?php echo $this->Paginator->sort('price','Giá'); ?></th>
-			<th><?php echo $this->Paginator->sort('created','Ngày tạo'); ?></th>
-			<th><?php echo $this->Paginator->sort('created_by','Người tạo'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated','Ngày cập nhật'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated_by','Người cập nhật'); ?></th>
-			<th><?php echo $this->Paginator->sort('status','Trạng thái'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($products as $product): ?>
-	<tr>
-		<td><img class="thumbnail grid-thumb" src="<?php echo !empty($product['Product']['thumbnail'])?$product['Product']['thumbnail']:'/img/logo.png'; ?>"></td>
-		<td><?php echo h($product['Product']['sku']); ?></td>
-		<td><?php echo h($product['Product']['name']); ?></td>
-		<td><?php echo h($product['Product']['price']); ?></td>
-		<td><?php echo h($product['Product']['created']); ?></td>
-		<td>
-			<?php echo $this->Html->link($product['Creater']['name'],
-										 array('controller' => 'users', 'action' => 'view', $product['Creater']['id'])); ?>
-		</td>
-		<td><?php echo h($product['Product']['updated']); ?></td>
-		<td>
-			<?php echo $this->Html->link($product['Updater']['name'],
-										 array('controller' => 'users', 'action' => 'view', $product['Updater']['id'])); ?>
-		</td>
-		<td><?php echo h($product['Product']['status']); ?></td>
-		<td class="actions">
-			<?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view',  $product['Product']['id']), array('escape' => false,'title'=>'Xem thông tin')); ?>
-			<?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit',  $product['Product']['id']), array('escape' => false,'title'=>'Thay đổi thông tin')); ?>
-			<?php echo $this->Form->postLink('<i class="glyphicon glyphicon-trash"></i>', array('action' => 'delete',  $product['Product']['id']), array('escape' => false,'title'=>'Xoá'), __('Are you sure you want to delete # %s?',  $product['Product']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</tbody>
-				</table>
-				<div class="dataTables_info" id="data-table_info">
-					<?php
-					echo $this->Paginator->counter(array(
-														'format' => __('Showing {:start} to {:end} {:count} entries')
-												   ));
-					?>
-				</div>
-				<div class="dataTables_paginate paging_full_numbers">
-					<?php
-					echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-					echo $this->Paginator->numbers(array('separator' => ''));
-					echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-					?>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <div class="title pull-right">
+                    <?php echo $this->Html->link(
+                        '<span aria-hidden="true" class="icon-plus"></span> Tạo mới',
+                        array('action' => 'add'),
+                        array('class' => 'btn btn-sm btn-success', 'escape' => false));?>
+                </div>
+                <h3>Danh sách hàng hoá</h3>
+            </div>
+            <div class="widget-body">
+               <div class="row">
+                   <div class="col-md-12">
+                       <form method="post">
+                       <div class="input-group">
+                           <input name="data[q]" placeholder="Nhập mã sản phẩm hoặc tên để tìm kiếm" value="<?php
+                                if(isset($this->request->data['q'])) echo $this->request->data['q'];
+                           ?>" class="form-control">
+                           <span class="input-group-btn">
+                                    <button class="btn btn-info" type="submit"><i class="icon-search"></i> Tìm kiếm
+                                    </button>
+                                </span>
+                       </div>
+                       </form>
+                   </div>
+               </div>
+                <div class="row">
+                   <div class="col-md-12">
+                       <table class="table table-condensedtable-hover no-margin table-product">
+                           <thead>
+                           <tr>
+                               <th width="80">Ảnh đại diện</th>
+                               <th><?php echo $this->Paginator->sort('sku', 'Mã gốc'); ?></th>
+                               <th><?php echo $this->Paginator->sort('name', 'Tên Sản phẩm'); ?></th>
+                               <th><?php echo $this->Paginator->sort('price', 'Giá'); ?></th>
+                               <th><?php echo $this->Paginator->sort('price', 'Giá gốc'); ?></th>
+                               <th><?php echo $this->Paginator->sort('created', 'Ngày tạo'); ?></th>
+                               <th><?php echo $this->Paginator->sort('created_by', 'Người tạo'); ?></th>
+                               <th><?php echo $this->Paginator->sort('updated', 'Ngày cập nhật'); ?></th>
+                               <th><?php echo $this->Paginator->sort('updated_by', 'Người cập nhật'); ?></th>
+                               <th class="actions"><?php echo __('Actions'); ?></th>
+                           </tr>
+                           </thead>
+                           <tbody>
+                           <?php foreach ($products as $product): ?>
+                               <tr>
+                                   <td><img class="thumbnail grid-thumb"
+                                            src="<?php echo !empty($product['Product']['thumbnail']) ? $product['Product']['thumbnail'] : '/img/logo.png'; ?>">
+                                   </td>
+                                   <td><?php echo h($product['Product']['sku']); ?></td>
+                                   <td><?php echo h($product['Product']['name']); ?></td>
+                                   <td><span
+                                           class="price-text"><?php echo number_format(h($product['Product']['price']), 0, '.', ','); ?></span>
+                                   </td>
+                                   <td><span
+                                           class="price-text"><?php echo number_format(h($product['Product']['source_price']), 0, '.', ','); ?></span>
+                                   </td>
+                                   <td><?php echo h($product['Product']['created']); ?></td>
+                                   <td>
+                                       <?php echo $this->Html->link($product['Creater']['name'],
+                                           array('controller' => 'users', 'action' => 'view', $product['Creater']['id'])); ?>
+                                   </td>
+                                   <td><?php echo h($product['Product']['updated']); ?></td>
+                                   <td>
+                                       <?php echo $this->Html->link($product['Updater']['name'],
+                                           array('controller' => 'users', 'action' => 'view', $product['Updater']['id'])); ?>
+                                   </td>
+                                   <td class="actions">
+                                       <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $product['Product']['id']), array('escape' => false, 'title' => 'Xem thông tin')); ?>
+                                       <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $product['Product']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>
+                                       <?php echo $this->Form->postLink('<i class="glyphicon glyphicon-trash"></i>', array('action' => 'delete', $product['Product']['id']), array('escape' => false, 'title' => 'Xoá'), __('Are you sure you want to delete # %s?', $product['Product']['id'])); ?>
+                                   </td>
+                               </tr>
+                           <?php endforeach; ?>
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class=" pull-right">
+                            <div class="dataTables_info" id="data-table_info">
+                                <?php
+                                echo $this->Paginator->counter(array(
+                                    'format' => __('Showing {:start} to {:end} {:count} entries')
+                                ));
+                                ?>
+                            </div>
+                            <ul class="pagination pull-right">
+                                <?php
+                                echo $this->Paginator->prev(__('&laquo;'), array('tag' => 'li','escape'=>false), null, array('tag' => 'li','class' => 'disabled','disabledTag' => 'a','escape'=>false));
+                                echo $this->Paginator->numbers(array('separator' => '','currentTag' => 'a', 'currentClass' => 'active','tag' => 'li','first' => 1));
+                                echo $this->Paginator->next(__('&raquo;'), array('tag' => 'li','currentClass' => 'disabled','escape'=>false), null, array('tag' => 'li','class' => 'disabled','disabledTag' => 'a','escape'=>false));
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-<!--
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Product'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Order Details'), array('controller' => 'order_details', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Order Detail'), array('controller' => 'order_details', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Product Categories'), array('controller' => 'product_categories', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Product Category'), array('controller' => 'product_categories', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Product Options'), array('controller' => 'product_options', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Product Option'), array('controller' => 'product_options', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Product Promotes'), array('controller' => 'product_promotes', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Product Promote'), array('controller' => 'product_promotes', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Warehouses'), array('controller' => 'warehouses', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Warehouse'), array('controller' => 'warehouses', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
--->

@@ -1,0 +1,26 @@
+body{
+    font-size: 14px;
+}
+.sub-table , .sub-table td, .sub-table th{
+    border: 1px solid rgba(96, 96, 96, 0.88)
+}
+.sub-table{
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.text-right{
+    text-align: right;
+}
+.text-center{
+    text-align: center;
+}
+.text-left{
+    text-align: left;
+}
+.text-italic{
+   font-style: italic;
+}
+.title{
+    font-size: 20px;
+    font-weight: bold;
+}
