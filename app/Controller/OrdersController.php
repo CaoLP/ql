@@ -78,8 +78,6 @@ class OrdersController extends AppController
             $total = 0;
             $amount = 0;
             $order_detail = $this->request->data['OrderDetails'];
-
-
             foreach ($order_detail as $detail) {
                 $data = json_decode($detail['data'], true);
                 $total += $detail['qty'] * $data['price'];
@@ -97,7 +95,6 @@ class OrdersController extends AppController
                     'promote_type' => $this->request->data['Order']['promote_type'],
                     'note' => $this->request->data['Order']['note'],
                     'store_id' => $this->request->data['Order']['store_id'],
-
                     'total' => $total,
                     'code' => 'BL'.date('dmYhms'),
                     'total_promote' => $promote,
