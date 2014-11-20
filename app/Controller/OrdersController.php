@@ -143,7 +143,9 @@ class OrdersController extends AppController
         $this->layout = 'order';
         $this->set(compact('customers', 'users', 'promotes', 'promoteData','customersl'));
     }
+    public function admin_save_cart(){
 
+    }
     /**
      * edit method
      *

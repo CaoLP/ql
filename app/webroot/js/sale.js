@@ -256,8 +256,16 @@ $(document).ready(function () {
             $('#order-product-list').append(template);
         }
         updatePrice();
+        saveCart();
     }
+    function saveCart(){
+        $.ajax({
+            url: saveUrl,
+        }
 
+
+        );
+    }
     function removeRow(row) {
         $(row).remove();
         updatePrice();
