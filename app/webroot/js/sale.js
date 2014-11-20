@@ -150,7 +150,12 @@ $(document).ready(function () {
             $('#OrderPromoteValue').val(value);
             $('#OrderPromoteType').val(type);
             $('#summary-total').change();
+        }else{
+            $('#OrderPromoteValue').val(0);
+            $('#OrderPromoteType').val('');
+            $('#summary-total').change();
         }
+        updatePrice();
     });
 
     $(document).on('change', '#summary-total', function (e) {
@@ -245,26 +250,27 @@ $(document).ready(function () {
                 '</td>' +
                 '<td class="text-right">' +
                 '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-                '<input class="qty" name="data[OrderDetails][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
+                '<input class="qty" name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
                 '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                 '</td>' +
                 '<td class="text-right">' +
                 '<span class="new-total-price price-text">' + digits(pPrice) + '</span>' +
-                '<textarea type="hidden" style="display: none" name="data[OrderDetails][' + uuid + '][data]">' + pData + '</textarea>' +
+                '<textarea type="hidden" style="display: none" name="data[OrderDetail][' + uuid + '][data]">' + pData + '</textarea>' +
                 '</td>' +
                 '</tr>';
             $('#order-product-list').append(template);
         }
         updatePrice();
-        saveCart();
     }
     function saveCart(){
         $.ajax({
             url: saveUrl,
-        }
+            type: 'post',
+            data: $('#OrderAdminAddForm').serialize(),
+            success: function (data){
 
-
-        );
+            }
+        });
     }
     function removeRow(row) {
         $(row).remove();
@@ -281,7 +287,8 @@ $(document).ready(function () {
         });
         $('#summary-total').val(summary);
         $('#summary-total').change();
-
+        $('#OrderReceive').change();
+        saveCart();
     }
 
     function uniqId() {

@@ -215,7 +215,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                     <?php if($this->request->data['Order']['status']==1){?>
                     <a class="btn btn-warning" id="cancel-order">Huỷ đơn hàng</a>
                     <?php } ?>
-                    <a class="btn btn-success">In hóa đơn</a>;
+                    <a onclick="window.print();" class="btn btn-success">In hóa đơn</a>
                 </div>
             </div>
         </div>

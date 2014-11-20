@@ -3,11 +3,12 @@ setlocale(LC_MONETARY, "vi_VN");
 if ($this->request->action == 'admin_add')
     $this->Html->addCrumb('<li>Bán hàng</li>', array('action' => 'add'), array('escape' => false));
 else
-    $this->Html->addCrumb('<li>' . $this->request->data['Order']['id'] . '</li>', '/' . $this->request->url, array('escape' => false));
+    $this->Html->addCrumb('<li>' . $this->request->data['Order']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
 echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('inline' => false));
 ?>
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
+    var saveUrl = '<?php echo $this->Html->url(array('controller'=>'orders','action'=>'admin_save_cart'))?>';
     var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
     var promotes = <?php echo json_encode($promoteData);?>;
     var customers = <?php echo json_encode($customers);?>;
@@ -23,45 +24,34 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
             </div>
             <?php
             echo $this->Form->create('Order', array('class' => 'form-horizontal'));
+            echo $this->Form->hidden('id');
+            echo $this->Form->hidden('code');
             ?>
             <div class="widget-body order-w-b" id="order-product">
                 <table id="order-product-list">
                     <?php
-                    if($this->request->action == 'admin_edit')
-                    if($this->request->data['OrderDetail']){
+                    if(isset($this->request->data['OrderDetail'])){
                         ?>
-                        <tr>
-                            <th>Stt</th>
-                            <th class="text-left">Mã hàng</th>
-                            <th class="text-left">Tên hàng</th>
-                            <th class="text-right">Giá</th>
-                            <th class="text-right">Số lượng</th>
-                            <th class="text-right">Thành tiền</th>
-                        </tr>
                         <?php
                         foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
+                            $data = json_decode($order_detail['data'], true);
                             ?>
-                            <tr class="row<?php echo $key?>">
+                            <tr class="row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo $data['options']?>">
                                 <td>
-                                    <?php echo $key+1?>
+                                    <a href="javascript:;" class="remove-row" data-needremove=".row<?php echo $key?>"><i class="icon-close"></i></a>
                                 </td>
-                                <td class="text-left"><span><?php echo $order_detail['code']?></span></td>
-                                <td class="text-left"><span>Áo demo</span><br><span class="opt">
-                                    <?php
-                                    $opts = explode(',',$order_detail['product_options']);
-                                    $temp = array();
-                                    foreach($opts as $opt){
-                                        $temp[] = $options[$opt];
-                                    }
-                                    $op = implode(',',$temp);
-                                    echo $op;
-                                    ?></span></td>
-                                <td class="text-right"><span class="price-text"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></span></td>
+                                <td class="text-left"><span><?php echo $data['code']?></span></td>
+                                <td class="text-left"><span><?php echo $data['name']?></span><br><span class="opt">
+                                   <?php echo $data['optionsName']?></span></td>
+                                <td class="text-right"><span class="price-text"><?php echo number_format($data['price'], 0, '.', ','); ?></span></td>
                                 <td class="text-right">
-                                    <?php echo $order_detail['qty']?>
+                                    <a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>
+                                    <input class="qty" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" data-price="<?php echo $data['price']?>" value="<?php echo $order_detail['qty']?>">
+                                    <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                                 </td>
                                 <td class="text-right">
-                                    <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
+                                    <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $data['price']),0, '.', ',')?></span>
+                                    <textarea type="hidden" style="display: none" name="data[OrderDetail][<?php echo $key?>][data]"><?php echo $order_detail['data'];?></textarea>
                                 </td>
                             </tr>
                         <?php
@@ -78,7 +68,10 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
     <div class="col-md-4">
         <div class="widget">
             <div class="widget-header">
-                <h3>Thông tin</h3>
+                <h3>Thông tin <?php
+                    if(isset($this->request->data['Order']['code']) && !empty($this->request->data['Order']['code']))
+                        echo '<span style="color:red;font-size:14px;">('.$this->request->data['Order']['code'].')</span>';
+                    ?></h3>
             </div>
             <div class="widget-body order-w-b-s">
                 <div class="col-md-12">
@@ -96,10 +89,13 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
                                         ?>
                                         <input id="input-customer" class="form-control" value="<?php
-                                        if(isset($this->request->data['Order']['customer_id']))
+                                        if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                         echo $customersl[$this->request->data['Order']['customer_id']];
                                         ?>">
-                                        <input type="hidden" name="data[Order][customer_id]" id="input-customer-id">
+                                        <input type="hidden" name="data[Order][customer_id]" id="input-customer-id" value="<?php
+                                        if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
+                                            echo $this->request->data['Order']['customer_id'];
+                                        ?>">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" data-toggle="modal"
                                                         data-target="#customer"><i class="icon-plus"></i>
