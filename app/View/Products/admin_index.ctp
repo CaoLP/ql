@@ -1,6 +1,7 @@
 <?php
 setlocale(LC_MONETARY, "vi_VN");
 echo $this->Html->css('product',array('inline'=>false));
+echo $this->Html->script('product',array('inline'=>false));
 ?>
 <!-- Row start -->
 <div class="row">
@@ -51,8 +52,13 @@ echo $this->Html->css('product',array('inline'=>false));
                            <tbody>
                            <?php foreach ($products as $product): ?>
                                <tr>
-                                   <td><img class="thumbnail grid-thumb"
+                                   <td>
+                                       <a href="javascript:;" class="view-img" data-imagelist='<?php
+                                       $img = explode(',',$product['Product']['images']);
+                                       echo json_encode($img);
+                                       ?>'><img class="thumbnail grid-thumb"
                                             src="<?php echo !empty($product['Product']['thumbnail']) ? $product['Product']['thumbnail'] : '/img/logo.png'; ?>">
+                                       </a>
                                    </td>
                                    <td><?php echo h($product['Product']['sku']); ?></td>
                                    <td><?php echo h($product['Product']['name']); ?></td>
@@ -103,6 +109,31 @@ echo $this->Html->css('product',array('inline'=>false));
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this html to your page -->
+<div class="modal fade" id="img-view" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-original-title="">×
+                </button>
+                <h4 class="modal-title">Hình ảnh</h4>
+            </div>
+            <div class="modal-body">
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-original-title="">Đóng</button>
             </div>
         </div>
     </div>

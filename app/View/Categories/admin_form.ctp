@@ -76,7 +76,8 @@ echo $this->Html->css (
 												));
 					echo $this->Form->input('parent_id', array ('empty'=>true,'label' => array ('text' => 'Danh mục cha', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('name', array ('label' => array ('text' => 'Tên danh mục', 'class' => 'col-lg-2 control-label')));
-					echo $this->Form->input('excerpt', array ('label' => array ('text' => 'Mô tả ngắn', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('code', array ('label' => array ('text' => 'Mã', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('excerpt', array ('label' => array ('text' => 'Mô tả ngắn', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('descriptions', array ('label' => array ('text' => 'Mô tả danh mục', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('status', array ('label' => array ('text' => 'Trạng thái', 'class' => 'col-lg-2 control-label')));
 					?>

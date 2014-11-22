@@ -16,6 +16,7 @@
 			<th width="80">Hình ảnh</th>
 			<th><?php echo $this->Paginator->sort('parent_id','Mục cha'); ?></th>
 			<th><?php echo $this->Paginator->sort('name', 'Tên danh mục'); ?></th>
+			<th><?php echo $this->Paginator->sort('code', 'Mã'); ?></th>
 			<th><?php echo $this->Paginator->sort('created','Ngày tạo'); ?></th>
 			<th><?php echo $this->Paginator->sort('created_by','Người tạo'); ?></th>
 			<th><?php echo $this->Paginator->sort('updated','Ngày update'); ?></th>
@@ -31,6 +32,7 @@
 			<?php echo $this->Html->link($category['ParentCategory']['name'], array('controller' => 'categories', 'action' => 'view', $category['ParentCategory']['id'])); ?>
 		</td>
 		<td><?php echo h($category['Category']['name']); ?>&nbsp;</td>
+		<td><?php echo h($category['Category']['code']); ?>&nbsp;</td>
 		<td><?php echo h($category['Category']['created']); ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($category['Creater']['name'],

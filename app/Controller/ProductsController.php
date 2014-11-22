@@ -90,7 +90,9 @@ class ProductsController extends AppController {
  */
 	public function admin_add() {
         $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
+        $categories = $this->Product->Category->find('all',array('recursive'=>-1));
         $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
+        $categoriesDataCode =Set::combine($categories,'{n}.Category.id','{n}.Category.code');
 		if ($this->request->is('post')) {
 			$this->Product->create();
 			if ($this->Product->save($this->request->data)) {
@@ -98,7 +100,10 @@ class ProductsController extends AppController {
 				$option_data = $this->request->data['ProductOption']['option_id'];
 				$options = array();
 				foreach($option_data as $op){
-                    $code = $this->request->data['Product']['sku'].'-'.$providersDataCode[$this->request->data['Product']['provider_id']];
+                    $code = $this->request->data['Product']['sku']
+                        .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
+                        .'='.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                    ;
 					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
 				$this->Product->ProductOption->saveMany($options['ProductOption']);
@@ -110,9 +115,9 @@ class ProductsController extends AppController {
 		}
 		$selected= Set::classicExtract($this->request->data,'ProductOption.{n}.option_id');
 		$this->set(compact( 'selected'));
-		$categories = $this->Product->Category->find('list');
-		$options = $this->Product->ProductOption->Option->find('all');
 
+		$options = $this->Product->ProductOption->Option->find('all');
+        $categories =  Set::combine($categories,'{n}.Category.id','{n}.Category.name');
         $providers = Set::combine($providersData,'{n}.Provider.id','{n}.Provider.name');
 		$options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
         $this->set(compact( 'categories','options','providers','providersData'));
@@ -132,7 +137,9 @@ class ProductsController extends AppController {
 			throw new NotFoundException(__('Invalid product'));
 		}
         $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
+        $categories = $this->Product->Category->find('all',array('recursive'=>-1));
         $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
+        $categoriesDataCode =Set::combine($categories,'{n}.Category.id','{n}.Category.code');
         if ($this->request->is(array('post', 'put'))) {
 		
 			if ($this->Product->save($this->request->data)) {
@@ -141,7 +148,10 @@ class ProductsController extends AppController {
 				$this->Product->ProductOption->deleteAll(array('product_id' => $product_id), false);
 				$options = array();
 				foreach($option_data as $op){
-                    $code = $this->request->data['Product']['sku'].'-'.$providersDataCode[$this->request->data['Product']['provider_id']];
+                    $code = $this->request->data['Product']['sku']
+                        .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
+                        .'='.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                    ;
                     $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
 				$this->Product->ProductOption->saveMany($options['ProductOption']);
@@ -156,7 +166,7 @@ class ProductsController extends AppController {
 			$selected= Set::classicExtract($this->request->data,'ProductOption.{n}.option_id');
 			$this->set(compact( 'selected'));
 		}
-		$categories = $this->Product->Category->find('list');
+        $categories =  Set::combine($categories,'{n}.Category.id','{n}.Category.name');
 		$options = $this->Product->ProductOption->Option->find('all');
 
         $providers = Set::combine($providersData,'{n}.Provider.id','{n}.Provider.name');

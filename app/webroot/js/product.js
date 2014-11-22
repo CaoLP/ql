@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    if($('#submit-provider').length > 0)
     $('#submit-provider').on('click', function () {
         if($('#ProviderName').val() == '' || $('#ProviderCode').val() == '') return false;
         $.ajax({
@@ -17,6 +18,7 @@ $(document).ready(function () {
             }
         });
     });
+    if($('#submit-option').length > 0)
     $('#submit-option').on('click', function () {
         var option_id = new Array();
         $('input:checkbox:checked').each(function() {
@@ -44,5 +46,10 @@ $(document).ready(function () {
                 $('#OptionOther').val('');
             }
         });
+    });
+
+    $('.view-img').on('click',function(){
+        var images = $(this).data('imagelist');
+        console.log(images);
     });
 });

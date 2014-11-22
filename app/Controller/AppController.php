@@ -32,7 +32,6 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 	public $components = array(
-            'DebugKit.Toolbar',
             'Session',
             'Auth' => array(
 								'loginRedirect' => array('admin'=>true,'controller' => 'dashboard', 'action' => 'index'),
@@ -58,6 +57,10 @@ class AppController extends Controller {
 			1 => 'Kích hoạt',
 		);
 		$this->set(compact('statuses'));
+        if($this->Session->read('Auth.User.group_id') == 1){
+            $this->Toolbar = $this->Components->load('DebugKit.Toolbar');
+        }
+        parent::beforeFilter();
     }
 
     public function isAuthorized($user) {

@@ -25,12 +25,12 @@ class WarehousesController extends AppController
     {
         $this->set('title_for_layout', 'Nhà kho');
         $this->Warehouse->recursive = 0;
-        $store_id = $this->Session->read('Auth.User.store_id');
-        $this->Paginator->settings = array(
-            'conditions'=>array(
-                'Warehouse.store_id'=> $store_id
-            ),
-        );
+//        $store_id = $this->Session->read('Auth.User.store_id');
+//        $this->Paginator->settings = array(
+//            'conditions'=>array(
+//                'Warehouse.store_id'=> $store_id
+//            ),
+//        );
         $this->loadModel('Option');
         $options = $this->Option->find('list');
         $this->set(compact('options'));
