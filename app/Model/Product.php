@@ -48,26 +48,6 @@ class Product extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'excert' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'descriptions' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
         'category_id' => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),

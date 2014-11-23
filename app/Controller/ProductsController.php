@@ -31,19 +31,47 @@ class ProductsController extends AppController {
 			$this->layout = 'ajax';
 			$this->view = 'admin_ajax_pro';
 		}else{
+            $options = $this->Product->ProductOption->Option->find('all');
+            $providers = $this->Product->Provider->find('list');
+            $categories = $this->Product->Category->find('list');
+            $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
+
+            /*
+             array(
+                    'q' => 'aaaa',
+                    'category_id' => '1',
+                    'provider_id' => '14',
+                    'option_id' => array(
+                                        (int) 0 => '1',
+                                        (int) 1 => '2',
+                                        (int) 2 => '7',
+                                        (int) 3 => '4',
+                                        (int) 4 => '5',
+                                        (int) 5 => '16'
+                    )
+                )
+             * */
+            $con = array();
             if(isset($this->request->data['q'])){
                 $input =$this->request->data['q'];
-                $this->Paginator->settings = array(
-                    'conditions' => array(
-                        'OR' => array(
+                $con['conditions']['OR'] =  array(
                             'Product.name like' => '%' . $input . '%',
                             'Product.sku like' => '%' . $input . '%'
-                        ),
-                    ),
-                );
+                            );
             }
+            if(isset($this->request->data['category_id']) && !empty($this->request->data['category_id'])){
+                $con['conditions']['Product.category_id'] = $this->request->data['category_id'];
+            }
+            if(isset($this->request->data['provider_id']) && !empty($this->request->data['provider_id'])){
+                $con['conditions']['Product.provider_id'] = $this->request->data['provider_id'];
+            }
+//            if(isset($this->request->data['option_id']) && count($this->request->data['option_id']) > 0){
+//                $con['conditions']['ProductOption.option_id'] = $this->request->data['option_id'];
+//            }
+            $this->Paginator->settings = $con;
             $this->Product->recursive = 0;
             $this->set('products', $this->Paginator->paginate());
+            $this->set(compact('options','providers','categories'));
 		}
 	}
 
@@ -102,7 +130,7 @@ class ProductsController extends AppController {
 				foreach($option_data as $op){
                     $code = $this->request->data['Product']['sku']
                         .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
-                        .'='.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                        .'-'.$categoriesDataCode[$this->request->data['Product']['category_id']]
                     ;
 					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
@@ -150,7 +178,7 @@ class ProductsController extends AppController {
 				foreach($option_data as $op){
                     $code = $this->request->data['Product']['sku']
                         .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
-                        .'='.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                        .'-'.$categoriesDataCode[$this->request->data['Product']['category_id']]
                     ;
                     $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}

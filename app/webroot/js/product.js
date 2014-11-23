@@ -50,6 +50,21 @@ $(document).ready(function () {
 
     $('.view-img').on('click',function(){
         var images = $(this).data('imagelist');
-        console.log(images);
+        var imgList = $('#img-list');
+        var html = '<div class="row">';
+        imgList.html('');
+        $.each(images,function(_,val){
+            var template = ''+
+                '<div class="col-xs-6 col-md-4">'+
+                '    <a href="javascript:;" class="thumbnail">'+
+                '        <img src="'+val+'">'+
+                '        </a>'+
+                '    </div>'+
+                '';
+            html+= template;
+        });
+        html+='</div>';
+        imgList.html(html);
+        $('#img-view').modal('show')
     });
 });

@@ -5,7 +5,32 @@ echo $this->Html->script('product',array('inline'=>false));
 ?>
 <!-- Row start -->
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3">
+        <div class="widget">
+            <div class="widget-header">
+                <h3>Tìm kiếm</h3>
+            </div>
+            <div class="widget-body">
+                <form method="post">
+                    <div class="form-group">
+                        <input name="data[q]" placeholder="Nhập mã hoặc tên để tìm kiếm" value="<?php
+                        if(isset($this->request->data['q'])) echo $this->request->data['q'];
+                        ?>" class="form-control">
+                    </div>
+                    <?php
+                    echo $this->Form->input('category_id',array('label'=>array('text'=>'Danh mục'),'empty'=>true,'div'=>array('class'=>'form-group'),'class'=>'form-control'));
+                    echo $this->Form->input('provider_id',array('label'=>array('text'=>'Nhà cung cấp'),'empty'=>true,'div'=>array('class'=>'form-group'),'class'=>'form-control'));
+                    echo $this->Form->input('option_id', array('label'=>array('text'=>'Tuỳ chọn'), 'multiple' => 'checkbox','div'=>array('id'=>'option_group','class'=>'form-group'),'class'=>'form-control'));
+                    ?>
+                    <div class="form-group">
+                        <button class="form-control btn btn-info" type="submit"><i class="icon-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
         <div class="widget">
             <div class="widget-header">
                 <div class="title pull-right">
@@ -17,21 +42,6 @@ echo $this->Html->script('product',array('inline'=>false));
                 <h3>Danh sách hàng hoá</h3>
             </div>
             <div class="widget-body">
-               <div class="row">
-                   <div class="col-md-12">
-                       <form method="post">
-                       <div class="input-group">
-                           <input name="data[q]" placeholder="Nhập mã sản phẩm hoặc tên để tìm kiếm" value="<?php
-                                if(isset($this->request->data['q'])) echo $this->request->data['q'];
-                           ?>" class="form-control">
-                           <span class="input-group-btn">
-                                    <button class="btn btn-info" type="submit"><i class="icon-search"></i> Tìm kiếm
-                                    </button>
-                                </span>
-                       </div>
-                       </form>
-                   </div>
-               </div>
                 <div class="row">
                    <div class="col-md-12">
                        <table class="table table-condensedtable-hover no-margin table-product">
@@ -41,11 +51,9 @@ echo $this->Html->script('product',array('inline'=>false));
                                <th><?php echo $this->Paginator->sort('sku', 'Mã gốc'); ?></th>
                                <th><?php echo $this->Paginator->sort('name', 'Tên Sản phẩm'); ?></th>
                                <th><?php echo $this->Paginator->sort('price', 'Giá'); ?></th>
-                               <th><?php echo $this->Paginator->sort('price', 'Giá gốc'); ?></th>
+                               <th><?php echo $this->Paginator->sort('retail_price', 'Giá bán lẻ'); ?></th>
                                <th><?php echo $this->Paginator->sort('created', 'Ngày tạo'); ?></th>
                                <th><?php echo $this->Paginator->sort('created_by', 'Người tạo'); ?></th>
-                               <th><?php echo $this->Paginator->sort('updated', 'Ngày cập nhật'); ?></th>
-                               <th><?php echo $this->Paginator->sort('updated_by', 'Người cập nhật'); ?></th>
                                <th class="actions"><?php echo __('Actions'); ?></th>
                            </tr>
                            </thead>
@@ -66,17 +74,12 @@ echo $this->Html->script('product',array('inline'=>false));
                                            class="price-text"><?php echo number_format(h($product['Product']['price']), 0, '.', ','); ?></span>
                                    </td>
                                    <td><span
-                                           class="price-text"><?php echo number_format(h($product['Product']['source_price']), 0, '.', ','); ?></span>
+                                           class="price-text"><?php echo number_format(h($product['Product']['retail_price']), 0, '.', ','); ?></span>
                                    </td>
                                    <td><?php echo h($product['Product']['created']); ?></td>
                                    <td>
                                        <?php echo $this->Html->link($product['Creater']['name'],
                                            array('controller' => 'users', 'action' => 'view', $product['Creater']['id'])); ?>
-                                   </td>
-                                   <td><?php echo h($product['Product']['updated']); ?></td>
-                                   <td>
-                                       <?php echo $this->Html->link($product['Updater']['name'],
-                                           array('controller' => 'users', 'action' => 'view', $product['Updater']['id'])); ?>
                                    </td>
                                    <td class="actions">
                                        <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $product['Product']['id']), array('escape' => false, 'title' => 'Xem thông tin')); ?>
@@ -127,7 +130,7 @@ echo $this->Html->script('product',array('inline'=>false));
                 <div class="widget-body">
                     <div class="row">
                         <div class="col-md-12">
-
+                            <div id="img-list"></div>
                         </div>
                     </div>
                 </div>

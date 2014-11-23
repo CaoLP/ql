@@ -226,7 +226,11 @@ setlocale(LC_MONETARY, "vi_VN");
                                             'action'=>'fillwarehouse',
                                             $inoutWarehouse['InoutWarehouse']['id']
                                         ));?>" target="_blank" class="btn btn-warning"><i class="icon-print"></i> In</a>
-									<a href="javascript:;" class="btn btn-warning"><i class="icon-download-3"></i>
+									<a href="<?php echo $this->Html->url(array(
+                                        'controller'=>'print',
+                                        'action'=>'fillwarehouse_excel',
+                                        $inoutWarehouse['InoutWarehouse']['id']
+                                    ));?>" class="btn btn-warning"><i class="icon-download-3"></i>
 										Xuất file</a>
                                     <?php
                                     if($inoutWarehouse['InoutWarehouse']['status']==0)

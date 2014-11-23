@@ -21,9 +21,35 @@ class PrintController extends AppController
         );
         $this->set(compact('data'));
     }
+    public function admin_fillwarehouse_excel($id = null)
+    {
+        $this->layout = 'excel';
+        $this->loadModel('InoutWarehouse');
+        $data = $this->InoutWarehouse->find('first',
+            array(
+                'conditions' => array(
+                    'InoutWarehouse.id' => $id
+                )
+            )
+        );
+        $this->set(compact('data'));
+    }
 
     public function admin_transferwarehouse($id = null)
     {
+        $this->loadModel('InoutWarehouse');
+        $data = $this->InoutWarehouse->find('first',
+            array(
+                'conditions' => array(
+                    'InoutWarehouse.id' => $id
+                )
+            )
+        );
+        $this->set(compact('data'));
+    }
+    public function admin_transferwarehouse_excel($id = null)
+    {
+        $this->layout = 'excel';
         $this->loadModel('InoutWarehouse');
         $data = $this->InoutWarehouse->find('first',
             array(
