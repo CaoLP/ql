@@ -129,8 +129,7 @@ class ProductsController extends AppController {
 				$options = array();
 				foreach($option_data as $op){
                     $code = $this->request->data['Product']['sku']
-                        .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
-                        .'-'.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                        .$providersDataCode[$this->request->data['Product']['provider_id']]
                     ;
 					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
@@ -177,8 +176,7 @@ class ProductsController extends AppController {
 				$options = array();
 				foreach($option_data as $op){
                     $code = $this->request->data['Product']['sku']
-                        .'-'.$providersDataCode[$this->request->data['Product']['provider_id']]
-                        .'-'.$categoriesDataCode[$this->request->data['Product']['category_id']]
+                        .$providersDataCode[$this->request->data['Product']['provider_id']]
                     ;
                     $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}

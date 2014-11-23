@@ -210,7 +210,7 @@ $(document).ready(function () {
             if (!duplicated) {
                 var uuid = uniqId();
                 var template = '<tr class="first-tr row' + uuid + '" data-id="' + pId.val() + '" data-options=\'' + JSON.stringify(optionIds) + '\'>' +
-                    '<td>' + pSku.val()+'-'+ extendCode + '</td>' +
+                    '<td>' + pSku.val()+extendCode + '</td>' +
                     '<td>' + pName.val() + '</td>' +
                     '<td><span class="price-text">' + digits(subPrice) + '</span></td>' +
                     '<td class="hidden-qty-text">' +
@@ -225,7 +225,7 @@ $(document).ready(function () {
                     '<span class="options">' + optionNames + '</span>' +
                     '</td>' +
                     '<td>' +
-                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][code]" value="' + pSku.val()+'-'+ extendCode + '">'+
+                    '<input type="hidden" name="data[ProductList][' + uuid + '][Product][code]" value="' + pSku.val()+ extendCode + '">'+
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][data]">' + pData.val() + '</textarea>' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][option]">' + JSON.stringify(optionIds) + '</textarea>' +
                     '<textarea style="display: none" name="data[ProductList][' + uuid + '][Product][optionName]">' + JSON.stringify(optionNames) + '</textarea>' +
