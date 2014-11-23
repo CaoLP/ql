@@ -61,6 +61,11 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
                     }
                     ?>
                 </table>
+                <div class="row">
+                    <div class="col-md-12">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

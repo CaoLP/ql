@@ -91,7 +91,7 @@ class Warehouse extends AppModel {
             'order' => ''
         ));
         $result = $this->find('all', array(
-            'fields'=>'Product.sku,Product.name,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
+            'fields'=>'Product.sku,Product.name,Product.thumbnail,Product.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
             'conditions' => array(
                 'Warehouse.qty > '=>'0',
                 'Warehouse.store_id'=> $store_id,
@@ -100,6 +100,25 @@ class Warehouse extends AppModel {
 //                    'Product.sku like' => '%' . $input . '%'
                     'Warehouse.code' => $input
                 ),
+            )
+        ));
+        return $result;
+    }
+    public function filterWarehouseData($store_id)
+    {
+        $this->belongsTo = array(
+            'Product' => array(
+                'className' => 'Product',
+                'foreignKey' => 'product_id',
+                'conditions' => '',
+                'fields' => '',
+                'order' => ''
+            ));
+        $result = $this->find('all', array(
+            'fields'=>'Product.sku,Product.name,Product.thumbnail,Product.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
+            'conditions' => array(
+                'Warehouse.qty > '=>'0',
+                'Warehouse.store_id'=> $store_id
             )
         ));
         return $result;
