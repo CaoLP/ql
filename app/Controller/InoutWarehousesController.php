@@ -275,17 +275,38 @@ class InoutWarehousesController extends AppController
      *
      * @return void
      */
-    public function admin_edit($id = null)
+    public function admin_change($id = null)
     {
 //        debug($this->request);die;
         if (!$this->InoutWarehouse->exists($id)) {
             throw new NotFoundException(__('Invalid inout warehouse'));
         }
         if ($this->request->is(array('post', 'put'))) {
+            $storeData = array();
+            $fullTotal = 0;
+            if(isset($this->request->data['InoutWarehouseDetail']) && count($this->request->data['InoutWarehouseDetail'])){
+                foreach($this->request->data['InoutWarehouseDetail'] as $detail){
+                    $total = $detail['qty'] * $detail['price'];
+                    $fullTotal+= $total;
+                    $storeData[] = array(
+                        'qty' => $detail['qty'],
+                        'product_id' => $detail['product_id'],
+                        'inout_warehouse_id' => $detail['inout_warehouse_id'],
+                        'sku' => $detail['sku'],
+                        'price' => $detail['price'],
+                        'name' => $detail['name'],
+                        'options' => $detail['options'],
+                        'option_names' => $detail['option_names'],
+                        'total' => $total,
+                    );
+                }
+            }
+            $this->request->data['InoutWarehouse']['total'] = $fullTotal;
             if ($this->InoutWarehouse->save($this->request->data)) {
+                $this->InoutWarehouse->InoutWarehouseDetail->deleteAll(array('InoutWarehouseDetail.inout_warehouse_id' => $id), false);
+                $this->InoutWarehouse->InoutWarehouseDetail->saveMany($storeData);
                 $this->Session->setFlash(__('The inout warehouse has been saved.'));
-
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(array('action' => 'in'));
             } else {
                 $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
             }
@@ -295,7 +316,46 @@ class InoutWarehousesController extends AppController
         }
         $stores = $this->InoutWarehouse->Store->find('list');
         $customers = $this->InoutWarehouse->Customer->find('list');
-        $this->set(compact('stores', 'customers'));
+        $this->loadModel('OptionGroup');
+        $options = $this->OptionGroup->getOptions();
+        $this->set(compact('stores', 'customers', 'type', 'options'));
+    }
+    public function admin_change_transfer($id = null)
+    {
+//        debug($this->request);die;
+        if (!$this->InoutWarehouse->exists($id)) {
+            throw new NotFoundException(__('Invalid inout warehouse'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
+            debug($this->request->data);
+//            if ($this->InoutWarehouse->save($this->request->data)) {
+//                $this->Session->setFlash(__('The inout warehouse has been saved.'));
+//
+//                return $this->redirect(array('action' => 'index'));
+//            } else {
+//                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+//            }
+        } else {
+            $options = array('conditions' => array('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
+            $this->request->data = $this->InoutWarehouse->find('first', $options);
+        }
+        if($this->request->data['InoutWarehouse']['type'] == 1){
+            $products = Set::combine($this->request->data['InoutWarehouseDetail'],'{n}.product_id','{n}.product_id');
+            $this->loadModel('Warehouse');
+            $limits = $this->Warehouse->find('list',array(
+                'fields'=>'Warehouse.product_id,Warehouse.qty',
+                'conditions'=>array(
+                    'Warehouse.product_id' => $products
+                )
+            ));
+            $this->set(compact('limits'));
+        }
+
+        $stores = $this->InoutWarehouse->Store->find('list');
+        $customers = $this->InoutWarehouse->Customer->find('list');
+        $this->loadModel('OptionGroup');
+        $options = $this->OptionGroup->getOptions();
+        $this->set(compact('stores', 'customers', 'type', 'options'));
     }
 
     /**
@@ -447,17 +507,28 @@ class InoutWarehousesController extends AppController
      */
     public function admin_delete($id = null)
     {
+//        $this->InoutWarehouse->id = $id;
+//        if (!$this->InoutWarehouse->exists()) {
+//            throw new NotFoundException(__('Invalid inout warehouse'));
+//        }
+//        $this->request->allowMethod('post', 'delete');
+//        if ($this->InoutWarehouse->delete()) {
+//            $this->Session->setFlash(__('The inout warehouse has been deleted.'));
+//        } else {
+//            $this->Session->setFlash(__('The inout warehouse could not be deleted. Please, try again.'));
+//        }
+//
+//        return $this->redirect(array('action' => 'index'));
+    }
+    public function admin_cancel($id = null){
+        $saveData = array('InoutWarehouse'=>array(
+            'status'=>2
+        ));
         $this->InoutWarehouse->id = $id;
-        if (!$this->InoutWarehouse->exists()) {
-            throw new NotFoundException(__('Invalid inout warehouse'));
-        }
-        $this->request->allowMethod('post', 'delete');
-        if ($this->InoutWarehouse->delete()) {
-            $this->Session->setFlash(__('The inout warehouse has been deleted.'));
-        } else {
-            $this->Session->setFlash(__('The inout warehouse could not be deleted. Please, try again.'));
-        }
-
+        $this->InoutWarehouse->save($saveData);
+        return $this->redirect(array('action' => 'in'));
+    }
+    public function admin_cancel_transfer($id = null){
         return $this->redirect(array('action' => 'index'));
     }
 }

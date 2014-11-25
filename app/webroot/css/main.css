@@ -1220,7 +1220,8 @@ header .logo span {
     padding: 2px 4px 0 0;
     list-style: none;
     display: inline-block;
-    color: #999
+    color: #999;
+    font-size: 12px;
 }
 
 .page-title h2 small a:last-child li{

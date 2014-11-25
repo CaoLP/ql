@@ -1,27 +1,30 @@
-<ul class="breadcrumb">
-<?php
-$i=1;
-$pathCount=count($acoPath);
-foreach ($acoPath as $node) {    
-    if($i==$pathCount){
-        echo '<li class="active">'.$acos_details[$node['Aco']['id']]['name'].'</li>';
-    }else{
-        echo  '<li>'.$acos_details[$node['Aco']['id']]['name'].' <span class="divider">/</span></li>';
-    }
-    $i++;
-}
-?>
-</ul>
+<?php if(false){
+    ?>
+    <ul class="breadcrumb">
+        <?php
+        $i=1;
+        $pathCount=count($acoPath);
+        foreach ($acoPath as $node) {
+            if($i==$pathCount){
+                echo '<li class="active">'.$acos_details[$node['Aco']['id']]['name'].'</li>';
+            }else{
+                echo  '<li>'.$acos_details[$node['Aco']['id']]['name'].' <span class="divider">/</span></li>';
+            }
+            $i++;
+        }
+        ?>
+    </ul>
 
-<em>
-    <?php
+    <em>
+        <?php
         $method = end($acoPath);
         echo $acos_details[$method['Aco']['id']]['description'];
-    ?>
-</em>
+        ?>
+    </em>
 
-<p>
-    <table width="100%">
+<?php
+}?>
+    <table class="table no-margin">
     <?php 
 	$adminRoleName = array('admin', 'Tổng quản lý');
 	foreach ($aros as $roleName => $data):
@@ -45,4 +48,3 @@ foreach ($acoPath as $node) {
         </tr>
     <?php endforeach; ?>
     </table>
-</p>

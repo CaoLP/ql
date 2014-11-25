@@ -265,12 +265,12 @@ setlocale(LC_MONETARY, "vi_VN");
                     <div class="panel-footer text-right">
                         <?php
                         if ($inoutWarehouse['InoutWarehouse']['status'] != 1)
-                            echo $this->Form->postLink(
+                            echo $this->Html->link(
                                 '<i class="icon-remove"></i> Huỷ bỏ',
-                                array('action' => 'delete',
+                                array('action' => 'cancel_transfer',
                                     $inoutWarehouse['InoutWarehouse']['id']),
                                 array('escape' => false, 'class' => 'btn btn-danger'),
-                                __('Are you sure you want to delete # %s?',
+                                __('Bạn có muốn huỷ chứng từ này không # %s?',
                                     $inoutWarehouse['InoutWarehouse']['code'])); ?>
 
                         <a href="<?php echo $this->Html->url(array(
@@ -287,7 +287,7 @@ setlocale(LC_MONETARY, "vi_VN");
                             Xuất file</a>
                         <?php
                         if ($inoutWarehouse['InoutWarehouse']['status'] != 1)
-                            if ($this->Session->read('Auth.User.group_id') == 1)
+                            if ($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.id') == $inoutWarehouse['InoutWarehouse']['created_by'])
                                 echo $this->Html->link('<i class="icon-storage"></i> Lưu', array('#'), array('class' => 'btn btn-success', 'id' => 'clickInoutWarehouse' . $key, 'escape' => false, 'div' => false)); ?>
                         <?php echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu', array('action' => 'view', $inoutWarehouse['InoutWarehouse']['id']), array('class' => 'btn btn-success', 'escape' => false, 'div' => false)); ?>
                         <script>

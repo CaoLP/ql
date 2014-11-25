@@ -212,11 +212,22 @@ setlocale(LC_MONETARY, "vi_VN");
 									</div>
 								</div>
 								<div class="panel-footer text-right">
+                                    <?php
+                                    if($inoutWarehouse['InoutWarehouse']['status']==0)
+                                        if($this->Session->read('Auth.User.group_id')==1
+                                            || $inoutWarehouse['InoutWarehouse']['created']==$this->Session->read('Auth.User.id'))
+                                        echo $this->Html->link(
+                                            '<i class="icon-pencil"></i> Thay đổi',
+                                            array('action' => 'change',
+                                                $inoutWarehouse['InoutWarehouse']['id']),
+                                            array('escape'=>false,'class'=>'btn btn-info'),
+                                            __('Bạn có muốn thay đổi thông tin đơn nhập hàng # %s này không?',
+                                                $inoutWarehouse['InoutWarehouse']['code'])); ?>
 									<?php
                                     if($inoutWarehouse['InoutWarehouse']['status']==0)
-                                    echo $this->Form->postLink(
+                                    echo $this->Html->link(
 										'<i class="icon-remove"></i> Huỷ bỏ',
-										array('action' => 'delete',
+										array('action' => 'cancel',
 											 $inoutWarehouse['InoutWarehouse']['id']),
 										array('escape'=>false,'class'=>'btn btn-danger'),
 										__('Bạn có muốn huỷ đơn nhập hàng # %s này không?',

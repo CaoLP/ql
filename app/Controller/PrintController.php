@@ -23,6 +23,7 @@ class PrintController extends AppController
     }
     public function admin_fillwarehouse_excel($id = null)
     {
+
         $this->layout = 'excel';
         $this->loadModel('InoutWarehouse');
         $data = $this->InoutWarehouse->find('first',
@@ -63,7 +64,7 @@ class PrintController extends AppController
 
     public function admin_checkwarehouse()
     {
-
+        $this->layout = 'ajax';
     }
 
     public function admin_paymentvoucher()

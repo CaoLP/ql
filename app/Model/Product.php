@@ -158,7 +158,13 @@ class Product extends AppModel
             'order' => ''
         )
     );
-
+    public function checkCode($code = null){
+        return $this->find('count',array(
+            'conditions'=>array(
+                'Product.sku' => $code
+            )
+        ));
+    }
     public function filterData($input)
     {
         $this->belongsTo = array();

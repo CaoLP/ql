@@ -68,6 +68,7 @@ class ProductsController extends AppController {
 //            if(isset($this->request->data['option_id']) && count($this->request->data['option_id']) > 0){
 //                $con['conditions']['ProductOption.option_id'] = $this->request->data['option_id'];
 //            }
+            $con['order'] = 'Product.created DESC';
             $this->Paginator->settings = $con;
             $this->Product->recursive = 0;
             $this->set('products', $this->Paginator->paginate());
@@ -122,23 +123,37 @@ class ProductsController extends AppController {
         $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
         $categoriesDataCode =Set::combine($categories,'{n}.Category.id','{n}.Category.code');
 		if ($this->request->is('post')) {
-			$this->Product->create();
-			if ($this->Product->save($this->request->data)) {
-				$product_id = $this->Product->id;
-				$option_data = $this->request->data['ProductOption']['option_id'];
-				$options = array();
-				foreach($option_data as $op){
-                    $code = $this->request->data['Product']['sku']
-                        .$providersDataCode[$this->request->data['Product']['provider_id']]
-                    ;
-					$options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
-				}
-				$this->Product->ProductOption->saveMany($options['ProductOption']);
-				$this->Session->setFlash(__('The product has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The product could not be saved. Please, try again.'));
-			}
+            if(isset($this->request->data['Product']['sku']) || !empty($this->request->data['Product']['sku'])){
+                if($this->Product->checkCode($this->request->data['Product']['sku']) == 0) {
+                    if(isset($this->request->data['ProductOption']['option_id']) || count($this->request->data['ProductOption']['option_id']) > 0){
+                        $this->Product->create();
+
+                        if(empty($this->request->data['Product']['retail_price'])) $this->request->data['Product']['retail_price'] = 0;
+                        if(empty($this->request->data['Product']['source_price'])) $this->request->data['Product']['source_price'] = 0;
+
+                        if ($this->Product->save($this->request->data)) {
+                            $product_id = $this->Product->id;
+                            $option_data = $this->request->data['ProductOption']['option_id'];
+                            $options = array();
+                            foreach($option_data as $op){
+                                $code = $this->request->data['Product']['sku'] ;
+                                $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
+                            }
+                            $this->Product->ProductOption->saveMany($options['ProductOption']);
+                            $this->Session->setFlash(__('The product has been saved.'), 'message', array('class' => 'alert-success'));
+                            return $this->redirect(array('action' => 'index'));
+                        } else {
+                            $this->Session->setFlash(__('Không thể lưu'), 'message', array('class' => 'alert-danger'));
+                        }
+                    }else {
+                        $this->Session->setFlash(__('Vui lòng chọn thuộc tính'), 'message', array('class' => 'alert-danger'));
+                    }
+                }else {
+                    $this->Session->setFlash(__('Mã hàng này đã tồn tại'), 'message', array('class' => 'alert-danger'));
+                }
+            }else {
+                $this->Session->setFlash(__('Vui lòng nhập mã hàng'), 'message', array('class' => 'alert-danger'));
+            }
 		}
 		$selected= Set::classicExtract($this->request->data,'ProductOption.{n}.option_id');
 		$this->set(compact( 'selected'));
@@ -175,9 +190,7 @@ class ProductsController extends AppController {
 				$this->Product->ProductOption->deleteAll(array('product_id' => $product_id), false);
 				$options = array();
 				foreach($option_data as $op){
-                    $code = $this->request->data['Product']['sku']
-                        .$providersDataCode[$this->request->data['Product']['provider_id']]
-                    ;
+                    $code = $this->request->data['Product']['sku'];
                     $options['ProductOption'][] = array('product_id'=>$product_id,'option_id'=>$op, 'code'=>$code);
 				}
 				$this->Product->ProductOption->saveMany($options['ProductOption']);

@@ -4,7 +4,7 @@ var acos = {
               url: url+'/'+id,
               type: "POST",
               success: function(response){
-                $('#aco-edit').html(response);
+                $('#aco-edit'+id).html(response);
               }
             });
         },

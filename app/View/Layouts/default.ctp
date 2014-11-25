@@ -82,6 +82,11 @@ setlocale(LC_MONETARY,"vi_VN");
 <div class="dashboard-wrapper">
 	<div class="container">
 		<?php echo $this->element('content_header')?>
+        <div class="row">
+            <div class="col-md-12">
+                <?php echo $this->Session->flash(); ?>
+            </div>
+        </div>
 		<?php echo $this->fetch('content'); ?>
 	</div>
 </div>
