@@ -32,6 +32,7 @@ class InoutWarehousesController extends AppController
                 'Đang chuyển',
                 'Đã chuyển',
                 'Đã huỷ',
+                'Lưu tạm',
             );
         $this->set('status', $this->status);
         parent::beforeRender();
@@ -148,7 +149,7 @@ class InoutWarehousesController extends AppController
             $cont = true;
             if ($type == 1) {
                 if ($this->request->data['InoutWarehouse']['store_id'] == $this->request->data['InoutWarehouse']['store_receive_id']) {
-                    $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+                    $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
                     $cont = false;
                 }
             }
@@ -183,16 +184,16 @@ class InoutWarehousesController extends AppController
                         }
 
                         $this->InoutWarehouse->InoutWarehouseDetail->saveMany($arrStore['InoutWarehouseDetail']);
-                        $this->Session->setFlash(__('The inout warehouse has been saved.'));
+                        $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
                         if ($type == 1)
                             return $this->redirect(array('action' => 'index'));
                         else
                             return $this->redirect(array('action' => 'in'));
                     } else {
-                        $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+                        $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
                     }
                 } else {
-                    $this->Session->setFlash(__('Vui lòng thêm hàng'));
+                    $this->Session->setFlash(__('Vui lòng thêm hàng'), 'message', array('class' => 'alert-danger'));
                 }
             }
         }
@@ -209,7 +210,7 @@ class InoutWarehousesController extends AppController
         if ($this->request->is('post')) {
             $cont = true;
             if ($this->request->data['InoutWarehouse']['store_id'] == $this->request->data['InoutWarehouse']['store_receive_id']) {
-                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
                 $cont = false;
             }
             if ($cont) {
@@ -223,6 +224,7 @@ class InoutWarehousesController extends AppController
                         $summary += $data['price'] * $pItem['Product']['qty'];
                     }
                     $this->request->data['InoutWarehouse']['total'] = $summary;
+                    $this->request->data['InoutWarehouse']['status'] = 3;
                     if ($this->InoutWarehouse->save($this->request->data)) {
                         $arrStore = array();
                         $arrWarehouse = array();
@@ -248,14 +250,14 @@ class InoutWarehousesController extends AppController
                         }
                         $this->InoutWarehouse->InoutWarehouseDetail->saveMany($arrStore['InoutWarehouseDetail']);
                         $this->loadModel('Warehouse');
-                        $this->Warehouse->saveMany($arrWarehouse);
-                        $this->Session->setFlash(__('The inout warehouse has been saved.'));
+//                        $this->Warehouse->saveMany($arrWarehouse);
+                        $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
                         return $this->redirect(array('action' => 'index'));
                     } else {
-                        $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+                        $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
                     }
                 } else {
-                    $this->Session->setFlash(__('Vui lòng thêm hàng'));
+                    $this->Session->setFlash(__('Vui lòng thêm hàng'), 'message', array('class' => 'alert-danger'));
                 }
             }
         }
@@ -265,7 +267,58 @@ class InoutWarehousesController extends AppController
         $options = $this->OptionGroup->getOptions();
         $this->set(compact('stores', 'customers', 'type', 'options'));
     }
+    public function admin_do_transfer($id = null){
+        if (!$this->InoutWarehouse->exists($id)) {
+            throw new NotFoundException(__('Invalid inout warehouse'));
+        }
+        $options = array('conditions' => array('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
+        $data = $this->InoutWarehouse->find('first', $options);
+        $data['InoutWarehouse']['status'] = '0';
+        $products = Set::combine($data['InoutWarehouseDetail'],'{n}.sku','{n}.sku');
 
+        $this->loadModel('Warehouse');
+
+        $warehouse = $this->Warehouse->find('all',array(
+            'fields'=>'Warehouse.id,Warehouse.code,Warehouse.qty',
+            'conditions'=>array(
+                'Warehouse.store_id' => $data['InoutWarehouse']['store_id'],
+                'Warehouse.code' => $products
+            )
+        ));
+        $warehouse = Set::classicExtract($warehouse,'{n}.Warehouse');
+        $warehouse = Set::combine($warehouse,'{n}.code','{n}');
+//        $warehouse = array(
+//            '91010MX27' => array(
+//                'id' => '1',
+//                'code' => '91010MX27',
+//                'qty' => '4'
+//            ),
+//            '6616DE2X' => array(
+//                'id' => '51',
+//                'code' => '6616DE2X',
+//                'qty' => '1'
+//            )
+//        );
+        foreach($data['InoutWarehouseDetail'] as $d){
+
+            $old = $warehouse[$d['sku']]['qty'];
+            $new = $d['qty'];
+
+            if($new > $old){
+                $this->Session->setFlash(__('Số lượng trong kho ít hơn số lượng cần chuyển.'), 'message', array('class' => 'alert-danger'));
+                return $this->redirect(array('action' => 'change_transfer',$id));
+            }
+            $warehouse[$d['sku']]['qty'] = $old - $new;
+        }
+        if ($this->InoutWarehouse->save($data)) {
+            $this->Warehouse->saveMany($warehouse);
+            $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
+            return $this->redirect(array('action' => 'index'));
+        } else {
+            $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
+        }
+        return $this->redirect(array('action' => 'index'));
+    }
     /**
      * edit method
      *
@@ -305,14 +358,17 @@ class InoutWarehousesController extends AppController
             if ($this->InoutWarehouse->save($this->request->data)) {
                 $this->InoutWarehouse->InoutWarehouseDetail->deleteAll(array('InoutWarehouseDetail.inout_warehouse_id' => $id), false);
                 $this->InoutWarehouse->InoutWarehouseDetail->saveMany($storeData);
-                $this->Session->setFlash(__('The inout warehouse has been saved.'));
+                $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
                 return $this->redirect(array('action' => 'in'));
             } else {
-                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
+                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
             }
         } else {
             $options = array('conditions' => array('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
             $this->request->data = $this->InoutWarehouse->find('first', $options);
+        }
+        if($this->request->data['InoutWarehouse']['type'] == 1){
+            return $this->redirect(array('action' => 'in'));
         }
         $stores = $this->InoutWarehouse->Store->find('list');
         $customers = $this->InoutWarehouse->Customer->find('list');
@@ -327,25 +383,49 @@ class InoutWarehousesController extends AppController
             throw new NotFoundException(__('Invalid inout warehouse'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            debug($this->request->data);
-//            if ($this->InoutWarehouse->save($this->request->data)) {
-//                $this->Session->setFlash(__('The inout warehouse has been saved.'));
-//
-//                return $this->redirect(array('action' => 'index'));
-//            } else {
-//                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'));
-//            }
+            $storeData = array();
+            $fullTotal = 0;
+            if(isset($this->request->data['InoutWarehouseDetail']) && count($this->request->data['InoutWarehouseDetail'])){
+                foreach($this->request->data['InoutWarehouseDetail'] as $detail){
+                    $total = $detail['qty'] * $detail['price'];
+                    $fullTotal+= $total;
+                    $storeData[] = array(
+                        'qty' => $detail['qty'],
+                        'product_id' => $detail['product_id'],
+                        'inout_warehouse_id' => $detail['inout_warehouse_id'],
+                        'sku' => $detail['sku'],
+                        'price' => $detail['price'],
+                        'name' => $detail['name'],
+                        'options' => $detail['options'],
+                        'option_names' => $detail['option_names'],
+                        'total' => $total,
+                    );
+                }
+            }
+            $this->request->data['InoutWarehouse']['total'] = $fullTotal;
+            if ($this->InoutWarehouse->save($this->request->data)) {
+                $this->InoutWarehouse->InoutWarehouseDetail->deleteAll(array('InoutWarehouseDetail.inout_warehouse_id' => $id), false);
+                $this->InoutWarehouse->InoutWarehouseDetail->saveMany($storeData);
+                $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
+                return $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('The inout warehouse could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
+            }
         } else {
             $options = array('conditions' => array('InoutWarehouse.' . $this->InoutWarehouse->primaryKey => $id));
             $this->request->data = $this->InoutWarehouse->find('first', $options);
         }
+        if($this->request->data['InoutWarehouse']['type'] == 0){
+            return $this->redirect(array('action' => 'index'));
+        }
         if($this->request->data['InoutWarehouse']['type'] == 1){
-            $products = Set::combine($this->request->data['InoutWarehouseDetail'],'{n}.product_id','{n}.product_id');
+            $products = Set::combine($this->request->data['InoutWarehouseDetail'],'{n}.sku','{n}.sku');
             $this->loadModel('Warehouse');
             $limits = $this->Warehouse->find('list',array(
-                'fields'=>'Warehouse.product_id,Warehouse.qty',
+                'fields'=>'Warehouse.code,Warehouse.qty',
                 'conditions'=>array(
-                    'Warehouse.product_id' => $products
+                    'Warehouse.store_id' => $this->request->data['InoutWarehouse']['store_id'],
+                    'Warehouse.code' => $products
                 )
             ));
             $this->set(compact('limits'));
@@ -436,7 +516,7 @@ class InoutWarehousesController extends AppController
             $this->InoutWarehouse->save($approvedata);
 
 
-            $this->Session->setFlash(__('The inout warehouse has been saved.'));
+            $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
 
             return $this->redirect(array('action' => 'in'));
 //				} else {
@@ -491,7 +571,7 @@ class InoutWarehousesController extends AppController
             $this->Warehouse->saveMany($warehouse);
             $this->InoutWarehouse->save($approvedata);
             $this->InoutWarehouse->InoutWarehouseDetail->saveMany($this->request->data['InoutWarehouseDetail']);
-            $this->Session->setFlash(__('The inout warehouse has been saved.'));
+            $this->Session->setFlash(__('The inout warehouse has been saved.'), 'message', array('class' => 'alert-success'));
             return $this->redirect(array('action' => 'index'));
         }
     }

@@ -3098,3 +3098,6 @@ form input[type=checkbox]{
 .ui-datepicker{
     z-index: 10 !important;
 }
+.error-input{
+    border: 1px solid rgba(255, 15, 3, 0.75);
+}

@@ -215,7 +215,7 @@ setlocale(LC_MONETARY, "vi_VN");
                                     <?php
                                     if($inoutWarehouse['InoutWarehouse']['status']==0)
                                         if($this->Session->read('Auth.User.group_id')==1
-                                            || $inoutWarehouse['InoutWarehouse']['created']==$this->Session->read('Auth.User.id'))
+                                            || $inoutWarehouse['InoutWarehouse']['created_by']==$this->Session->read('Auth.User.id'))
                                         echo $this->Html->link(
                                             '<i class="icon-pencil"></i> Thay đổi',
                                             array('action' => 'change',
@@ -245,7 +245,8 @@ setlocale(LC_MONETARY, "vi_VN");
 										Xuất file</a>
                                     <?php
                                     if($inoutWarehouse['InoutWarehouse']['status']==0)
-                                    echo $this->Form->postLink(
+                                        if($this->Session->read('Auth.User.group_id')==1)
+                                    echo $this->Html->link(
                                         '<i class="icon-checkmark"></i> Duyệt hàng',
                                         array('action' => 'approve',
                                             $inoutWarehouse['InoutWarehouse']['id']),

@@ -263,15 +263,31 @@ setlocale(LC_MONETARY, "vi_VN");
                         </div>
                     </div>
                     <div class="panel-footer text-right">
+                        <div class="pull-left">
+                            <?php
+                            if ($inoutWarehouse['InoutWarehouse']['status'] != 1)
+                                echo $this->Html->link(
+                                    '<i class="icon-remove"></i> Huỷ bỏ',
+                                    array('action' => 'cancel_transfer',
+                                        $inoutWarehouse['InoutWarehouse']['id']),
+                                    array('escape' => false, 'class' => 'btn btn-danger'),
+                                    __('Bạn có muốn huỷ chứng từ # %s này không?',
+                                        $inoutWarehouse['InoutWarehouse']['code'])); ?>
+                        </div>
+                        <div class="text-right">
+
                         <?php
-                        if ($inoutWarehouse['InoutWarehouse']['status'] != 1)
-                            echo $this->Html->link(
-                                '<i class="icon-remove"></i> Huỷ bỏ',
-                                array('action' => 'cancel_transfer',
-                                    $inoutWarehouse['InoutWarehouse']['id']),
-                                array('escape' => false, 'class' => 'btn btn-danger'),
-                                __('Bạn có muốn huỷ chứng từ này không # %s?',
-                                    $inoutWarehouse['InoutWarehouse']['code'])); ?>
+                        if($inoutWarehouse['InoutWarehouse']['status']==3)
+                            if($this->Session->read('Auth.User.group_id')==1
+                                || $inoutWarehouse['InoutWarehouse']['created_by']==$this->Session->read('Auth.User.id'))
+                                echo $this->Html->link(
+                                    '<i class="icon-pencil"></i> Thay đổi',
+                                    array('action' => 'change_transfer',
+                                        $inoutWarehouse['InoutWarehouse']['id']),
+                                    array('escape'=>false,'class'=>'btn btn-info'),
+                                    __('Bạn có muốn thay đổi thông tin đơn nhập hàng # %s này không?',
+                                        $inoutWarehouse['InoutWarehouse']['code'])); ?>
+
 
                         <a href="<?php echo $this->Html->url(array(
                             'controller' => 'print',
@@ -286,10 +302,29 @@ setlocale(LC_MONETARY, "vi_VN");
                         ));?>" class="btn btn-warning"><i class="icon-download-3"></i>
                             Xuất file</a>
                         <?php
+                        if ($inoutWarehouse['InoutWarehouse']['status'] == 3)
+                            if ($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.id') == $inoutWarehouse['InoutWarehouse']['created_by'])
+                                echo $this->Html->link(
+                            '<i class="icon-truck"></i> Chuyển hàng',
+                            array('action' => 'do_transfer',
+                                $inoutWarehouse['InoutWarehouse']['id']),
+                            array('escape' => false, 'class' => 'btn btn-info'),
+                            __('Bạn có muốn chuyển đơn hàng # %s này không?',
+                                $inoutWarehouse['InoutWarehouse']['code']));;
+                        ?>
+                        <?php
                         if ($inoutWarehouse['InoutWarehouse']['status'] != 1)
                             if ($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.id') == $inoutWarehouse['InoutWarehouse']['created_by'])
-                                echo $this->Html->link('<i class="icon-storage"></i> Lưu', array('#'), array('class' => 'btn btn-success', 'id' => 'clickInoutWarehouse' . $key, 'escape' => false, 'div' => false)); ?>
-                        <?php echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu', array('action' => 'view', $inoutWarehouse['InoutWarehouse']['id']), array('class' => 'btn btn-success', 'escape' => false, 'div' => false)); ?>
+                                echo $this->Html->link('<i class="icon-disk"></i> Lưu',
+                                    array('#'), array('class' => 'btn btn-success', 'escape' => false, 'div' => false));
+                        ?>
+                        <?php
+                        if ($inoutWarehouse['InoutWarehouse']['status'] == 1)
+                            if ($this->Session->read('Auth.User.group_id') == 1
+                                || ($this->Session->read('Auth.User.group_id') == 2 && $this->Session->read('Auth.User.store_id') == $inoutWarehouse['InoutWarehouse']['store_receive_id']))
+                                echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu', array('action' => 'view', $inoutWarehouse['InoutWarehouse']['id']), array('class' => 'btn btn-success', 'escape' => false, 'div' => false));
+
+                        ?>
                         <script>
                             $(document).ready(function () {
                                 $(document).on('click', '#clickInoutWarehouse<?php echo $key;?>', function (e) {
@@ -299,6 +334,7 @@ setlocale(LC_MONETARY, "vi_VN");
                             });
 
                         </script>
+                        </div>
                     </div>
                 </div>
                 <?php echo $this->Form->end(); ?>

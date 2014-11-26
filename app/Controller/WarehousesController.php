@@ -32,8 +32,14 @@ class WarehousesController extends AppController
 //            ),
 //        );
         $this->loadModel('Option');
-        $options = $this->Option->find('list');
-        $this->set(compact('options'));
+        $options = $this->Option->find('all');
+        $stores = $this->Warehouse->Store->find('list');
+        $this->loadModel('Category');
+        $categories = $this->Category->find('list');
+        $optionsData = Set::combine($options,'{n}.Option.id','{n}.Option.name');
+        $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
+
+        $this->set(compact('options','optionsData','stores','categories'));
         $this->set('warehouses', $this->Paginator->paginate());
     }
 
