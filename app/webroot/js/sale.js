@@ -306,4 +306,14 @@ $(document).ready(function () {
     function digits(number) {
         return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
+
+
+//    filter
+    $('.expand-cart a').on('click',function(){
+        var position = $('#panel-from-left').css('left');
+        if(position=='0px')$('#panel-from-left').css('left','-600px');
+        else $('#panel-from-left').css('left','0px');
+    });
+
+
 });

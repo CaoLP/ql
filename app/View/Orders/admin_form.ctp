@@ -5,6 +5,7 @@ if ($this->request->action == 'admin_add')
 else
     $this->Html->addCrumb('<li>' . $this->request->data['Order']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
 echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('inline' => false));
+echo $this->Html->css(array('order'), array('inline' => false));
 ?>
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
@@ -61,12 +62,9 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
                     }
                     ?>
                 </table>
-                <div class="row">
-                    <div class="col-md-12">
 
-                    </div>
-                </div>
             </div>
+
         </div>
     </div>
 
@@ -228,7 +226,66 @@ echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('i
 </div>
 </div>
 <?php echo $this->Form->end(); ?>
-
+<div class="panel-from-left" id="panel-from-left">
+    <div class="expand-cart"><a href="javascript:;"><i class="icon-cart"></i><br><span class="expand-text">Tìm nhanh</span></a></div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <input class="form-control" type="text" placeholder="Default input">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div id="product-list">
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/350x450" alt="...">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Add this html to your page -->
 <div class="modal fade" id="customer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

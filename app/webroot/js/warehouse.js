@@ -39,6 +39,8 @@ $(document).ready(function () {
         allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName),
         tips = $(".validateTips");
 
+
+
     dialog = $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,
@@ -60,6 +62,14 @@ $(document).ready(function () {
         event.preventDefault();
         addProduct();
     });
+
+    qty.on('keyup',function(e){
+        var code = e.keyCode || e.which;
+        if (code  == 13) {
+            form.submit();
+        }
+    });
+
 // Sets up the multicolumn autocomplete widget.
     $("#p-search").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.

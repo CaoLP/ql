@@ -24,13 +24,43 @@ class WarehousesController extends AppController
     public function admin_index()
     {
         $this->set('title_for_layout', 'Nhà kho');
+        $settings = array();
         $this->Warehouse->recursive = 0;
 //        $store_id = $this->Session->read('Auth.User.store_id');
-//        $this->Paginator->settings = array(
-//            'conditions'=>array(
-//                'Warehouse.store_id'=> $store_id
-//            ),
-//        );
+        if($this->request->is('post')){
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['OR'] =  array(
+                    'Product.name like' => '%' . $input . '%',
+                    'Warehouse.code like' => '%' . $input . '%'
+                );
+            }
+            if(isset($this->request->data['category_id']) && !empty($this->request->data['category_id'])){
+                $settings['conditions']['Product.category_id'] = $this->request->data['category_id'];
+            }
+            if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                $settings['conditions']['Warehouse.store_id'] = $this->request->data['store_id'];
+            }
+
+            if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                $settings['conditions']['Warehouse.store_id'] = $this->request->data['store_id'];
+            }
+            if(isset($this->request->data['option_id']) && count($this->request->data['option_id'])>0){
+                foreach($this->request->data['option_id'] as $option){
+                    $settings['conditions']['AND'][] = 'FIND_IN_SET(\''. $option .'\',Warehouse.options)';
+                }
+            }
+            $this->Session->write('Warehouse.paginate',$settings);
+            $this->Session->write('Warehouse.request.data',$this->request->data);
+            return $this->redirect(array('action'=>'index'));
+        }
+        if($this->Session->check('Warehouse.paginate')){
+            $this->paginate = $this->Session->read('Warehouse.paginate');
+        }
+        if($this->Session->check('Warehouse.request.data')){
+            $this->request->data = $this->Session->read('Warehouse.request.data');
+        }
+//        $this->Paginator->settings = $settings;
         $this->loadModel('Option');
         $options = $this->Option->find('all');
         $stores = $this->Warehouse->Store->find('list');
@@ -40,7 +70,7 @@ class WarehousesController extends AppController
         $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
 
         $this->set(compact('options','optionsData','stores','categories'));
-        $this->set('warehouses', $this->Paginator->paginate());
+        $this->set('warehouses', $this->Paginator->paginate('Warehouse'));
     }
 
     /**

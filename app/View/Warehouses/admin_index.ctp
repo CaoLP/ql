@@ -32,7 +32,11 @@ echo $this->Html->script('product',array('inline'=>false));
     <div class="col-md-9">
         <div class="widget">
             <div class="widget-header">
-                <h3>Kho hàng</h3>
+                <h3>Kho hàng  <?php
+                    echo $this->Paginator->counter(array(
+                        'format' => __('hiện có {:count} sản phẩm')
+                    ));
+                    ?></h3>
             </div>
             <div class="widget-body">
                 <div class="row">
