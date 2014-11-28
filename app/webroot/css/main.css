@@ -741,7 +741,6 @@ header .logo span {
 }
 
 #mini-nav .summary .basic-details {
-    width: 120px;
     float: left;
     margin-right: 10px
 }
@@ -2966,7 +2965,7 @@ form input[type=checkbox]{
     color: red;
 }
 .price-text{
-    color: red;
+    color: red !important;
     font-weight: bold;
 }
 .right-bar{
@@ -3100,4 +3099,14 @@ form input[type=checkbox]{
 }
 .error-input{
     border: 1px solid rgba(255, 15, 3, 0.75);
+}
+.attendance{
+    width: 115px;
+    background-color: white !important;
+}
+.attendance:hover{
+    background: #383838 !important;
+}
+#attendance label.radio-inline {
+    width: 48%;
 }

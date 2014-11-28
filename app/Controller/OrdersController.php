@@ -76,64 +76,67 @@ class OrdersController extends AppController
     public function admin_add()
     {
         if ($this->request->is('post')) {
-
-            $this->Order->create();
-            $total = 0;
-            $amount = 0;
-            $order_detail = $this->request->data['OrderDetail'];
-            foreach ($order_detail as $detail) {
-                $data = json_decode($detail['data'], true);
-                $total += $detail['qty'] * $data['price'];
-            }
-            $promote = $this->request->data['Order']['promote_value'];
-            if ($this->request->data['Order']['promote_type'] == 1) {
-                $promote = $total * ($promote / 100);
-            }
-            $amount = $total - $promote;
-            $saveData = array(
-                'Order' => array(
-                    'customer_id' => $this->request->data['Order']['customer_id'],
-                    'promote_id' => $this->request->data['Order']['promote_id'],
-                    'promote_value' => $this->request->data['Order']['promote_value'],
-                    'promote_type' => $this->request->data['Order']['promote_type'],
-                    'note' => $this->request->data['Order']['note'],
-                    'store_id' => $this->request->data['Order']['store_id'],
-                    'total' => $total,
-                    'status' => 1,
-                    'code' => 'BL'.date('dmYhms'),
-                    'total_promote' => $promote,
-                    'amount' => $amount,
-                    'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
-                    'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
-                )
-            );
-
-            if ($this->Order->save($saveData)) {
-                $storeDetail = array();
-
-                $id = $this->Order->id;
-                //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
-
+            if(isset($this->request->data['OrderDetail'])){
+                $this->Order->create();
+                $total = 0;
+                $amount = 0;
+                $order_detail = $this->request->data['OrderDetail'];
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
-                    $storeDetail[] = array(
-                        'order_id' => $id,
-                        'product_id' => $data['id'],
-                        'name' => $data['name'],
-                        'price' => $data['price'],
-                        'sku' => $data['sku'],
-                        'qty' => $detail['qty'],
-                        'code' => $data['code'],
-                        'product_options' => $data['options'],
-                        'data' => $detail['data'],
-                    );
+                    $total += $detail['qty'] * $data['price'];
                 }
-                $this->Order->OrderDetail->saveMany($storeDetail);
-                $this->Session->setFlash(__('The order has been saved.'));
-                $this->Session->delete('Cart');
-                return $this->redirect(array('action' => 'view',$id));
-            } else {
-                $this->Session->setFlash(__('The order could not be saved. Please, try again.'));
+                $promote = $this->request->data['Order']['promote_value'];
+                if ($this->request->data['Order']['promote_type'] == 1) {
+                    $promote = $total * ($promote / 100);
+                }
+                $amount = $total - $promote;
+                $saveData = array(
+                    'Order' => array(
+                        'customer_id' => $this->request->data['Order']['customer_id'],
+                        'promote_id' => $this->request->data['Order']['promote_id'],
+                        'promote_value' => $this->request->data['Order']['promote_value'],
+                        'promote_type' => $this->request->data['Order']['promote_type'],
+                        'note' => $this->request->data['Order']['note'],
+                        'store_id' => $this->request->data['Order']['store_id'],
+                        'total' => $total,
+                        'status' => 1,
+                        'code' => 'BL'.date('dmYhms'),
+                        'total_promote' => $promote,
+                        'amount' => $amount,
+                        'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                        'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
+                    )
+                );
+
+                if ($this->Order->save($saveData)) {
+                    $storeDetail = array();
+
+                    $id = $this->Order->id;
+                    //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
+
+                    foreach ($order_detail as $detail) {
+                        $data = json_decode($detail['data'], true);
+                        $storeDetail[] = array(
+                            'order_id' => $id,
+                            'product_id' => $data['id'],
+                            'name' => $data['name'],
+                            'price' => $data['price'],
+                            'sku' => $data['sku'],
+                            'qty' => $detail['qty'],
+                            'code' => $data['code'],
+                            'product_options' => $data['options'],
+                            'data' => $detail['data'],
+                        );
+                    }
+                    $this->Order->OrderDetail->saveMany($storeDetail);
+                    $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
+                    $this->Session->delete('Cart');
+                    return $this->redirect(array('action' => 'view',$id));
+                } else {
+                    $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
+                }
+            }else{
+                $this->Session->setFlash(__('Vui lòng nhập hàng.'), 'message', array('class' => 'alert-danger'));
             }
         }
         if($this->Session->read('Cart')){
@@ -227,11 +230,11 @@ class OrdersController extends AppController
                     );
                 }
                 $this->Order->OrderDetail->saveMany($storeDetail);
-                $this->Session->setFlash(__('The order has been saved.'));
+                $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                 $this->Session->delete('Cart');
                 return $this->redirect(array('action' => 'view',$id));
             } else {
-                $this->Session->setFlash(__('The order could not be saved. Please, try again.'));
+                $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
             }
         } else {
             $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
@@ -269,7 +272,7 @@ class OrdersController extends AppController
         if ($this->Order->delete()) {
             $this->Session->setFlash(__('The order has been deleted.'));
         } else {
-            $this->Session->setFlash(__('The order could not be deleted. Please, try again.'));
+            $this->Session->setFlash(__('The order could not be deleted. Please, try again.'), 'message', array('class' => 'alert-danger'));
         }
         return $this->redirect(array('action' => 'index'));
     }

@@ -43,6 +43,7 @@ if ($this->request->params['action'] == 'admin_add') {
                     echo $this->Form->input('password',array ('label' => array ('text' => 'Mật khẩu', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('group_id',array ('label' => array ('text' => 'Quyền hạn', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('name',array ('label' => array ('text' => 'Tên nhân viên', 'class' => 'col-lg-2 control-label')));
+					echo $this->Form->input('code',array ('label' => array ('text' => 'Mã nhân viên', 'class' => 'col-lg-2 control-label'),'readonly'=>'readonly'));
 					echo $this->Form->input('phone',array ('label' => array ('text' => 'Số điện thoại', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('address',array ('label' => array ('text' => 'Địa chỉ', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('district',array ('label' => array ('text' => 'Quận huyện', 'class' => 'col-lg-2 control-label')));

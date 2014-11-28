@@ -65,11 +65,19 @@ setlocale(LC_MONETARY,"vi_VN");
     <!-- Dashboard wrapper start -->
     <div class="dashboard-wrapper">
         <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->Session->flash(); ?>
+                </div>
+            </div>
             <?php echo $this->fetch('content'); ?>
         </div>
     </div>
     <!-- Dashboard wrapper end -->
 </div>
 <!-- Main Container end -->
+<footer>
+    <?php echo $this->element('footer')?>
+</footer>
 </body>
 </html>

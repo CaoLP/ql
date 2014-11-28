@@ -41,16 +41,20 @@ class UsersController extends AppController {
         // if we get the post information, try to authenticate
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                $this->Session->setFlash(__('Welcome, '. $this->Auth->user('username')));
+                $this->loadModel('UserLoginLog');
+                $this->UserLoginLog->save(array('UserLoginLog'=>array('user_id'=>$this->Auth->user('id'),'type'=>0)));
+                $this->Session->setFlash(__('Welcome, '. $this->Auth->user('username')), 'message', array('class' => 'alert-success'));
                 $this->redirect($this->Auth->redirectUrl());
             } else {
-                $this->Session->setFlash(__('Invalid username or password'));
+                $this->Session->setFlash(__('Invalid username or password'), 'message', array('class' => 'alert-danger'));
             }
         }
     }
 
     public function admin_logout() {
-		$this->Session->setFlash('Good-Bye', 'success');
+        $this->loadModel('UserLoginLog');
+        $this->UserLoginLog->save(array('UserLoginLog'=>array('user_id'=>$this->Auth->user('id'),'type'=>1)));
+		$this->Session->setFlash('Good-Bye', 'message', array('class' => 'alert-success'));
         $this->redirect($this->Auth->logout());
     }
 /**
@@ -86,13 +90,17 @@ class UsersController extends AppController {
  */
 	public function admin_add() {
 		if ($this->request->is('post')) {
+            if(empty($this->request->data['User']['code'])){
+                $random = substr(number_format(time() * mt_rand(),0,'',''),0,10);
+                $this->request->data['User']['code']= $random;
+            }
 			$this->User->create();
 			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
+				$this->Session->setFlash(__('The user has been saved.'), 'message', array('class' => 'alert-success'));
                 die;
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
 			}
 		}
 		$stores = $this->User->Store->find('list');
@@ -109,11 +117,13 @@ class UsersController extends AppController {
         if ($this->request->is('post')) {
             $this->User->create();
             $this->request->data['User']['group_id'] = 5;
+            $random = substr(number_format(time() * mt_rand(),0,'',''),0,10);
+            $this->request->data['User']['code']= $random;
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved.'));
+                $this->Session->setFlash(__('The user has been saved.'), 'message', array('class' => 'alert-success'));
                 return $this->redirect(array('action' => 'login'));
             } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+                $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
             }
         }
         $stores = $this->User->Store->find('list');
@@ -134,11 +144,15 @@ class UsersController extends AppController {
 			throw new NotFoundException(__('Invalid user'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+            if(empty($this->request->data['User']['code'])){
+                $random = substr(number_format(time() * mt_rand(),0,'',''),0,10);
+                $this->request->data['User']['code']= $random;
+            }
 			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
+				$this->Session->setFlash(__('The user has been saved.'), 'message', array('class' => 'alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
@@ -164,9 +178,9 @@ class UsersController extends AppController {
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->User->delete()) {
-			$this->Session->setFlash(__('The user has been deleted.'));
+			$this->Session->setFlash(__('The user has been deleted.'), 'message', array('class' => 'alert-success'));
 		} else {
-			$this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
+			$this->Session->setFlash(__('The user could not be deleted. Please, try again.'), 'message', array('class' => 'alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

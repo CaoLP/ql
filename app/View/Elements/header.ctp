@@ -78,6 +78,12 @@
     <!-- Mini navigation start -->
     <div id="mini-nav" class="hidden-phone">
         <ul>
+            <li class="attendance">
+                <a href="#attendance" data-toggle="modal">
+                    <i class="fs1 icon-star-3" aria-hidden="true" data-icon="&#xe088;"></i>
+                    Điểm danh
+                </a>
+            </li>
             <li>
                 <a href="#">
                     <span class="text-label"><?php echo $this->Session->read ('Auth.User.name'); ?></span><span class="fs1" aria-hidden="true"
@@ -92,6 +98,7 @@
                             <div class="basic-details">
                                 <h4 class="no-margin"><?php echo $this->Session->read ('Auth.User.name'); ?></h4>
                                 <h5 class="no-margin"><?php echo $this->Session->read ('Auth.User.Store.name'); ?></h5>
+                                <h5 class="no-margin">Mã nhân viên: <?php echo $this->Session->read ('Auth.User.code'); ?></h5>
                                 <small><?php echo $this->Session->read ('Auth.User.phone'); ?></small>
                             </div>
                             <div class="clearfix"></div>

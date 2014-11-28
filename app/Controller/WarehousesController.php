@@ -81,8 +81,10 @@ class WarehousesController extends AppController
     public function admin_ajax_product($store_id = '')
     {
         $this->layout = 'ajax';
+        $settings = array('limit'=>8);
+        $this->loadModel('Option');
+        $options = $this->Option->find('list');
         if($this->request->is('post')){
-            $settings = array();
             $settings['conditions']['Warehouse.store_id'] = $store_id;
             if(isset($this->request->data['q'])){
                 $input =$this->request->data['q'];
@@ -97,9 +99,33 @@ class WarehousesController extends AppController
             $this->Session->write('Warehouse.ajax_paginate',$settings);
         }
         if($this->Session->check('Warehouse.paginate')){
-            $this->paginate = $this->Session->read('Warehouse.ajax_paginate');
+            $settings = $this->Session->read('Warehouse.ajax_paginate');
         }
-        $this->set('warehouses', $this->Paginator->paginate('Warehouse'));
+        $this->paginate =  $settings;
+        $warehouses = $this->Paginator->paginate('Warehouse');
+        $temp = array();
+        foreach ($warehouses as $item) {
+            $sub = array();
+            $sub['sku'] = $item['Product']['sku'];
+            $sub['name'] = $item['Product']['name'];
+            $sub['id'] = $item['Product']['id'];
+            $sub['price'] = $item['Warehouse']['price'];
+            $sub['options'] = $item['Warehouse']['options'];
+            $sub['qty'] = $item['Warehouse']['qty'];
+            $sub['warehouse'] = $item['Warehouse']['id'];
+            $sub['code'] = $item['Warehouse']['code'];
+            $opts = explode(',',$item['Warehouse']['options']);
+            $optsName = array();
+            foreach($opts as $op){
+                $optsName[] = $options[$op];
+            }
+            $sub['optionsName'] = implode(',',$optsName);
+            $sub['data'] = json_encode($sub);
+            $sub['thumbnail'] = $item['Product']['thumbnail'];
+            $temp[] = $sub;
+        }
+        $warehouses = $temp;
+        $this->set(compact('warehouses'));
     }
     public function admin_product_ajax($store_id = '')
     {

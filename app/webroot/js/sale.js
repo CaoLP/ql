@@ -314,21 +314,57 @@ $(document).ready(function () {
         if(position=='0px')$('#panel-from-left').css('left','-600px');
         else $('#panel-from-left').css('left','0px');
     });
+    loadajaxPro('');
 
+    $(document).on('click','#panel-from-left #next,#panel-from-left #prev',function(e){
+        e.preventDefault();
+        var link = $(this).attr('href');
+        if(link)
+            loadajaxProPage(link);
+    });
+    $(document).on('click','#panel-from-left .thumbnail',function(e){
+        var pId = $(this).data('id'),
+            pSku = $(this).data('code'),
+            pName = $(this).data('name'),
+            pOptions = $(this).data('options'),
+            limit = $(this).data('limit'),
+            optionNames = $(this).data('optionsname'),
+            pPrice = $(this).data('price'),
+            pData  = $("#" + $(this).data('key')).text();
+        addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData);
+    });
     $(document).on('keyup','#search-input',function(){
+        loadajaxPro('');
+    });
+    function loadajaxProPage(link){
         $.ajax({
-            url : product_ajax + '/' + store_id,
+            url : link,
             type : 'post',
-            data : '',
             beforeSend: function(){
-              var loading = '<div class="col-md-12 text-center">'+
-                                '<img src="/img/select2-spinner.gif">'+
-                            '</div>';
+                var loading = '<div class="col-md-12 text-center">'+
+                    '<img src="/img/select2-spinner.gif">'+
+                    '</div>';
                 $('#product-list').html(loading);
             },
             success: function(response){
                 $('#product-list').html(response);
             }
         });
-    });
+    }
+    function loadajaxPro(data){
+        $.ajax({
+            url : product_ajax + '/' + store_id,
+            type : 'post',
+            data : data,
+            beforeSend: function(){
+                var loading = '<div class="col-md-12 text-center">'+
+                    '<img src="/img/select2-spinner.gif">'+
+                    '</div>';
+                $('#product-list').html(loading);
+            },
+            success: function(response){
+                $('#product-list').html(response);
+            }
+        });
+    }
 });

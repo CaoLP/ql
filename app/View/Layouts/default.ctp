@@ -93,5 +93,8 @@ setlocale(LC_MONETARY,"vi_VN");
 <!-- Dashboard wrapper end -->
 </div>
 <!-- Main Container end -->
+<footer>
+    <?php echo $this->element('footer')?>
+</footer>
 </body>
 </html>
