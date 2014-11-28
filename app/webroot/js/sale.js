@@ -309,11 +309,26 @@ $(document).ready(function () {
 
 
 //    filter
-    $('.expand-cart a').on('click',function(){
+    $('.btn-expand').on('click',function(){
         var position = $('#panel-from-left').css('left');
         if(position=='0px')$('#panel-from-left').css('left','-600px');
         else $('#panel-from-left').css('left','0px');
     });
 
-
+    $(document).on('keyup','#search-input',function(){
+        $.ajax({
+            url : product_ajax + '/' + store_id,
+            type : 'post',
+            data : '',
+            beforeSend: function(){
+              var loading = '<div class="col-md-12 text-center">'+
+                                '<img src="/img/select2-spinner.gif">'+
+                            '</div>';
+                $('#product-list').html(loading);
+            },
+            success: function(response){
+                $('#product-list').html(response);
+            }
+        });
+    });
 });

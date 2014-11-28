@@ -13,6 +13,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
     var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
     var promotes = <?php echo json_encode($promoteData);?>;
     var customers = <?php echo json_encode($customers);?>;
+    var product_ajax = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'ajax_product'))?>';
 </script>
 <div class="row">
     <div class="col-md-8">
@@ -227,59 +228,47 @@ echo $this->Html->css(array('order'), array('inline' => false));
 </div>
 <?php echo $this->Form->end(); ?>
 <div class="panel-from-left" id="panel-from-left">
-    <div class="expand-cart"><a href="javascript:;"><i class="icon-cart"></i><br><span class="expand-text">Tìm nhanh</span></a></div>
+    <a href="javascript:;" class="btn-expand"><div class="expand-cart"><i class="icon-cart"></i><br><span class="expand-text">Tìm nhanh</span></div></a>
     <div class="row">
         <div class="col-md-12">
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <div>
-                        <input class="form-control" type="text" placeholder="Default input">
+                    <div class="col-md-6">
+                        <?php
+                        echo $this->Form->input('search-input',
+                            array(
+                                'label'=>false,
+                                'placeholder'=>'Tên hoặc mã hàng',
+                                'name'=>'q',
+                                'id'=>'search-input',
+                                'div'=>false,
+                                'class'=>'form-control input-sm'
+                            )
+                        );
+                        ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php
+                        echo $this->Form->input('category_id',
+                            array(
+                                'label'=>false,
+                                'name'=>'search-select',
+                                'id'=>'search-select',
+                                'div'=>false,
+                                'empty'=>true,
+                                'class'=>'form-control input-sm'
+                            )
+                        );
+                        ?>
                     </div>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div id="product-list">
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <a href="#" class="thumbnail">
-                            <img src="http://placehold.it/350x450" alt="...">
-                        </a>
+                    <div class="col-md-12 text-center">
+                        <img src="/img/select2-spinner.gif">
                     </div>
                 </div>
             </div>

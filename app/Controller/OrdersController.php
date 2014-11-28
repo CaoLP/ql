@@ -139,8 +139,9 @@ class OrdersController extends AppController
         if($this->Session->read('Cart')){
             $this->request->data =  $this->Session->read('Cart');
         }
-        $this->loadModel('Warehouse');
+        $this->loadModel('Category');
 
+        $this->loadModel('Warehouse');
         $warehouse = $this->Warehouse->filterWarehouseData($this->Session->read('Auth.User.store_id'));
 
         $customers = $this->Order->Customer->find('list');
@@ -151,10 +152,11 @@ class OrdersController extends AppController
         }
         $customers = $temp;
         $promoteData = $this->Order->Promote->find('all', array('recursive' => -1));
+        $categories = $this->Category->find('list');
         $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
         $this->layout = 'order';
-        $this->set(compact('customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
+        $this->set(compact('categories','customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
     }
     public function admin_save_cart(){
         $this->Session->write('Cart',$this->request->data);

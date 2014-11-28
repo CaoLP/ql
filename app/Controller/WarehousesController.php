@@ -78,6 +78,29 @@ class WarehousesController extends AppController
      *
      * @return void
      */
+    public function admin_ajax_product($store_id = '')
+    {
+        $this->layout = 'ajax';
+        if($this->request->is('post')){
+            $settings = array();
+            $settings['conditions']['Warehouse.store_id'] = $store_id;
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['OR'] =  array(
+                    'Product.name like' => '%' . $input . '%',
+                    'Warehouse.code like' => '%' . $input . '%'
+                );
+            }
+            if(isset($this->request->data['category_id']) && !empty($this->request->data['category_id'])){
+                $settings['conditions']['Product.category_id'] = $this->request->data['category_id'];
+            }
+            $this->Session->write('Warehouse.ajax_paginate',$settings);
+        }
+        if($this->Session->check('Warehouse.paginate')){
+            $this->paginate = $this->Session->read('Warehouse.ajax_paginate');
+        }
+        $this->set('warehouses', $this->Paginator->paginate('Warehouse'));
+    }
     public function admin_product_ajax($store_id = '')
     {
         //if($this->request->isAjax()){
