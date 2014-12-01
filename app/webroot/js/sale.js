@@ -204,6 +204,118 @@ $(document).ready(function () {
             return false;
         }
     });
+//    =============================================================
+//    BEGIN POPOVER
+//    =============================================================
+
+    $(document).on('click','.pov',function(){
+        var template = '<div class="popover">' +
+                        '       <div class="arrow"></div>' +
+                        '            <h3 class="popover-title"></h3>' +
+                        '            <div class="popover-content"></div>' +
+                        '            <div class="popover-footer">' +
+                        '                <button type="button" class="btn btn-success btn-sm">Chấp nhận</button>' +
+                        '            </div>' +
+                        '</div>';
+        var content = '<div class="input-group input-group-sm">' +
+            '<div class="input-group-btn">' +
+            '<div class="onoffswitch">' +
+            '<input type="checkbox" name="{{name}}" class="onoffswitch-checkbox" id="sw{{id}}">' +
+            '<label class="onoffswitch-label" for="sw{{id}}">' +
+            '<span class="onoffswitch-inner"></span>' +
+            '<span class="onoffswitch-switch"></span>' +
+            '</label>' +
+            '</div>' +
+            '</div>' +
+            '<input name="mod-price" class="form-control" value="{{value}}">' +
+            '<div class="input-group-btn">' +
+            '<button type="button" class="btn btn-success btn-sm" data-price="{{price}}" data-key="{{key}}"><i class="icon-checkmark"></i></button>'+
+            '</div>' +
+            '</div>';
+        var i_key = $(this).data('key');
+        var i_price = $(this).data('price');
+        var mod_price_field = $('#'+i_key+'-mod-price');
+        var uid = uniqId();
+        content= content.replace(/{{id}}/g,uid);
+        content= content.replace('{{name}}',uid);
+        content= content.replace('{{value}}',mod_price_field.val());
+        content =  content.replace('{{price}}',i_price);
+        content =  content.replace('{{key}}',i_key);
+        $(this).popover('destroy').popover(
+            {
+                trigger: 'manual',
+                content:content,
+                placement: 'left',
+//                template: template,
+                title: 'Thay đổi giá',
+                selector: 'a.pov',
+                html: true
+            }
+        ).popover("show");
+    });
+    $('body').on('click', function (e) {
+        $('.pov').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
+    $(document).on('change','.popover-content .onoffswitch-checkbox',function(){
+        var s_price = $(this).closest('.popover-content').find('button').data('price');
+        if($(this).is(':checked')){
+            $(this).closest('.popover-content').find('input[name=mod-price]').val(0).focus();
+        }else{
+            $(this).closest('.popover-content').find('input[name=mod-price]').val(s_price).focus();
+        }
+    });
+    $(document).on('click','.popover-content button',function(){
+        var i_key = $(this).data('key');
+        var s_price = $(this).data('price');
+        var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
+        var type_box = $(this).closest('.popover-content').find('input[type=checkbox]');
+        var type = 0;
+        if(type_box.is(':checked')){
+           type = 1;
+        }
+        var maxPrice  = parseInt(s_price) + parseInt(s_price)*0.1;
+        var minPrice  = parseInt(s_price) - parseInt(s_price)*0.1;
+        if(type == 0){
+            if(i_price >= minPrice && i_price <= maxPrice){
+                var mod_price_field = $('#'+i_key+'-mod-price');
+                var price_field = $('#'+i_key+'-price-text');
+                mod_price_field.val(i_price);
+                $('#'+i_key+'-cur-price').data('price',i_price).change();
+                price_field.text(digits(i_price*1));
+                $('.pov').each(function () {
+                    $(this).popover('destroy');
+                });
+            }else{
+                alert('Giá thay đổi không được quá 10% giá gốc');
+            }
+        }else{
+            if(i_price >= 0 && i_price <= 10){
+                var mod_price_field = $('#'+i_key+'-mod-price');
+                var price_field = $('#'+i_key+'-price-text');
+
+                i_price = s_price + s_price * (i_price/100);
+
+                mod_price_field.val(i_price);
+                $('#'+i_key+'-cur-price').data('price',i_price).change();
+                price_field.text(digits(i_price*1));
+                $('.pov').each(function () {
+                    $(this).popover('destroy');
+                });
+            }else{
+                alert('Giá thay đổi không được quá 10% giá gốc');
+            }
+        }
+
+    });
+//    =============================================================
+//    END POPOVER
+//    =============================================================
+
+
     function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
         var duplicated = false;
         $('#order-product-list tr').each(function () {
@@ -238,19 +350,22 @@ $(document).ready(function () {
                 '<i class="icon-close"></i>' +
                 '</a>' +
                 '</td>' +
-                '<td>' +
+                '<td class="text-left">' +
                 '<span>' + pSku + '</span>' +
                 '</td>' +
-                '<td>' +
+                '<td class="text-left">' +
                 '<span>' + pName + '</span>' +
                 '<br><span class="opt">' + optionNames + '</span>' +
                 '</td>' +
                 '<td class="text-right">' +
-                '<span class="price-text">' + digits(pPrice) + '</span>' +
+                '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
+                '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
+                '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+pPrice+'">'+
+                '</a>'+
                 '</td>' +
                 '<td class="text-right">' +
                 '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-                '<input class="qty" name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
+                '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
                 '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                 '</td>' +
                 '<td class="text-right">' +
@@ -333,8 +448,11 @@ $(document).ready(function () {
             pData  = $("#" + $(this).data('key')).text();
         addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData);
     });
-    $(document).on('keyup','#search-input',function(){
-        loadajaxPro('');
+    $(document).on('keyup change','#search-input',function(){
+        loadajaxPro({q:$(this).val(),category_id:$('#search-select').val()});
+    });
+    $(document).on('change','#search-select',function(){
+        loadajaxPro({q:$('#search-input').val(),category_id:$(this).val()});
     });
     function loadajaxProPage(link){
         $.ajax({

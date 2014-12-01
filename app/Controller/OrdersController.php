@@ -85,11 +85,26 @@ class OrdersController extends AppController
                     $data = json_decode($detail['data'], true);
                     $total += $detail['qty'] * $data['price'];
                 }
+                if(empty($this->request->data['Order']['promote_value'])){
+                    $this->request->data['Order']['promote_value'] = 0;
+                }
                 $promote = $this->request->data['Order']['promote_value'];
                 if ($this->request->data['Order']['promote_type'] == 1) {
                     $promote = $total * ($promote / 100);
                 }
                 $amount = $total - $promote;
+
+                if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
+                    $this->request->data['Order']['customer_id'] = 1;
+                }
+                if(empty($this->request->data['Order']['receive'])){
+                    $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
+                    return $this->redirect(array('action' => 'add'));
+                }
+                if(empty($this->request->data['Order']['refund'])){
+                    $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
+                    return $this->redirect(array('action' => 'add'));
+                }
                 $saveData = array(
                     'Order' => array(
                         'customer_id' => $this->request->data['Order']['customer_id'],
@@ -120,7 +135,7 @@ class OrdersController extends AppController
                             'order_id' => $id,
                             'product_id' => $data['id'],
                             'name' => $data['name'],
-                            'price' => $data['price'],
+                            'price' => $detail['mod_price'],
                             'sku' => $data['sku'],
                             'qty' => $detail['qty'],
                             'code' => $data['code'],
@@ -162,6 +177,21 @@ class OrdersController extends AppController
         $this->set(compact('categories','customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
     }
     public function admin_save_cart(){
+        if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
+            $this->request->data['Order']['customer_id'] = 1;
+        }
+        if(isset($this->request->data['OrderDetail'])){
+            $temp = array();
+            foreach($this->request->data['OrderDetail'] as $key=>$detail){
+                $data = json_decode($detail['data'],true);
+                $data['mod_price'] = $detail['mod_price'];
+                $temp[$key]['mod_price'] = $detail['mod_price'];
+                $temp[$key]['qty'] = $detail['qty'];
+                $temp[$key]['data'] = json_encode($data);
+            }
+            $this->request->data['OrderDetail'] = $temp;
+            debug($this->request->data['OrderDetail']);
+        }
         $this->Session->write('Cart',$this->request->data);
         die;
     }
@@ -214,14 +244,13 @@ class OrdersController extends AppController
                 $storeDetail = array();
 
                 //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
-
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
                     $storeDetail[] = array(
                         'order_id' => $id,
                         'product_id' => $data['id'],
                         'name' => $data['name'],
-                        'price' => $data['price'],
+                        'price' => $detail['mod_price'],
                         'sku' => $data['sku'],
                         'qty' => $detail['qty'],
                         'code' => $data['code'],

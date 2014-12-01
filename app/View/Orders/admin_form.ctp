@@ -45,14 +45,20 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-left"><span><?php echo $data['code']?></span></td>
                                 <td class="text-left"><span><?php echo $data['name']?></span><br><span class="opt">
                                    <?php echo $data['optionsName']?></span></td>
-                                <td class="text-right"><span class="price-text"><?php echo number_format($data['price'], 0, '.', ','); ?></span></td>
+                                <td class="text-right">
+                                    <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
+                                    <span class="price-text" id="<?php echo $key?>-price-text">
+                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
+                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
+                                    </a>
+                                </td>
                                 <td class="text-right">
                                     <a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>
-                                    <input class="qty" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" data-price="<?php echo $data['price']?>" value="<?php echo $order_detail['qty']?>">
+                                    <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" data-price="<?php echo $data['mod_price']?>" value="<?php echo $order_detail['qty']?>">
                                     <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                                 </td>
                                 <td class="text-right">
-                                    <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $data['price']),0, '.', ',')?></span>
+                                    <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $data['mod_price']),0, '.', ',')?></span>
                                     <textarea type="hidden" style="display: none" name="data[OrderDetail][<?php echo $key?>][data]"><?php echo $order_detail['data'];?></textarea>
                                 </td>
                             </tr>
@@ -94,11 +100,13 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         ?>
                                         <input id="input-customer" class="form-control" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
-                                        echo $customersl[$this->request->data['Order']['customer_id']];
+                                            echo $customersl[$this->request->data['Order']['customer_id']];
+                                        else echo $customersl[1];
                                         ?>">
                                         <input type="hidden" name="data[Order][customer_id]" id="input-customer-id" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                             echo $this->request->data['Order']['customer_id'];
+                                        else echo 1;
                                         ?>">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" data-toggle="modal"

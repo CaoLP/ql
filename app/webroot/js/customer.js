@@ -8,12 +8,16 @@ $(document).ready(function () {
             $( "#input-customer-id" ).val( ui.item.value );
             return false;
         }
-    })
+    }).focus(function(){
+            //Use the below line instead of triggering keydown
+            $(this).data("autocomplete").search($(this).val());
+        })
         .autocomplete( "instance" )._renderItem = function( ul, item ) {
         return $( "<li>" )
             .append( "<a>" + item.label + "</a>" )
             .appendTo( ul );
-    };
+    }
+        ;
     $('#submit-customer').on('click', function () {
         $.ajax({
             url: '/admin/customers/add',
