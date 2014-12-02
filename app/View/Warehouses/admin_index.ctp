@@ -2,6 +2,7 @@
 setlocale(LC_MONETARY, "vi_VN");
 echo $this->Html->css('product',array('inline'=>false));
 echo $this->Html->script('product',array('inline'=>false));
+//http://demo.gawibowo.com/easymenu/emm/
 ?>
 <div class="row">
     <div class="col-md-3">
@@ -69,6 +70,7 @@ echo $this->Html->script('product',array('inline'=>false));
                                         $arrayOP = explode(',', $warehouse['Warehouse']['options']);
                                         $temp = array();
                                         foreach ($arrayOP as $item) {
+                                            if(isset($optionsData[$item]))
                                             $temp[] = $optionsData[$item];
                                         }
                                         echo implode(',', $temp);
