@@ -28,6 +28,7 @@ class AdminMenusController extends AppController {
  */
 	public function admin_index() {
 		$this->AdminMenu->recursive = 0;
+//		$this->set('adminMenus', $this->AdminMenu->find('tree'));
 		$this->set('adminMenus', $this->Paginator->paginate());
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups'));
@@ -65,7 +66,7 @@ class AdminMenusController extends AppController {
 			}
 		}
 		$groups = $this->Group->find('list');
-		$parents = $this->AdminMenu->ParentAdminMenu->find('list');
+		$parents = $this->AdminMenu->ParentAdminMenu->generateTreeList($conditions=null, $keyPath=null, $valuePath=null, $spacer= '╟─', $recursive=null);
 		$this->set(compact('groups', 'parents'));
 	}
 

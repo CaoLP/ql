@@ -25,6 +25,50 @@ $(document).ready(function(){
            tag.addClass('tb-expanded');
        }
    });
+    $('#attendance form input').on('keyup keypress',function(e){
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+    $('#attendance #attendance-btn').on('click',function(e){
+        $('#attendance-msg').html('');
+        var msgTemplate = '' +
+            '<div class="alert alert-error alert-dismissible" role="alert">'+
+            '   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+
+            '{msg}' +
+            '</div>';
+        var msgTemplateSuccess = '' +
+            '<div class="alert alert-success alert-dismissible" role="alert">'+
+            '   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+
+            '{msg}' +
+            '</div>';
+        if($('#attendance #Code').val()==''){
+            $('#attendance-msg').html(msgTemplate.replace('{msg}','Vui lòng điền mã nhân viên'));
+            return false;
+        }
+        if ($("input[type=radio]:checked").length <= 0){
+            $('#attendance-msg').html(msgTemplate.replace('{msg}','Vui lòng chọn loại điểm danh'));
+            return false;
+        }
+        $.ajax({
+            url: attendancelink,
+            data: $('#attendance form').serialize(),
+            type: 'post',
+            dataType: "json",
+            success: function(response){
+                if(response.code !='undefined'){
+                    if(response.code == 0)
+                        $('#attendance-msg').html(msgTemplate.replace('{msg}',response.msg));
+                    else if(response.code == 1){
+                        $('#attendance-msg').html(msgTemplateSuccess.replace('{msg}',response.msg));
+                        $('#attendance').modal('hide');
+                    }
+                }
+            }
+        });
+    });
     $( ".datepicker2" ).datepicker({
         showOn: "button",
         buttonImage: "/img/dateIcon.png",
