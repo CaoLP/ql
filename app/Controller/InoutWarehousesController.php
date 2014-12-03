@@ -64,6 +64,7 @@ class InoutWarehousesController extends AppController
             $conds['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
             $conds['conditions']['OR']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.Store.id');
         }
+        $conds['order'] = 'InoutWarehouse.created DESC';
         $this->Paginator->settings = $conds;
 
         $this->set('inoutWarehouses', $this->Paginator->paginate());
@@ -97,6 +98,7 @@ class InoutWarehousesController extends AppController
         if ($this->Session->read('Auth.User.group_id') != 1) {
             $conds['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
         }
+        $conds['order'] = 'InoutWarehouse.created DESC';
         $this->Paginator->settings = $conds;
 
         $this->InoutWarehouse->recursive = 1;
@@ -609,6 +611,54 @@ class InoutWarehousesController extends AppController
         return $this->redirect(array('action' => 'in'));
     }
     public function admin_cancel_transfer($id = null){
+        $this->InoutWarehouse->id = $id;
+        if (!$this->InoutWarehouse->exists()) {
+            throw new NotFoundException(__('Invalid inout warehouse'));
+        }
+        $data = $this->InoutWarehouse->find('first', array(
+            'conditions' => array(
+                'InoutWarehouse.id' => $id
+            )
+        ));
+        //0,1,2,3
+        if(count($data)>0){
+           if($data['InoutWarehouse']['status'] == 0){
+               if( $this->InoutWarehouse->save(array(
+                   'InoutWarehouse' =>array(
+                       'id' => $id,
+                       'status' => 2
+                   )
+               ))){
+                   $warehouse = array();
+                   $this->loadModel('Warehouse');
+                   foreach($data['InoutWarehouseDetail'] as $d){
+                       $oldData = $this->Warehouse->find('first', array(
+                           'conditions' => array(
+                               'Warehouse.store_id' => $data['Store']['id'],
+                               'Warehouse.product_id' => $d['product_id'],
+                               'Warehouse.options' => $d['options']
+                           ),
+                           'recursive' => -1
+                       ));
+
+                       $t = array();
+                       if (isset($oldData['Warehouse'])) {
+                           $t['id'] = $oldData['Warehouse']['id'];
+                           $t['qty'] = $d['qty'] + $oldData['Warehouse']['qty'];
+                       }
+                       $warehouse[] = $t;
+                   }
+                   $this->Warehouse->saveMany($warehouse);
+               }
+           }else if($data['InoutWarehouse']['status'] == 3){
+               $this->InoutWarehouse->save(array(
+                   'InoutWarehouse' =>array(
+                       'id' => $id,
+                       'status' => 2
+                   )
+               ));
+           }
+        }
         return $this->redirect(array('action' => 'index'));
     }
 }

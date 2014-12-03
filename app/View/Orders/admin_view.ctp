@@ -5,6 +5,7 @@ echo $this->Html->css(array('bill'), array('inline' => false));
 echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('inline' => false));
 ?>
 <script>
+    var product_ajax = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'ajax_product'))?>';
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
     var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
 </script>
@@ -45,6 +46,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                                     $opts = explode(',',$order_detail['product_options']);
                                     $temp = array();
                                     foreach($opts as $opt){
+                                        if(isset($options[$opt]))
                                         $temp[] = $options[$opt];
                                     }
                                     $op = implode(',',$temp);
@@ -212,9 +214,16 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
             <div class="text-center bt-done">
                 <div class="btn-group">
                     <a class="btn btn-danger" onclick="history.back()">Trở về</a>
-                    <?php if($this->request->data['Order']['status']==1){?>
-                    <a class="btn btn-warning" id="cancel-order">Huỷ đơn hàng</a>
-                    <?php } ?>
+                    <?php
+                    if($this->request->data['Order']['status']==1){
+                        echo $this->Html->link(
+                            '<i class="icon-remove"></i> Huỷ bỏ',
+                            array('action' => 'cancel',
+                                $this->request->data['Order']['id']),
+                            array('escape' => false, 'class' => 'btn btn-warning'),
+                            __('Bạn có muốn huỷ đơn hàng này không?'));
+                    }
+                        ?>
                     <a onclick="window.print();" class="btn btn-success">In hóa đơn</a>
                 </div>
             </div>

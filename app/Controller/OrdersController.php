@@ -102,8 +102,7 @@ class OrdersController extends AppController
                     return $this->redirect(array('action' => 'add'));
                 }
                 if(empty($this->request->data['Order']['refund'])){
-                    $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
-                    return $this->redirect(array('action' => 'add'));
+                    $this->request->data['Order']['refund'] = 0;
                 }
                 $saveData = array(
                     'Order' => array(
@@ -128,7 +127,8 @@ class OrdersController extends AppController
 
                     $id = $this->Order->id;
                     //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
-
+                    $this->loadModel('Warehouse');
+                    $warehouse = array();
                     foreach ($order_detail as $detail) {
                         $data = json_decode($detail['data'], true);
                         $storeDetail[] = array(
@@ -142,8 +142,24 @@ class OrdersController extends AppController
                             'product_options' => $data['options'],
                             'data' => $detail['data'],
                         );
+                        $oldData = $this->Warehouse->find('first', array(
+                            'conditions' => array(
+                                'Warehouse.store_id' => $this->request->data['Order']['store_id'],
+                                'Warehouse.product_id' => $data['id'],
+                                'Warehouse.options' => $data['options']
+                            ),
+                            'recursive' => -1
+                        ));
+
+                        $t = array();
+                        if (isset($oldData['Warehouse'])) {
+                            $t['id'] = $oldData['Warehouse']['id'];
+                            $t['qty'] = $oldData['Warehouse']['qty']-$detail['qty'];
+                        }
+                        $warehouse[] = $t;
                     }
                     $this->Order->OrderDetail->saveMany($storeDetail);
+                    $this->Warehouse->saveMany($warehouse);
                     $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                     $this->Session->delete('Cart');
                     return $this->redirect(array('action' => 'view',$id));
@@ -308,5 +324,46 @@ class OrdersController extends AppController
 
     public function admin_change(){
 
+    }
+    public function admin_cancel($id = null){
+        $this->Order->id = $id;
+        if (!$this->Order->exists()) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        $data = $this->Order->find('first', array(
+            'conditions' => array(
+                'Order.id' => $id
+            )
+        ));
+        if(count($data)>0){
+                if( $this->Order->save(array(
+                    'Order' =>array(
+                        'id' => $id,
+                        'status' => 2
+                    )
+                ))){
+                    $warehouse = array();
+                    $this->loadModel('Warehouse');
+                    foreach($data['OrderDetail'] as $d){
+                        $oldData = $this->Warehouse->find('first', array(
+                            'conditions' => array(
+                                'Warehouse.store_id' => $data['Store']['id'],
+                                'Warehouse.product_id' => $d['product_id'],
+                                'Warehouse.options' => $d['product_options']
+                            ),
+                            'recursive' => -1
+                        ));
+
+                        $t = array();
+                        if (isset($oldData['Warehouse'])) {
+                            $t['id'] = $oldData['Warehouse']['id'];
+                            $t['qty'] = $d['qty'] + $oldData['Warehouse']['qty'];
+                        }
+                        $warehouse[] = $t;
+                    }
+                    $this->Warehouse->saveMany($warehouse);
+                }
+        }
+        return $this->redirect(array('action' => 'index'));
     }
 }

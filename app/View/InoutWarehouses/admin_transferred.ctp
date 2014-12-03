@@ -41,7 +41,7 @@ echo $this->Html->script(array('warehouse_transferred'), array('inline' => false
                             <td><?php echo $data['sku'] ?></td>
                             <td><?php echo $data['name'] ?></td>
                             <td><span
-                                    class="price-text"><?php echo number_format($data['price'], 2, '.', ','); ?></span>
+                                    class="price-text"><?php echo number_format($data['price'], 0, '.', ','); ?></span>
                             </td>
                             <td><?php echo $item['Product']['limit'] ?></td>
                             <td class="hidden-qty-text">
@@ -52,7 +52,7 @@ echo $this->Html->script(array('warehouse_transferred'), array('inline' => false
                                 <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                             </td>
                             <td><span
-                                    class="price-text total-price"><?php echo number_format($summary, 2, '.', ','); ?></span>
+                                    class="price-text new-total-price"><?php echo number_format($summary, 0, '.', ','); ?></span>
                             </td>
                         </tr>
                         <tr class="last-tr row<?php echo $key ?>">
@@ -66,6 +66,7 @@ echo $this->Html->script(array('warehouse_transferred'), array('inline' => false
                             </td>
                             <td>
                                 <input type="hidden" name="data[ProductList][<?php echo $key ?>][Product][limit]" value="<?php echo $item['Product']['limit'] ?>">
+                                <input type="hidden" name="data[ProductList][<?php echo $key ?>][Product][code]" value="<?php echo $item['Product']['code'] ?>">
                                 <input type="hidden" name="data[ProductList][<?php echo $key ?>][Product][warehouse]" value="<?php echo $item['Product']['warehouse'] ?>">
                                 <textarea style="display: none"
                                           name="data[ProductList][<?php echo $key ?>][Product][data]"><?php echo $item['Product']['data'] ?></textarea>
