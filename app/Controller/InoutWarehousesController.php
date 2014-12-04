@@ -555,12 +555,12 @@ class InoutWarehousesController extends AppController
                     ),
                     'recursive' => -1
                 ));
-
                 $t = array(
                     'store_id' => $storeId,
                     'product_id' => $item['product_id'],
                     'options' => $item['options'],
                     'price' => $item['price'],
+                    'code' => $item['sku'],
                 );
                 if (isset($oldData['Warehouse'])) {
                     $t['id'] = $oldData['Warehouse']['id'];

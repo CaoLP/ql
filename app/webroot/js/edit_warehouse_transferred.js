@@ -288,7 +288,7 @@ $(document).ready(function () {
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][product_id]" value="' + pId.val() + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][inout_warehouse_id]" value="' + inout_warehouse_id + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][sku]" value="' + pSku.val() + '">'+
-                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][price]" value="' + price + '">'+
+                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][price]" value="' + subPrice + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][name]" value="' + pName.val() + '">'+
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][options]">' +optionIds + '</textarea>' +
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][option_names]">' + optionNames + '</textarea>' +

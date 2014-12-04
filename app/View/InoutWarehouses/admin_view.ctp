@@ -6,7 +6,7 @@ else
     $this->Html->addCrumb('<li>' . $title_for_layout . '</li>', array('action' => 'index'), array('escape' => false));
 $this->Html->addCrumb('<li>' . $inoutWarehouse['InoutWarehouse']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
 
-echo $this->Html->script(array('warehouse_transferred'), array('inline' => false));
+echo $this->Html->script(array('warehouse_transferred','inout_view'), array('inline' => false));
 
 echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal','url'=>array(
     'controller'=>'inout_warehouses','action'=>'approve_transfer'
@@ -40,21 +40,26 @@ echo $this->Form->hidden('received');
                                 <td><?php echo $item['sku'] ?></td>
                                 <td><?php echo $item['name'] ?></td>
                                 <td><span
-                                        class="price-text"><?php echo number_format($item['price'], 2, '.', ','); ?></span>
+                                        class="price-text"><?php echo number_format($item['price'], 0, '.', ','); ?></span>
                                 </td>
                                 <td class="hidden-qty-text text-center">
                                     <?php echo $item['qty'] ?>
                                 </td>
                                 <td class="text-right"><span
-                                        class="price-text total-price"><?php echo number_format($summary, 2, '.', ','); ?></span>
+                                        class="price-text total-price"><?php echo number_format($summary, 0, '.', ','); ?></span>
                                 </td>
                                 <td class="hidden-qty-text">
-                                    <input type="text" class="hidden-qty" data-limit="<?php echo $item['qty'] ?>" data-price="<?php echo $item['price'] ?>"
-                                           name="data[InoutWarehouseDetail][<?php echo $key ?>][qty_received]"
-                                            value="<?php echo $item['qty_received']?$item['qty_received']:0;?>">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="hidden-qty form-control" data-limit="<?php echo $item['qty'] ?>" data-price="<?php echo $item['price'] ?>"
+                                               name="data[InoutWarehouseDetail][<?php echo $key ?>][qty_received]"
+                                               value="<?php echo $item['qty_received']?$item['qty_received']:0;?>">
+                                          <span class="input-group-btn">
+                                            <a href="javascript:;"  class="btn btn-info btn-sm btn-fill-all">All</a>
+                                          </span>
+                                    </div>
                                 </td>
                                 <td class="text-right"><span
-                                        class="price-text new-total-price"><?php echo number_format(($item['qty_received'] * $item['price']), 2, '.', ','); ?></span>
+                                        class="price-text new-total-price"><?php echo number_format(($item['qty_received'] * $item['price']), 0, '.', ','); ?></span>
                                 </td>
                             </tr>
                             <tr class="last-tr row<?php echo $key ?>">
@@ -71,13 +76,14 @@ echo $this->Form->hidden('received');
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.product_id',array('value'=>$item['product_id']));
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.options',array('value'=>$item['options']));
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.price',array('value'=>$item['price']));
+                                    echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.sku',array('value'=>$item['sku']));
                                     ?></td>
                             </tr>
                         <?php
                         }
                     ?>
                     <tr class="first-tr last-tr">
-                        <td colspan="5" class="text-right"><span class="price-text"><?php echo number_format($this->request->data['InoutWarehouse']['total'], 2, '.', ','); ?></span></td>
+                        <td colspan="5" class="text-right"><span class="price-text"><?php echo number_format($this->request->data['InoutWarehouse']['total'], 0, '.', ','); ?></span></td>
                         <td colspan="2" class="text-right"><span id="summary-total" class="price-text"></span></td>
                     </tr>
                     </tbody>

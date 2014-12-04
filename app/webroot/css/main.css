@@ -3272,3 +3272,6 @@ Common SWITCH
      border-bottom: 1px solid #EBEBEB;
      border-radius: 5px 5px 0 0;
  }
+.hidden-qty-text .input-group.input-group-sm {
+    width:100px
+}

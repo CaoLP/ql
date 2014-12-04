@@ -13,13 +13,18 @@ setlocale(LC_MONETARY, "vi_VN");
 				<input class="form-control" name="data[q]" value="<?php
                     if(isset($this->request->data['q'])) echo $this->request->data['q'];
                 ?>" placeholder="Theo mã phiếu chuyển">
-                <input type="hidden" name="data[from]"  value="<?php
-                if (isset($this->request->data['from'])) echo $this->request->data['from'];
-                ?>">
-                <input type="hidden" name="data[to]"  value="<?php
-                if (isset($this->request->data['to'])) echo $this->request->data['to'];
-                ?>">
-			</form>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Cửa hàng</span>
+                <?php
+                echo $this->Form->input('store_id',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>true));
+                ?>
+                </div>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Trạng thái</span>
+                    <?php
+                    echo $this->Form->input('status',array('div'=>false,'options'=>$status,'label'=>false,'class'=>'form-control','empty'=>true));
+                    ?>
+                </div>
 		</div>
 	</div>
 	<div class="widget">
@@ -52,10 +57,6 @@ setlocale(LC_MONETARY, "vi_VN");
                 </label>
             </div>
             <div>
-                <form method="post">
-                    <input type="hidden" class="form-control" name="data[q]" value="<?php
-                    if (isset($this->request->data['q'])) echo $this->request->data['q'];
-                    ?>">
                     <ul class="list-group no-margin">
                         <li class="list-group-item no-padding">
                             <div class="input-group input-group-sm">

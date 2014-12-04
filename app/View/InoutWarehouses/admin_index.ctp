@@ -319,7 +319,7 @@ setlocale(LC_MONETARY, "vi_VN");
                                     array('#'), array('class' => 'btn btn-success', 'escape' => false, 'div' => false));
                         ?>
                         <?php
-                        if ($inoutWarehouse['InoutWarehouse']['status'] == 1)
+                        if ($inoutWarehouse['InoutWarehouse']['status'] == 0)
                             if ($this->Session->read('Auth.User.group_id') == 1
                                 || ($this->Session->read('Auth.User.group_id') == 2 && $this->Session->read('Auth.User.store_id') == $inoutWarehouse['InoutWarehouse']['store_receive_id']))
                                 echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu', array('action' => 'view', $inoutWarehouse['InoutWarehouse']['id']), array('class' => 'btn btn-success', 'escape' => false, 'div' => false));

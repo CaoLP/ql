@@ -49,6 +49,7 @@ echo $this->Html->script('product',array('inline'=>false));
                                 <th><?php echo $this->Paginator->sort('id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('code'); ?></th>
                                 <th><?php echo $this->Paginator->sort('product_id'); ?></th>
+                                <th><?php echo $this->Paginator->sort('price'); ?></th>
                                 <th><?php echo $this->Paginator->sort('store_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('qty','Số lượng'); ?></th>
                                 <th><?php echo $this->Paginator->sort('options'); ?></th>
@@ -62,6 +63,7 @@ echo $this->Html->script('product',array('inline'=>false));
                                     <td>
                                         <?php echo $this->Html->link($warehouse['Product']['name'], array('controller' => 'products', 'action' => 'view', $warehouse['Product']['id'])); ?>
                                     </td>
+                                    <td><?php echo number_format(h($warehouse['Warehouse']['price']), 0, '.', ','); ?>&nbsp;</td>
                                     <td>
                                         <?php echo $this->Html->link($warehouse['Store']['name'], array('controller' => 'stores', 'action' => 'view', $warehouse['Store']['id'])); ?>
                                     </td>

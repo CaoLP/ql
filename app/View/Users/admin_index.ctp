@@ -13,7 +13,7 @@
                 <table class="table table-condensed table-bordered table-hover no-margin">
                     <thead>
                     <tr>
-                        <th><?php echo $this->Paginator->sort('id'); ?></th>
+                        <th><?php echo $this->Paginator->sort('code','Mã nhân viên'); ?></th>
                         <th><?php echo $this->Paginator->sort('username','Tên đăng nhập'); ?></th>
                         <th><?php echo $this->Paginator->sort('group_id', 'Quyền'); ?></th>
                         <th><?php echo $this->Paginator->sort('name','Tên'); ?></th>
@@ -25,7 +25,7 @@
                     <tbody>
                     <?php foreach ($users as $user): ?>
                         <tr>
-                            <td><?php echo h($user['User']['id']); ?>&nbsp;</td>
+                            <td><?php echo h($user['User']['code']); ?>&nbsp;</td>
                             <td><?php echo h($user['User']['username']); ?>&nbsp;</td>
                             <td><?php echo h($user['Group']['name']); ?>&nbsp;</td>
 							<td><?php echo h($user['User']['name']); ?>&nbsp;</td>
