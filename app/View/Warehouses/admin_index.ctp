@@ -1,9 +1,12 @@
 <?php
 setlocale(LC_MONETARY, "vi_VN");
 echo $this->Html->css('product',array('inline'=>false));
-echo $this->Html->script('product',array('inline'=>false));
+echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false));
 //http://demo.gawibowo.com/easymenu/emm/
 ?>
+<script>
+    var updateLink = '<?php echo $this->Html->url(array('action'=>'edit'))?>';
+</script>
 <div class="row">
     <div class="col-md-3">
         <div class="widget">
@@ -53,6 +56,7 @@ echo $this->Html->script('product',array('inline'=>false));
                                 <th><?php echo $this->Paginator->sort('store_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('qty','Số lượng'); ?></th>
                                 <th><?php echo $this->Paginator->sort('options'); ?></th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -78,7 +82,15 @@ echo $this->Html->script('product',array('inline'=>false));
                                         echo implode(',', $temp);
                                         ?>
                                     </td>
-
+                                    <td>
+                                        <a href="javascript:;"  class="btn btn-info btn-xs edit-btn"
+                                           data-id="<?php echo $warehouse['Warehouse']['id'];?>"
+                                           data-name="<?php echo $warehouse['Product']['name'];?>"
+                                           data-sku="<?php echo $warehouse['Warehouse']['code'];?>"
+                                           data-price="<?php echo $warehouse['Warehouse']['price'];?>"
+                                           data-store="<?php echo $warehouse['Store']['name'];?>"
+                                           data-qty="<?php echo $warehouse['Warehouse']['qty'];?>"><i class="icon-pen"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -103,17 +115,47 @@ echo $this->Html->script('product',array('inline'=>false));
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </div>
                 </div>
              </div>
-
-
         </div>
     </div>
+</div>
+<div id="dialog-form" title="Thay đổi hàng">
+    <p class="validateTips">Không được bỏ trống</p>
+    <form>
+        <ul class="list-group no-margin">
+            <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Mã hàng</span>
+                    <input style="z-index: 1003;" type="text" readonly="readonly" class="form-control" name="data[P][sku]" id="p-sku" value="">
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Tên hàng</span>
+                    <input style="z-index: 1003;" type="text" readonly="readonly" class="form-control" name="data[P][name]" id="p-name" value="">
+                    <input type="hidden" name="data[P][price]" id="hd-price">
+                    <input type="hidden" name="data[P][qty]" id="hd-qty">
+                    <input type="hidden" name="data[P][store]" id="hd-store">
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Giá</span>
+                    <input style="z-index: 1003;" type="text" class="form-control" name="data[Warehouse][price]" id="p-price" value="">
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Số lượng</span>
+                    <input style="z-index: 1003;" type="text" class="form-control" name="data[Warehouse][qty]" id="p-qty" value="">
+                    <input type="hidden" name="data[Warehouse][id]" id="p-id">
+                </div>
+            </li>
+        </ul>
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
 </div>
 
 

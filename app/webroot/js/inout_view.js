@@ -7,4 +7,9 @@ $(document).ready(function(){
         var limit = input.data('limit');
         input.val(limit).change();
     });
+    $('.btn-expand').on('click',function(){
+        var position = $('#panel-from-left').css('left');
+        if(position=='0px')$('#panel-from-left').css('left','-600px');
+        else $('#panel-from-left').css('left','0px');
+    });
 });

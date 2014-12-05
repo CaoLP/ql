@@ -7,7 +7,7 @@ else
 $this->Html->addCrumb('<li>' . $inoutWarehouse['InoutWarehouse']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
 
 echo $this->Html->script(array('warehouse_transferred','inout_view'), array('inline' => false));
-
+echo $this->Html->css(array('check_receive'), array('inline' => false));
 echo $this->Form->create('InoutWarehouse', array('class' => 'form-horizontal','url'=>array(
     'controller'=>'inout_warehouses','action'=>'approve_transfer'
 )));
@@ -244,3 +244,22 @@ echo $this->Form->hidden('received');
         </div>
     </div>
 <?php echo $this->Form->end(); ?>
+
+<div class="panel-from-left" id="panel-from-left">
+    <a href="javascript:;" class="btn-expand"><div class="expand-cart"><i class="icon-cart"></i><br><span class="expand-text">Kiểm nhanh</span></div></a>
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <div class="row">
+                <div class="col-md-12 check-detail">
+                    <table class="table table-condensedtable-hover no-margin">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

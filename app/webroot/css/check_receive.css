@@ -1,0 +1,65 @@
+.panel-from-left{
+    transition: 500ms;
+    top: 140px;
+    left: -600px;
+    padding: 0px 25px !important;
+    position: absolute;
+    width: 600px;
+    padding: 10px;
+    background-color: #FAFAFA;
+    border: 1px solid #32C8DB;
+    border-radius: 10px;
+    z-index: 1000;
+}
+.expand-cart{
+    font-size: 25px;
+    position: absolute;
+    top: -1px;
+    right: -60px;
+    text-align: center;
+    border-top: 1px solid #32C8DB;
+    border-bottom: 1px solid #32C8DB;
+    border-right: 1px solid #32C8DB;
+    width: 65px;
+    padding-right: 5px;
+    background-color: #FAFAFA;
+    border-radius: 10px;
+}
+.expand-text{
+    font-size: 12px;
+}
+.btn-expand{
+    text-decoration: none;
+    color: #2EA8F2 !important;
+    text-shadow: none !important;
+}
+.panel-from-left hr{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.panel-from-left .detail h3{
+    color: rgb(251, 248, 255);
+    font-size: 16px;
+    text-shadow: 1px 1px 1px #000;
+
+}
+.panel-from-left .detail h4{
+    color: rgb(251, 248, 255);
+    font-size: 14px;
+    text-shadow: 1px 1px 1px #000;
+}
+.panel-from-left a{
+}
+.panel-from-left .detail {
+    text-align: right;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    width: 100%;
+    padding-left: 0px;
+    padding-right: 15px;
+    height: 184px;
+}
+.check-detail{
+    min-height: 400px;
+}

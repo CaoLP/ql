@@ -212,7 +212,42 @@ class WarehousesController extends AppController
         }
         if ($this->request->is(array('post', 'put'))) {
             if ($this->Warehouse->save($this->request->data)) {
+                $name =  $this->request->data['P']['name'];
+                $sku =  $this->request->data['P']['sku'];
+                $oldPrice =  $this->request->data['P']['price'];
+                $oldQty =  $this->request->data['P']['qty'];
+
+                $store =  $this->request->data['P']['store'];
+
+                $newQty =  $this->request->data['Warehouse']['qty'];
+                $newPrice =  $this->request->data['Warehouse']['price'];
+
+                $saveLog = true;
+
+                $message = '['.$store.'] <strong>'.$this->Session->read('Auth.User.name') . '</strong> đã thay đổi ';
+                if($oldPrice != $newPrice && $newQty != $oldQty){
+                    $message .= 'giá và số lượng của sản phẩm ' . $name . '( '.$sku.' ) (Giá ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'] ;Số lượng  ['.$oldQty.']->['.$newQty.'])';
+                }else if( $oldPrice != $newPrice){
+                    $message .= 'giá của sản phẩm ' . $name . '( '.$sku.' ) (Giá ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'])';
+                }else if($oldQty != $newQty){
+                    $message .= 'số lượng của sản phẩm ' . $name . '( '.$sku.' ) (Số lượng  ['.$oldQty.']->['.$newQty.'])';
+                }else{
+                    $saveLog = false;
+                }
+
+               if($saveLog){
+                   $this->loadModel('ActionLog');
+                   $this->ActionLog->save(array(
+                       'ActionLog'=>array(
+                           'message' => $message
+                       )
+                   ));
+               }
+                if($this->request->isAjax()){
+                    die;
+                }
                 $this->Session->setFlash(__('The warehouse has been saved.'));
+
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The warehouse could not be saved. Please, try again.'));

@@ -1,6 +1,10 @@
+<?php
+$this->Html->script(array('realtime'),array('inline'=>false));
+?>
+
 <!-- Row start -->
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
         <div class="widget">
             <div class="widget-body container-fluid">
                 <?php
@@ -49,6 +53,21 @@
 
             </div>
         </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+    <div class="widget">
+        <div class="widget-header">
+            <h3>Realtime logs</h3>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-md-12" id="realtime-log">
+
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 <?php

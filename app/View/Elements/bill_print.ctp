@@ -44,12 +44,13 @@
                             <td><?php echo $key+1;?></td>
                             <td class="text-left">
                                 <span><?php
-                                    echo $order_detail['name']
+                                    echo $order_detail['name']. ' ' . $order_detail['code']
                                     ?></php></span><br><span class="opt">
                                     <?php
                                     $opts = explode(',',$order_detail['product_options']);
                                     $temp = array();
                                     foreach($opts as $opt){
+                                        if(isset($options[$opt]))
                                         $temp[] = $options[$opt];
                                     }
                                     $op = implode(',',$temp);
