@@ -224,7 +224,7 @@ class WarehousesController extends AppController
 
                 $saveLog = true;
 
-                $message = '['.$store.'] <strong>'.$this->Session->read('Auth.User.name') . '</strong> đã thay đổi ';
+                $message = '[<strong>Kho hàng</strong>]['.$store.'] <strong>'.$this->Session->read('Auth.User.name') . '</strong> đã thay đổi ';
                 if($oldPrice != $newPrice && $newQty != $oldQty){
                     $message .= 'giá và số lượng của sản phẩm ' . $name . '( '.$sku.' ) (Giá ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'] ;Số lượng  ['.$oldQty.']->['.$newQty.'])';
                 }else if( $oldPrice != $newPrice){

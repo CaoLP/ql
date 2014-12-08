@@ -37,6 +37,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                         <?php
                         foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                             $data = json_decode($order_detail['data'], true);
+                            if(!isset($data['mod_price'])) $data['mod_price'] = $data['price'];
                             ?>
                             <tr class="row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo $data['options']?>">
                                 <td>

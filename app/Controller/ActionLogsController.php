@@ -22,7 +22,10 @@ class ActionLogsController extends AppController {
  * @return void
  */
 	public function admin_index() {
-        $this->layout = 'ajax';
+        if($this->request->isAjax()){
+            $this->layout = 'ajax';
+            $this->view = 'admin_index_ajax';
+        }
 		$this->ActionLog->recursive = 0;
         $conds = array();
         $conds['order'] = 'ActionLog.created DESC';

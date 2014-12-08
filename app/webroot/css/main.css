@@ -346,7 +346,7 @@ header {
 }
 
 header .logo {
-    width: 100px;
+    width: 50px;
     /*max-height: 30px;*/
     /*margin: 15px 0 0 0;*/
     font-size: 16px;
@@ -511,7 +511,7 @@ header .logo span {
 
 #optional-dropdown ul li a {
     display: block;
-    padding: 14px 15px;
+    padding: 14px 8px;
     color: #999;
     font-size: 12px;
     text-align: left
@@ -650,12 +650,20 @@ header .logo span {
     line-height: 22px
 }
 
+/*#mini-nav ul li a {*/
+    /*display: block;*/
+    /*padding: 13px 15px;*/
+    /*color: #999;*/
+    /*font-size: 13px;*/
+    /*text-align: left*/
+/*}*/
+
 #mini-nav ul li a {
     display: block;
-    padding: 13px 15px;
+    padding: 13px 10px;
     color: #999;
-    font-size: 13px;
-    text-align: left
+    font-size: 12px;
+    text-align: left;
 }
 
 #mini-nav ul li a [data-icon]:before {
@@ -1231,7 +1239,8 @@ header .logo span {
 }
 
 .page-title ul.stats {
-    float: right
+    float: right;
+    padding-right: 15px;
 }
 
 .page-title ul.stats li {
@@ -3274,4 +3283,12 @@ Common SWITCH
  }
 .hidden-qty-text .input-group.input-group-sm {
     width:100px
+}
+@media (max-width: 1140px) {
+    .will-hidden{
+        display: none;
+    }
+    .attendance{
+        width: auto;
+    }
 }

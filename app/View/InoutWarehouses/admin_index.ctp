@@ -4,63 +4,85 @@ setlocale(LC_MONETARY, "vi_VN");
 <!-- Row start -->
 <div class="row">
 <div class="col-md-3">
-    <div class="widget">
-        <div class="widget-header">
-            <h3>Tìm kiếm</h3>
-        </div>
-        <div class="widget-body">
-            <form method="post">
+    <form method="post">
+        <div class="widget">
+            <div class="widget-header">
+                <h3>Tìm kiếm</h3>
+            </div>
+            <div class="widget-body">
                 <input class="form-control" name="data[q]" value="<?php
-                if (isset($this->request->data['q'])) echo $this->request->data['q'];
+                if(isset($this->request->data['q'])) echo $this->request->data['q'];
                 ?>" placeholder="Theo mã phiếu chuyển">
-                <input type="hidden" name="data[from]"  value="<?php
-                if (isset($this->request->data['from'])) echo $this->request->data['from'];
-                ?>">
-                <input type="hidden" name="data[to]"  value="<?php
-                if (isset($this->request->data['to'])) echo $this->request->data['to'];
-                ?>">
-            </form>
+                <?php
+                if($this->Session->read('Auth.User.group_id') == 1){
+                    ?>
+                    <div class="form-group-sm">
+                        <?php
+                        echo $this->Form->input('store_id',array('div'=>false,'label'=>array('text'=>'Cửa hàng'),'class'=>'form-control','empty'=>true));
+                        ?>
+                    </div>
+                    <div class="form-group-sm">
+                        <?php
+                        echo $this->Form->input('store_receive_id',array('div'=>false,'options'=>$stores,'label'=>array('text'=>'Cửa hàng nhận'),'class'=>'form-control','empty'=>true));
+                        ?>
+                    </div>
+                <?php
+                }
+                ?>
+                <div class="form-group-sm">
+                    <?php
+                    echo $this->Form->input('status',array('div'=>false,'options'=>$status,'label'=>array('text'=>'Trạng thái'),'class'=>'form-control','empty'=>true));
+                    ?>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="widget">
-        <div class="widget-header">
-            <h3>Lọc thời gian</h3>
-        </div>
-        <div class="widget-body">
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" class="radio-filter" value="1">
-                    Toàn thời gian
-                </label>
+        <div class="widget">
+            <div class="widget-header">
+                <h3>Lọc thời gian</h3>
             </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" class="radio-filter" value="2">
-                    Hôm nay
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" class="radio-filter" value="3">
-                    Tuần này
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" class="radio-filter" value="4">
-                    Tháng này
-                </label>
-            </div>
-            <div>
-                <form method="post">
-                    <input type="hidden" class="form-control" name="data[q]" value="<?php
-                    if (isset($this->request->data['q'])) echo $this->request->data['q'];
-                    ?>">
+            <?php
+            $value = 1;
+            if(isset($this->request->data['optionsRadios'])){
+                $value = $this->request->data['optionsRadios'];
+            }
+            ?>
+            <div class="widget-body">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="data[optionsRadios]" class="radio-filter" value="1" <?php if($value==1) echo 'checked';?>>
+                        Toàn thời gian
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="data[optionsRadios]" class="radio-filter" value="2" <?php if($value==2) echo 'checked';?>>
+                        Hôm nay
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="data[optionsRadios]" class="radio-filter" value="3" <?php if($value==3) echo 'checked';?>>
+                        Tuần này
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="data[optionsRadios]" class="radio-filter" value="4" <?php if($value==4) echo 'checked';?>>
+                        Tháng này
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="data[optionsRadios]" class="radio-filter" value="5" <?php if($value==5) echo 'checked';?>>
+                        Tuỳ chọn
+                    </label>
+                </div>
+                <div>
                     <ul class="list-group no-margin">
                         <li class="list-group-item no-padding">
                             <div class="input-group input-group-sm">
                                 <span class="input-group-addon">--Từ ngày-</span>
-                                <input name="data[from]"  value="<?php
+                                <input name="data[from]" value="<?php
                                 if (isset($this->request->data['from'])) echo $this->request->data['from'];
                                 ?>" class="form-control datepicker2" readonly="readonly">
                             </div>
@@ -74,13 +96,13 @@ setlocale(LC_MONETARY, "vi_VN");
                             </div>
                         </li>
                         <li class="list-group-item no-padding">
-                            <button class="form-control"><i class="icon-search"></i> Tìm</button>
+                            <button type="submit" class="form-control"><i class="icon-search"></i> Tìm</button>
                         </li>
                     </ul>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <div class="col-md-9">
 <div class="widget">

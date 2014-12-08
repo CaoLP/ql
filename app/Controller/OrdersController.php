@@ -35,7 +35,82 @@ class OrdersController extends AppController
      */
     public function admin_index()
     {
+        $settings = array();
+
         $this->Order->recursive = 0;
+        if ($this->request->is('post')) {
+
+//            array(
+//                'optionsRadios' => '1',
+//                'q' => '',
+//                'store_id' => '',
+//                'from' => '',
+//                'to' => ''
+//            )
+
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['Order.code like'] = '%' . $input . '%';
+            }
+            if($this->Session->read('Auth.User.group_id') == 1){
+                if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                    $settings['conditions']['Order.store_id'] = $this->request->data['store_id'];
+                }
+            }else{
+                $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
+            }
+            if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
+                $settings['conditions']['Order.status'] = $this->request->data['status'];
+            }else{
+                $settings['conditions']['Order.status'] = 1;
+            }
+
+            if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+                switch ($this->request->data['optionsRadios']){
+                    case 2:
+                        $settings['conditions']['Order.created >='] = date('Y-m-d').' 00:00:00';
+                        $settings['conditions']['Order.created <='] = date('Y-m-d').' 23:59:59';
+                        break;
+                    case 3:
+                        $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                        $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                        $settings['conditions']['Order.created >='] = $first_date.' 00:00:00';
+                        $settings['conditions']['Order.created <='] = $last_date.' 23:59:59';
+                        break;
+                    case 4:
+                        $settings['conditions']['Order.created >='] = date('Y-m-01').' 00:00:00';
+                        $settings['conditions']['Order.created <='] = date('Y-m-t').' 23:59:59';
+                        break;
+                    case 5:
+                        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                        $settings['conditions']['Order.created >='] = $this->request->data['from'].' 00:00:00';
+                        $settings['conditions']['Order.created <='] = $this->request->data['to'].' 23:59:59';
+                        }
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
+            }
+            $settings['order'] = 'Order.created DESC';
+            $this->Session->write('Order.paginate',$settings);
+            $this->Session->write('Order.request.data',$this->request->data);
+            return $this->redirect(array('action'=>'index'));
+        }
+        if($this->Session->check('Order.paginate')){
+            $this->paginate = $this->Session->read('Order.paginate');
+        }else{
+            $this->paginate = array(
+                'conditions'=>array(
+                    'Order.store_id'=> $this->Session->read('Auth.User.store_id')
+                ),
+                'order' => 'Order.created DESC',
+            );
+        }
+        if($this->Session->check('Order.request.data')){
+            $this->request->data = $this->Session->read('Order.request.data');
+        }
         $this->set('orders', $this->Paginator->paginate());
         $this->loadModel('Store');
         $stores = $this->Store->find('list');
@@ -55,6 +130,7 @@ class OrdersController extends AppController
             throw new NotFoundException(__('Invalid order'));
         }
         if ($this->request->is('post')) {
+
 
         }
         $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
@@ -104,6 +180,7 @@ class OrdersController extends AppController
                 if(empty($this->request->data['Order']['refund'])){
                     $this->request->data['Order']['refund'] = 0;
                 }
+                $orCode = 'BL'.date('dmYhms');
                 $saveData = array(
                     'Order' => array(
                         'customer_id' => $this->request->data['Order']['customer_id'],
@@ -114,7 +191,7 @@ class OrdersController extends AppController
                         'store_id' => $this->request->data['Order']['store_id'],
                         'total' => $total,
                         'status' => 1,
-                        'code' => 'BL'.date('dmYhms'),
+                        'code' => $orCode,
                         'total_promote' => $promote,
                         'amount' => $amount,
                         'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
@@ -162,6 +239,35 @@ class OrdersController extends AppController
                     $this->Warehouse->saveMany($warehouse);
                     $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                     $this->Session->delete('Cart');
+
+
+
+                    $this->loadModel('OrderLog');
+
+                    $this->OrderLog->save(array(
+                        'OrderLog'=>array(
+                            'order_id' => $id,
+                            'type' => '0',
+                            'data' => json_encode(array(
+                                'Order' =>$saveData,
+                                'OrderDetail' => $order_detail
+                            ))
+                        )
+                    ));
+
+
+                    $storeName = $this->Session->read('Auth.User.Store.name');
+
+                    $message = '[<strong>Đơn hàng</strong>]['.$storeName.'] Đơn hàng [<a href="javascript:;" data-type="order" data-order="'.$orCode.'">'.$orCode.'</a>]'.
+                        ' đã được tạo bởi <strong>'.$this->Session->read('Auth.User.name').'</strong>';
+
+                    $this->loadModel('ActionLog');
+                    $this->ActionLog->save(array(
+                        'ActionLog'=>array(
+                            'message' => $message
+                        )
+                    ));
+
                     return $this->redirect(array('action' => 'view',$id));
                 } else {
                     $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
@@ -277,6 +383,32 @@ class OrdersController extends AppController
                 $this->Order->OrderDetail->saveMany($storeDetail);
                 $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                 $this->Session->delete('Cart');
+
+                $this->loadModel('OrderLog');
+
+                $this->OrderLog->save(array(
+                    'OrderLog'=>array(
+                        'order_id' => $this->request->data['Order']['id'],
+                        'type' => '1',
+                        'data' => json_encode(array(
+                            'Order' =>$saveData,
+                            'OrderDetail' => $order_detail
+                        ))
+                    )
+                ));
+                $orCode = $this->request->data['Order']['code'];
+
+                $message = '[<strong>Đơn hàng</strong>]Đơn hàng [<a href="javascript:;" data-type="order" data-order="'.$orCode.'">'.$orCode.'</a>]'.
+                    ' đã thay đổi bởi <strong>'.$this->Session->read('Auth.User.name').'</strong>';
+
+                $this->loadModel('ActionLog');
+                $this->ActionLog->save(array(
+                    'ActionLog'=>array(
+                        'message' => $message
+                    )
+                ));
+
+
                 return $this->redirect(array('action' => 'view',$id));
             } else {
                 $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
@@ -362,6 +494,18 @@ class OrdersController extends AppController
                         $warehouse[] = $t;
                     }
                     $this->Warehouse->saveMany($warehouse);
+
+                    $orCode = $data['Order']['code'];
+
+                    $message = 'Đơn hàng [<a href="javascript:;" data-type="order" data-order="'.$orCode.'">'.$orCode.'</a>]'.
+                     ' đã bị huỷ bởi <strong>'.$this->Session->read('Auth.User.name').'</strong>';
+
+                    $this->loadModel('ActionLog');
+                    $this->ActionLog->save(array(
+                        'ActionLog'=>array(
+                            'message' => $message
+                        )
+                    ));
                 }
         }
         return $this->redirect(array('action' => 'index'));

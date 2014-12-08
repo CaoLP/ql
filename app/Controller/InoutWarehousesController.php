@@ -46,26 +46,114 @@ class InoutWarehousesController extends AppController
     public function admin_index($action = '')
     {
         $this->InoutWarehouse->recursive = 1;
-        $conds = array(
-            'conditions' => array(
-                'InoutWarehouse.type' => '1',
-            )
-        );
-        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
-            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
-        }
-        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
-            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
-                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
-                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+//        $conds = array(
+//            'conditions' => array(
+//                'InoutWarehouse.type' => '1',
+//            )
+//        );
+//        if ($this->request->is('post')) {
+//            debug($this->request->data);die;
+//        }
+//        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
+//            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
+//        }
+//        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
+//            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
+//                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+//                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+//            }
+//        }
+//        if ($this->Session->read('Auth.User.group_id') != 1) {
+//            $conds['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
+//            $conds['conditions']['OR']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.Store.id');
+//        }
+//        $conds['order'] = 'InoutWarehouse.created DESC';
+//        $this->Paginator->settings = $conds;
+
+
+//        $settings['conditions'] = array(
+//            'InoutWarehouse.type' => 1,
+//            'OR'=>array(
+//                'InoutWarehouse.store_id' =>$this->Session->read('Auth.User.Store.id'),
+//                'InoutWarehouse.store_receive_id' =>$this->Session->read('Auth.User.Store.id')
+//            )
+//        );
+//        $settings['order'] =  'InoutWarehouse.created DESC';
+//        $this->paginate = $settings;
+//        $this->Paginator->settings = $settings;
+
+        $settings = array();
+
+        if ($this->request->is('post')) {
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['InoutWarehouse.code like'] = '%' . $input . '%';
             }
+            if($this->Session->read('Auth.User.group_id') == 1){
+                if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                    $settings['conditions']['InoutWarehouse.store_id'] = $this->request->data['store_id'];
+                }
+                if(isset($this->request->data['store_receive_id']) && !empty($this->request->data['store_receive_id'])){
+                    $settings['conditions']['InoutWarehouse.store_receive_id'] = $this->request->data['store_receive_id'];
+                }
+            }else{
+                $settings['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.store_id');
+                $settings['conditions']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.store_id');
+            }
+            if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
+                $settings['conditions']['InoutWarehouse.status'] = $this->request->data['status'];
+            }
+
+            if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+                switch ($this->request->data['optionsRadios']){
+                    case 2:
+                        $settings['conditions']['InoutWarehouse.created >='] = date('Y-m-d').' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = date('Y-m-d').' 23:59:59';
+                        break;
+                    case 3:
+                        $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                        $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                        $settings['conditions']['InoutWarehouse.created >='] = $first_date.' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = $last_date.' 23:59:59';
+                        break;
+                    case 4:
+                        $settings['conditions']['InoutWarehouse.created >='] = date('Y-m-01').' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = date('Y-m-t').' 23:59:59';
+                        break;
+                    case 5:
+                        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                            $settings['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+                            $settings['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+                        }
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
+            }
+            $settings['order'] = 'InoutWarehouse.created DESC';
+            $settings['conditions']['InoutWarehouse.type'] = 1;
+            $this->Session->write('InoutWarehouse.Out.paginate',$settings);
+            $this->Session->write('InoutWarehouse.Out.request.data',$this->request->data);
+            return $this->redirect(array('action'=>'index'));
         }
-        if ($this->Session->read('Auth.User.group_id') != 1) {
-            $conds['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
-            $conds['conditions']['OR']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.Store.id');
+        if($this->Session->check('InoutWarehouse.Out.paginate')){
+            $this->paginate = $this->Session->read('InoutWarehouse.Out.paginate');
+        }else{
+            $settings['conditions'] = array(
+                'InoutWarehouse.type' => 1
+            );
+            if ($this->Session->read('Auth.User.group_id') != 1) {
+                $settings['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
+                $settings['conditions']['OR']['InoutWarehouse.store_receive_id'] = $this->Session->read('Auth.User.Store.id');
+            }
+            $settings['order'] =  'InoutWarehouse.created DESC';
+            $this->paginate = $settings;
         }
-        $conds['order'] = 'InoutWarehouse.created DESC';
-        $this->Paginator->settings = $conds;
+        if($this->Session->check('InoutWarehouse.Out.request.data')){
+            $this->request->data = $this->Session->read('InoutWarehouse.Out.request.data');
+        }
 
         $this->set('inoutWarehouses', $this->Paginator->paginate());
         $stores = $this->InoutWarehouse->Store->find('list');
@@ -80,35 +168,106 @@ class InoutWarehousesController extends AppController
     public function admin_in()
     {
         $this->title_for_layout = 'Phiếu nhập hàng chờ duyệt';
-        $conds = array(
-            'conditions' => array(
-                'InoutWarehouse.type' => '0',
-            )
-        );
-        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
-            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
-        }
-        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
-            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
-                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
-                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
-            }
-        }
-
-        if ($this->Session->read('Auth.User.group_id') != 1) {
-            $conds['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
-        }
-        $conds['order'] = 'InoutWarehouse.created DESC';
-        $this->Paginator->settings = $conds;
 
         $this->InoutWarehouse->recursive = 1;
-        $this->set('inoutWarehouses', $this->Paginator->paginate());
 
+//        $conds = array(
+//            'conditions' => array(
+//                'InoutWarehouse.type' => '0',
+//            )
+//        );
+//        if(isset($this->request->data['q']) && !empty($this->request->data['q'])){
+//            $conds['conditions']['InoutWarehouse.code'] = $this->request->data['q'];
+//        }
+//        if(isset($this->request->data['from']) && !empty($this->request->data['from'])){
+//            if(isset($this->request->data['to']) && !empty($this->request->data['to'])){
+//                $conds['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+//                $conds['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+//            }
+//        }
+//
+//        if ($this->Session->read('Auth.User.group_id') != 1) {
+//            $conds['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
+//        }
+//        $conds['order'] = 'InoutWarehouse.created DESC';
+//        $this->Paginator->settings = $conds;
+
+        $settings = array();
+
+        if ($this->request->is('post')) {
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['InoutWarehouse.code like'] = '%' . $input . '%';
+            }
+            if($this->Session->read('Auth.User.group_id') == 1){
+                if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                    $settings['conditions']['InoutWarehouse.store_id'] = $this->request->data['store_id'];
+                }
+            }else{
+                $settings['conditions']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.store_id');
+            }
+            if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
+                $settings['conditions']['InoutWarehouse.status'] = $this->request->data['status'];
+            }
+
+            if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+                switch ($this->request->data['optionsRadios']){
+                    case 2:
+                        $settings['conditions']['InoutWarehouse.created >='] = date('Y-m-d').' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = date('Y-m-d').' 23:59:59';
+                        break;
+                    case 3:
+                        $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                        $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                        $settings['conditions']['InoutWarehouse.created >='] = $first_date.' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = $last_date.' 23:59:59';
+                        break;
+                    case 4:
+                        $settings['conditions']['InoutWarehouse.created >='] = date('Y-m-01').' 00:00:00';
+                        $settings['conditions']['InoutWarehouse.created <='] = date('Y-m-t').' 23:59:59';
+                        break;
+                    case 5:
+                        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                            $settings['conditions']['InoutWarehouse.created >='] = $this->request->data['from'].' 00:00:00';
+                            $settings['conditions']['InoutWarehouse.created <='] = $this->request->data['to'].' 23:59:59';
+                        }
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
+            }
+            $settings['order'] = 'InoutWarehouse.created DESC';
+            $settings['conditions']['InoutWarehouse.type'] = 0;
+            $this->Session->write('InoutWarehouse.In.paginate',$settings);
+            $this->Session->write('InoutWarehouse.In.request.data',$this->request->data);
+            return $this->redirect(array('action'=>'in'));
+        }
+        if($this->Session->check('InoutWarehouse.In.paginate')){
+            $this->paginate = $this->Session->read('InoutWarehouse.In.paginate');
+        }else{
+            $settings['conditions'] = array(
+                'InoutWarehouse.type' => 0
+            );
+            if ($this->Session->read('Auth.User.group_id') != 1) {
+                $settings['conditions']['OR']['InoutWarehouse.store_id'] = $this->Session->read('Auth.User.Store.id');
+            }
+            $settings['order'] =  'InoutWarehouse.created DESC';
+            $this->paginate = $settings;
+        }
+        if($this->Session->check('InoutWarehouse.In.request.data')){
+            $this->request->data = $this->Session->read('InoutWarehouse.In.request.data');
+        }
+
+        $this->set('inoutWarehouses', $this->Paginator->paginate());
         $this->status = array(
             'Chờ duyệt',
             'Đã nhập',
             'Đã huỷ',
         );
+        $stores = $this->InoutWarehouse->Store->find('list');
+        $this->set(compact('stores'));
     }
 
     /**
