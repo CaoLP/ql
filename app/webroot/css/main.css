@@ -2964,6 +2964,13 @@ form input[type=checkbox] {
     cursor: pointer;
     z-index: 10;
 }
+.inl .ui-datepicker-trigger {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    cursor: pointer;
+    z-index: 10;
+}
 
 .content-1 {
     min-height: 230px;

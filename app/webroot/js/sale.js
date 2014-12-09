@@ -102,7 +102,18 @@ $(document).ready(function () {
             return false;
         }
     });
-
+    $('#OrderAdminAddForm').on('submit',function(){
+        if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
+            alert('Vui nhập thông tin khách hàng khi dùng khuyến mãi.');
+            return false;
+        }
+        var receive = parseNumber($('#OrderReceive').val());
+        var amount = parseNumber($('#OrderAmount').val());
+        if(receive < amount){
+            alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng đơn hàng.');
+            return false;
+        }
+    });
     $(document).on('keypress', '.qty', function (e) {
         e = e || window.event;
         var charCode = (typeof e.which == "undefined") ? e.keyCode : e.which;

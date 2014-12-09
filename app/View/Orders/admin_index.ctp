@@ -28,7 +28,7 @@ setlocale(LC_MONETARY, "vi_VN");
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">Trạng thái</span>
                         <?php
-                        echo $this->Form->input('status',array('div'=>false,'options'=>$status,'label'=>false,'class'=>'form-control','empty'=>true));
+                    echo $this->Form->input('status',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>true));
                         ?>
                     </div>
                 </div>
@@ -124,6 +124,7 @@ setlocale(LC_MONETARY, "vi_VN");
                         <th><?php echo $this->Paginator->sort('total', 'Tổng cộng'); ?></th>
                         <th><?php echo $this->Paginator->sort('total_promote', 'Khuyến mãi'); ?></th>
                         <th><?php echo $this->Paginator->sort('amount', 'Thành tiền'); ?></th>
+                        <th><?php echo $this->Paginator->sort('receive', 'Nhận của khách'); ?></th>
                         <th class="actions"><?php echo __('Actions'); ?></th>
                     </tr>
                     </thead>
@@ -147,6 +148,7 @@ setlocale(LC_MONETARY, "vi_VN");
                             <td class="text-right price-text"><?php echo number_format($order['Order']['total'], 0, '.', ',');?></td>
                             <td class="text-right price-text"><?php echo number_format($order['Order']['total_promote'], 0, '.', ',');?></td>
                             <td class="text-right price-text"><?php echo number_format($order['Order']['amount'], 0, '.', ',');?></td>
+                            <td class="text-right price-text"><?php echo number_format($order['Order']['receive'], 0, '.', ',');?></td>
                             <td class="actions">
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $order['Order']['id']), array('escape' => false, 'title' => 'Xem thông tin')); ?>
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>
