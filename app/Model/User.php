@@ -24,6 +24,10 @@ class User extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
+            'unique' => array(
+                'rule'    => array('isUniqueUsername'),
+                'message' => 'This username is already in use'
+            ),
 		),
 		'password' => array(
 			'notEmpty' => array(
@@ -35,6 +39,22 @@ class User extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+        'password_confirm' => array(
+            'required' => array(
+                'rule' => array('notEmpty'),
+                'message' => 'Please confirm your password'
+            ),
+            'equaltofield' => array(
+                'rule' => array('equaltofield','password'),
+                'message' => 'Mật khẩu nhập lại không giống với mật khẩu'
+            )
+        ),
+        'password_confirm_update' => array(
+            'equaltofield' => array(
+                'rule' => array('equaltofield','password_update'),
+                'message' => 'Mật khẩu nhập lại không giống với mật khẩu'
+            )
+        ),
 		'name' => array(
 			'notEmpty' => array(
 				'rule' => array('notEmpty'),
@@ -117,6 +137,17 @@ class User extends AppModel {
         }else{
             return true;
         }
+    }
+
+    public function equaltofield($check,$otherfield)
+    {
+        //get name of field
+        $fname = '';
+        foreach ($check as $key => $value){
+            $fname = $key;
+            break;
+        }
+        return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
     }
     /**
      * Before Save

@@ -3299,3 +3299,6 @@ Common SWITCH
         width: auto;
     }
 }
+span.help-inline {
+    color: red;
+}

@@ -72,6 +72,15 @@
                         <div class="clearfix"></div>
                     </div>
                 </li>
+                <li class="text-right">
+                    <a href="<?php
+                    echo $this->Html->url(array(
+                        'controller'=>'users',
+                        'action'=>'edit',
+                        $this->Session->read ('Auth.User.id')
+                    ));
+                    ?>">Thay đổi thông tin</a>
+                </li>
                 <li>
                     <button class="btn btn-xs btn-danger pull-right" onclick="location.href='<?php echo $this->Html->url(array('admin'=>true,'controller'=>'users','action'=>'logout'))?>'">Logout
                     </button>

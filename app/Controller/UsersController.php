@@ -176,8 +176,14 @@ class UsersController extends AppController {
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->User->delete()) {
+//		$this->request->allowMethod('post', 'delete');
+        $data = array(
+            'User'=>array(
+                'id'=>$id,
+                'status'=>'2'
+            )
+        );
+		if ($this->User->save($data)) {
 			$this->Session->setFlash(__('The user has been deleted.'), 'message', array('class' => 'alert-success'));
 		} else {
 			$this->Session->setFlash(__('The user could not be deleted. Please, try again.'), 'message', array('class' => 'alert-danger'));
