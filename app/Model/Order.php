@@ -114,8 +114,13 @@ class Order extends AppModel {
 		)
 	);
 
+    public  function getReportOrderDetails($option){
+        $this->belongsTo = array();
+        return $this->find('all',$option);
+    }
     public  function getReportOrder($option){
         $this->belongsTo = array();
-        return $this->find('all');
+        $this->recursive = -1;
+        return $this->find('all',$option);
     }
 }
