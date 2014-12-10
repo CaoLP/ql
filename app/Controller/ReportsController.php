@@ -44,10 +44,11 @@ class ReportsController extends AppController
             foreach ($order as $orderDetails) {
                 foreach ($orderDetails as $item) {
                    if(isset($products[$item['product_id']])){
-
+                       $old = $products[$item['product_id']];
+                       $products[$item['product_id']]['qty'] = $old['qty'] + $item['qty'];
                    }else{
                        $products[$item['product_id']] = array(
-                           'product_id' =>$item[''] ,
+                           'product_id' =>$item['product_id'] ,
                            'sku' =>$item['sku'] ,
                            'name' =>$item['name'] ,
                            'price' =>$item['price'] ,
