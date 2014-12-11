@@ -24,9 +24,20 @@ class StaffTimesheetController extends AppController {
     public function admin_index() {
         $this->set('title', __('StaffTimesheets'));
         $this->set('description', __('Manage StaffTimesheets'));
-
-        $this->StaffTimesheet->recursive = 0;        
-        $this->set('timesheets', $this->paginate());
+        $this->StaffTimesheet->recursive = 0;
+        if(isset($this->request->data['user_id']) && $this->request->data['user_id']!=''){
+            $timesheets = $this->StaffTimesheet->find('all',array(
+                    'conditions' => array(
+                        'StaffTimesheet.user_id'=>$this->request->data['user_id']
+                    )
+            ));
+        }else{
+            $timesheets = array();
+        }
+        $this->set(compact('timesheets'));
+        $this->loadModel('User');
+        $users = $this->User->find('list',array('conditions'=>array('User.group_id <>'=>1,'User.status'=>1)));
+        $this->set(compact('users'));
     }
 
     /**
