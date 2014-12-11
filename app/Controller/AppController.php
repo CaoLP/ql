@@ -38,8 +38,10 @@ class AppController extends Controller {
 								'logoutRedirect' => array('admin'=>true,'controller' => 'users', 'action' => 'login'),
 								'authError' => 'You must be logged in to view this page.',
 								'loginError' => 'Invalid Username or Password entered, please try again.',
-								'Form' => array(
-									'scope'  => array('User.status' => 1)
+								'authenticate' => array(
+                                    'Form' => array(
+                                        'scope'  => array('User.status' => 1)
+                                    ),
 								),
 								'authorize' => array(
 									'Actions' => array('actionPath' => 'controllers')

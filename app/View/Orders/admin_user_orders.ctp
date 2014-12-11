@@ -19,22 +19,16 @@ setlocale(LC_MONETARY, "vi_VN");
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon">Cửa hàng</span>
                             <?php
-                            echo $this->Form->input('store_id',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>'Toàn bộ'));
+                            echo $this->Form->input('store_id',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>true));
                             ?>
                         </div>
                     <?php
                     }
                     ?>
                     <div class="input-group input-group-sm">
-                        <span class="input-group-addon">Nhân viên</span>
-                        <?php
-                        echo $this->Form->input('user_id',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>'Toàn bộ'));
-                        ?>
-                    </div>
-                    <div class="input-group input-group-sm">
                         <span class="input-group-addon">Trạng thái</span>
                         <?php
-                    echo $this->Form->input('status',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>'Toàn bộ'));
+                    echo $this->Form->input('status',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>true));
                         ?>
                     </div>
                 </div>

@@ -126,6 +126,20 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         ?>
                                     </div>
                                 </li>
+                                <?php
+                                if($this->Session->read('Auth.User.group_id') == 1){
+                                    ?>
+                                    <li class="list-group-item">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">Ngày tạo</span>
+                                            <?php
+                                            echo $this->Form->input('created', array('label' => false,'type'=>'text','readonly'=>'readonly','div' => false, 'class' => 'form-control datepicker2'));
+                                            ?>
+                                        </div>
+                                    </li>
+                                <?php
+                                }
+                                ?>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="note">

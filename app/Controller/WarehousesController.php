@@ -117,6 +117,7 @@ class WarehousesController extends AppController
             $opts = explode(',',$item['Warehouse']['options']);
             $optsName = array();
             foreach($opts as $op){
+                if(isset($options[$op]))
                 $optsName[] = $options[$op];
             }
             $sub['optionsName'] = implode(',',$optsName);

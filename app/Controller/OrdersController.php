@@ -64,6 +64,9 @@ class OrdersController extends AppController
             }else{
                 $settings['conditions']['Order.status'] = 1;
             }
+            if(isset($this->request->data['user_id']) && $this->request->data['user_id'] !=''){
+                $settings['conditions']['Order.created_by'] = $this->request->data['user_id'];
+            }
 
             if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
                 switch ($this->request->data['optionsRadios']){
@@ -103,7 +106,8 @@ class OrdersController extends AppController
         }else{
             $this->paginate = array(
                 'conditions'=>array(
-                    'Order.store_id'=> $this->Session->read('Auth.User.store_id')
+                    'Order.store_id'=> $this->Session->read('Auth.User.store_id'),
+                    'Order.status'=> 1,
                 ),
                 'order' => 'Order.created DESC',
             );
@@ -115,6 +119,9 @@ class OrdersController extends AppController
         $this->loadModel('Store');
         $stores = $this->Store->find('list');
         $this->set(compact('stores'));
+        $this->loadModel('User');
+        $users = $this->User->find('list');
+        $this->set(compact('users'));
     }
 
     /**
@@ -361,6 +368,9 @@ class OrdersController extends AppController
                     'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
                 )
             );
+            if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
+                $saveData['Order']['created'] = $this->request->data['Order']['created'];
+            }
             if ($this->Order->save($saveData)) {
                 $this->Order->OrderDetail->deleteAll(array('OrderDetail.order_id' => $id), false);
                 $storeDetail = array();
@@ -509,5 +519,89 @@ class OrdersController extends AppController
                 }
         }
         return $this->redirect(array('action' => 'index'));
+    }
+    public function admin_user_orders(){
+        $settings = array();
+
+        $this->Order->recursive = 0;
+        if ($this->request->is('post')) {
+
+//            array(
+//                'optionsRadios' => '1',
+//                'q' => '',
+//                'store_id' => '',
+//                'from' => '',
+//                'to' => ''
+//            )
+
+            if(isset($this->request->data['q'])){
+                $input =$this->request->data['q'];
+                $settings['conditions']['Order.code like'] = '%' . $input . '%';
+            }
+            if($this->Session->read('Auth.User.group_id') == 1){
+                if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                    $settings['conditions']['Order.store_id'] = $this->request->data['store_id'];
+                }
+            }else{
+                $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
+            }
+            if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
+                $settings['conditions']['Order.status'] = $this->request->data['status'];
+            }else{
+                $settings['conditions']['Order.status'] = 1;
+            }
+
+            if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+                switch ($this->request->data['optionsRadios']){
+                    case 2:
+                        $settings['conditions']['Order.created >='] = date('Y-m-d').' 00:00:00';
+                        $settings['conditions']['Order.created <='] = date('Y-m-d').' 23:59:59';
+                        break;
+                    case 3:
+                        $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                        $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                        $settings['conditions']['Order.created >='] = $first_date.' 00:00:00';
+                        $settings['conditions']['Order.created <='] = $last_date.' 23:59:59';
+                        break;
+                    case 4:
+                        $settings['conditions']['Order.created >='] = date('Y-m-01').' 00:00:00';
+                        $settings['conditions']['Order.created <='] = date('Y-m-t').' 23:59:59';
+                        break;
+                    case 5:
+                        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                            $settings['conditions']['Order.created >='] = $this->request->data['from'].' 00:00:00';
+                            $settings['conditions']['Order.created <='] = $this->request->data['to'].' 23:59:59';
+                        }
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
+            }
+            $settings['conditions']['Order.created_by'] = $this->Session->read('Auth.User.id');
+            $settings['order'] = 'Order.created DESC';
+            $this->Session->write('Order.User.paginate',$settings);
+            $this->Session->write('Order.User.request.data',$this->request->data);
+            return $this->redirect(array('action'=>'user_orders'));
+        }
+        if($this->Session->check('Order.User.paginate')){
+            $this->paginate = $this->Session->read('Order.User.paginate');
+        }else{
+            $this->paginate = array(
+                'conditions'=>array(
+                    'Order.created_by'=> $this->Session->read('Auth.User.id'),
+                    'Order.status'=> 1,
+                ),
+                'order' => 'Order.created DESC',
+            );
+        }
+        if($this->Session->check('Order.User.request.data')){
+            $this->request->data = $this->Session->read('Order.User.request.data');
+        }
+        $this->set('orders', $this->Paginator->paginate());
+        $this->loadModel('Store');
+        $stores = $this->Store->find('list');
+        $this->set(compact('stores'));
     }
 }

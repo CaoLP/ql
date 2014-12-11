@@ -19,12 +19,13 @@ $(document).ready(function () {
     }
         ;
     $('#submit-customer').on('click', function () {
+        var cus_name = $('#CustomerName').val();
         $.ajax({
             url: '/admin/customers/add',
             type: 'POST',
             data: {
                 Customer: {
-                    name: $('#CustomerName').val(),
+                    name: cus_name,
                     phone: $('#CustomerPhone').val(),
                     email: $('#CustomerEmail').val(),
                     facebook: $('#CustomerFacebook').val(),
@@ -34,7 +35,13 @@ $(document).ready(function () {
                 }
             },
             success: function (data) {
-                $('#input-customer').autocomplete("option", { source: JSON.parse(data)});
+                var source = JSON.parse(data);
+                var last_item = source.pop();
+                $('#input-customer').autocomplete("option", { source: source});
+                if(last_item.label.trim() == cus_name.trim()){
+                    $('#input-customer').val(last_item.label);
+                    $('#input-customer-id').val(last_item.value);
+                }
                 $('#CustomerName').val('');
                 $('#CustomerPhone').val('');
                 $('#CustomerEmail').val('');
