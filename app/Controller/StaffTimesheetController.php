@@ -12,9 +12,8 @@ class StaffTimesheetController extends AppController {
 	public $title_for_layout = 'Điểm danh & chấm công';
 	
     function beforeFilter() {
+        $this->set('types',array('Vào làm','Ra về'));
         parent::beforeFilter();
-        
-        //$this->layout = "twitter_full";
     }    
     /**
      * index method
@@ -25,15 +24,44 @@ class StaffTimesheetController extends AppController {
         $this->set('title', __('StaffTimesheets'));
         $this->set('description', __('Manage StaffTimesheets'));
         $this->StaffTimesheet->recursive = 0;
+        $settings = array();
         if(isset($this->request->data['user_id']) && $this->request->data['user_id']!=''){
-            $timesheets = $this->StaffTimesheet->find('all',array(
-                    'conditions' => array(
-                        'StaffTimesheet.user_id'=>$this->request->data['user_id']
-                    )
-            ));
-        }else{
-            $timesheets = array();
+            $settings['conditions']['StaffTimesheet.user_id'] = $this->request->data['user_id'];
         }
+        if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+            switch ($this->request->data['optionsRadios']){
+                case 2:
+                    $settings['conditions']['StaffTimesheet.time >='] = date('Y-m-d').' 00:00:00';
+                    $settings['conditions']['StaffTimesheet.time <='] = date('Y-m-d').' 23:59:59';
+                    break;
+                case 3:
+                    $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                    $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                    $settings['conditions']['StaffTimesheet.time >='] = $first_date.' 00:00:00';
+                    $settings['conditions']['StaffTimesheet.time <='] = $last_date.' 23:59:59';
+                    break;
+                case 4:
+                    $settings['conditions']['StaffTimesheet.time >='] = date('Y-m-01').' 00:00:00';
+                    $settings['conditions']['StaffTimesheet.time <='] = date('Y-m-t').' 23:59:59';
+                    break;
+                case 5:
+                    if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                        $settings['conditions']['StaffTimesheet.time >='] = $this->request->data['from'].' 00:00:00';
+                        $settings['conditions']['StaffTimesheet.time <='] = $this->request->data['to'].' 23:59:59';
+                    }
+                    break;
+                case 1:
+                default:
+                $settings['conditions']['StaffTimesheet.time >='] = date('Y-m-01').' 00:00:00';
+                $settings['conditions']['StaffTimesheet.time <='] = date('Y-m-t').' 23:59:59';
+                    break;
+            }
+        }else{
+            $settings['conditions']['StaffTimesheet.time >='] = date('Y-m-01').' 00:00:00';
+            $settings['conditions']['StaffTimesheet.time <='] = date('Y-m-t').' 23:59:59';
+        }
+        $timesheets = $this->StaffTimesheet->find('all', $settings);
         $this->set(compact('timesheets'));
         $this->loadModel('User');
         $users = $this->User->find('list',array('conditions'=>array('User.group_id <>'=>1,'User.status'=>1)));

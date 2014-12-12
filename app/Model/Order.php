@@ -116,11 +116,18 @@ class Order extends AppModel {
 
     public  function getReportOrderDetails($option){
         $this->belongsTo = array();
+        $option['conditions']['Order.status'] = 1;
         return $this->find('all',$option);
     }
     public  function getReportOrder($option){
         $this->belongsTo = array();
         $this->recursive = -1;
+        $option['conditions']['Order.status'] = 1;
+        return $this->find('all',$option);
+    }
+    public  function getOrderList($option){
+        $this->belongsTo = array();
+        $option['conditions']['Order.status'] = 1;
         return $this->find('all',$option);
     }
 }

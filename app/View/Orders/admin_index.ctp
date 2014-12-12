@@ -37,6 +37,12 @@ setlocale(LC_MONETARY, "vi_VN");
                     echo $this->Form->input('status',array('div'=>false,'label'=>false,'class'=>'form-control','empty'=>'Toàn bộ'));
                         ?>
                     </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">Loại</span>
+                        <?php
+                        echo $this->Form->input('type',array('div'=>false,'label'=>false,'options'=>array('Bán lẻ','Bán sỉ'),'class'=>'form-control','empty'=>'Toàn bộ'));
+                        ?>
+                    </div>
                 </div>
             </div>
             <div class="widget">
@@ -122,6 +128,7 @@ setlocale(LC_MONETARY, "vi_VN");
                 <table class="table table-condensedtable-hover no-margin">
                     <thead>
                     <tr>
+                        <th><?php echo $this->Paginator->sort('type', 'Loại'); ?></th>
                         <th><?php echo $this->Paginator->sort('code', 'Mã đơn hàng'); ?></th>
                         <th><?php echo $this->Paginator->sort('customer_id', 'Tên khách'); ?></th>
                         <th><?php echo $this->Paginator->sort('status', 'Trạng thái'); ?></th>
@@ -140,7 +147,15 @@ setlocale(LC_MONETARY, "vi_VN");
                     foreach ($orders as $order):
                         $total += $order['Order']['amount'];
                         ?>
-                        <tr class="table-toggle-expand">
+                        <tr class="table-toggle-expand" <?php  if($order['Order']['type'] == 1){?>style="background-color: rgba(234, 217, 253, 0.71)"<?php } ?>>
+                            <td>
+                                <?php
+                                if($order['Order']['type'] == 0)
+                                    echo '<span class="label label-success">Bán lẻ</span>';
+                                else
+                                    echo '<span class="label label-info">Bán sỉ</span>';
+                                ?>
+                            </td>
                             <td><?php echo h($order['Order']['code']); ?>&nbsp;</td>
                             <td>
                                 <?php echo $this->Html->link($order['Customer']['name'], array('controller' => 'customers', 'action' => 'view', $order['Customer']['id'])); ?>
@@ -154,17 +169,24 @@ setlocale(LC_MONETARY, "vi_VN");
                             <td class="text-right price-text"><?php echo number_format($order['Order']['total'], 0, '.', ',');?></td>
                             <td class="text-right price-text"><?php echo number_format($order['Order']['total_promote'], 0, '.', ',');?></td>
                             <td class="text-right price-text"><?php echo number_format($order['Order']['amount'], 0, '.', ',');?></td>
-                            <td class="text-right price-text"><?php echo number_format($order['Order']['receive'], 0, '.', ',');?></td>
+                            <td class="text-right"><?php echo number_format($order['Order']['receive'], 0, '.', ',');?></td>
                             <td class="actions">
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $order['Order']['id']), array('escape' => false, 'title' => 'Xem thông tin')); ?>
-                                <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>
+                                <?php
+                                if($order['Order']['type'] == 0)
+                                echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin'));
+                                else
+                                    echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'editretail', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin'));
+                                ?>
                             </td>
                         </tr>
                         <tr class="table-expandable"></tr>
                     <?php endforeach; ?>
                     <tr>
+                        <td></td>
                         <td colspan="6" class="text-right" style="font-weight: bold; font-size: 14px">Tổng tiền</td>
                         <td colspan="2" class="text-right price-text" style="font-weight: bold; font-size: 14px"><?php echo number_format($total, 0, '.', ',');?></td>
+                        <td></td>
                         <td></td>
                     </tr>
                     </tbody>

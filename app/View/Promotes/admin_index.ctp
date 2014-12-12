@@ -18,6 +18,7 @@
 			<th><?php echo $this->Paginator->sort('code','Mã số'); ?></th>
 			<th><?php echo $this->Paginator->sort('value','Giá trị'); ?></th>
 			<th><?php echo $this->Paginator->sort('type','Loại'); ?></th>
+			<th><?php echo $this->Paginator->sort('store_id','Cửa hàng'); ?></th>
 			<th><?php echo $this->Paginator->sort('begin','Ngày bắt đầu'); ?></th>
 			<th><?php echo $this->Paginator->sort('end','Ngày kết thúc'); ?></th>
 			<th><?php echo $this->Paginator->sort('created','Ngày tạo'); ?></th>
@@ -35,7 +36,8 @@
 		<td><?php echo h($promote['Promote']['name']); ?></td>
 		<td><?php echo h($promote['Promote']['code']); ?></td>
 		<td><?php echo h($promote['Promote']['value']); ?></td>
-		<td><?php echo h($promote['Promote']['type']); ?></td>
+		<td><?php if($promote['Promote']['type']==0) echo 'Tiền'; else echo '%'; ?></td>
+        <td><?php echo h($promote['Store']['name']); ?></td>
 		<td><?php echo h($promote['Promote']['begin']); ?></td>
 		<td><?php echo h($promote['Promote']['end']); ?></td>
 		<td><?php echo h($promote['Promote']['created']); ?></td>

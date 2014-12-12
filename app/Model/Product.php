@@ -184,7 +184,7 @@ class Product extends AppModel
             )
         );
         $result = $this->find('all', array(
-		  	'fields'=>'Product.sku,Product.name,Product.id,Product.price',
+		  	'fields'=>'Product.sku,Product.name,Product.id,Product.price,Product.retail_price',
             'conditions' => array(
                 'OR' => array(
                     'Product.name like' => '%' . $input . '%',

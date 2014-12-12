@@ -91,7 +91,7 @@ class Warehouse extends AppModel {
             'order' => ''
         ));
         $result = $this->find('all', array(
-            'fields'=>'Product.sku,Product.name,Product.thumbnail,Product.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
+            'fields'=>'Product.sku,Product.name,Product.thumbnail,Warehouse.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
             'conditions' => array(
                 'Warehouse.qty > '=>'0',
                 'Warehouse.store_id'=> $store_id,
@@ -115,7 +115,7 @@ class Warehouse extends AppModel {
                 'order' => ''
             ));
         $result = $this->find('all', array(
-            'fields'=>'Product.sku,Product.name,Product.thumbnail,Product.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
+            'fields'=>'Product.sku,Product.name,Product.thumbnail,Warehouse.retail_price,Product.id,Warehouse.price,Warehouse.options,Warehouse.qty,Warehouse.code,Warehouse.id',
             'conditions' => array(
                 'Warehouse.qty > '=>'0',
                 'Warehouse.store_id'=> $store_id

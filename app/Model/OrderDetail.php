@@ -118,4 +118,16 @@ class OrderDetail extends AppModel {
 			'order' => ''
 		)
 	);
+    public  function getOrderList($option){
+        $this->belongsTo = array(
+            'Order' => array(
+            'className' => 'Order',
+            'foreignKey' => 'order_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ));
+        $option['conditions']['Order.status'] = 1;
+        return $this->find('all',$option);
+    }
 }

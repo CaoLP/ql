@@ -35,12 +35,13 @@ $(document).ready(function () {
         pSku = $("#p-sku"),
         pName = $("#p-name"),
         pPrice = $("#p-price"),
+        pRetailPrice = $("#p-retail_price"),
         pData = $("#p-data"),
         pOptions = $("#p-options"),
         pLimit = $("#p-limit"),
         pWarehouse = $("#p-warehouse"),
         pOptionsName = $("#p-optionsName"),
-        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName).add(pOptions).add(pOptionsName),
+        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pRetailPrice).add(pSku).add(pName).add(pOptions).add(pOptionsName),
         tips = $(".validateTips");
     updatePrice();
     var store_id = '';
@@ -116,6 +117,7 @@ $(document).ready(function () {
             pSku.val(ui.item.Product.code);
             pName.val(ui.item.Product.name);
             pPrice.val(ui.item.Product.price);
+            pRetailPrice.val(ui.item.Product.retail_price);
             pData.val(JSON.stringify(ui.item.Product));
             pOptions.val(ui.item.Product.options);
             pLimit.val(ui.item.Product.qty);
@@ -289,6 +291,7 @@ $(document).ready(function () {
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][inout_warehouse_id]" value="' + inout_warehouse_id + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][sku]" value="' + pSku.val() + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][price]" value="' + subPrice + '">'+
+                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][retail_price]" value="' + pRetailPrice.val() + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][name]" value="' + pName.val() + '">'+
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][options]">' +optionIds + '</textarea>' +
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][option_names]">' + optionNames + '</textarea>' +

@@ -44,6 +44,7 @@ if ($this->request->params['action'] == 'admin_add') {
 					echo $this->Form->input('end',array ('class' => '','label' => array ('text' => 'Kết thúc', 'class' => 'col-lg-2 control-label'),'between' => '<div class="col-lg-10">'));
 					echo $this->Form->input('status',array ('label' => array ('text' => 'Trạng thái', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('store_id',array ('empty'=>true,'label' => array ('text' => 'Cửa hàng', 'class' => 'col-lg-2 control-label')));			
+					echo $this->Form->input('global',array ('empty'=>true,'type'=>'checkbox','label' => array ('text' => 'Dùng chung', 'class' => 'col-lg-2 control-label')));
 					?>
 					<div class="btn-group" style="position: fixed;bottom: 0; right: 0;z-index: 1;">
 						<?php echo $this->Form->submit ('Lưu lại', array ('div' => false, 'class' => 'btn btn-success')) ?>

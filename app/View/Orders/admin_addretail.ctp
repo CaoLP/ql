@@ -1,15 +1,12 @@
 <?php
 setlocale(LC_MONETARY, "vi_VN");
-if ($this->request->action == 'admin_add')
-    $this->Html->addCrumb('<li>Bán hàng</li>', array('action' => 'add'), array('escape' => false));
-else
-    $this->Html->addCrumb('<li>' . $this->request->data['Order']['code'] . '</li>', '/' . $this->request->url, array('escape' => false));
-echo $this->Html->script(array('sale', 'jquery.inputmask', 'customer'), array('inline' => false));
+    $this->Html->addCrumb('<li>Bán sỉ</li>', array('action' => 'addretail'), array('escape' => false));
+echo $this->Html->script(array('retail_sale', 'jquery.inputmask', 'customer'), array('inline' => false));
 echo $this->Html->css(array('order'), array('inline' => false));
 ?>
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
-    var saveUrl = '<?php echo $this->Html->url(array('controller'=>'orders','action'=>'admin_save_cart'))?>';
+    var saveUrl = '<?php echo $this->Html->url(array('controller'=>'orders','action'=>'admin_save_cartretail'))?>';
     var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
     var promotes = <?php echo json_encode($promoteData);?>;
     var customers = <?php echo json_encode($customers);?>;
@@ -37,7 +34,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                         <?php
                         foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                             $data = json_decode($order_detail['data'], true);
-                            if(!isset($data['mod_price'])) $data['mod_price'] = $data['price'];
+                            if(!isset($data['mod_price'])) $data['mod_price'] = $data['retail_price'];
                             ?>
                             <tr class="row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo $data['options']?>">
                                 <td>
@@ -47,7 +44,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-left"><span><?php echo $data['name']?></span><br><span class="opt">
                                    <?php echo $data['optionsName']?></span></td>
                                 <td class="text-right">
-                                    <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
+                                    <a href="javascript:;" class="pov" data-price="<?php echo $data['retail_price']?>" data-key="<?php echo $key?>">
                                     <span class="price-text" id="<?php echo $key?>-price-text">
                                         <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
                                     <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
@@ -102,12 +99,12 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <input id="input-customer" class="form-control" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                             echo $customersl[$this->request->data['Order']['customer_id']];
-                                        else echo $customersl[1];
+                                        else echo $customersl[2];
                                         ?>">
                                         <input type="hidden" name="data[Order][customer_id]" id="input-customer-id" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                             echo $this->request->data['Order']['customer_id'];
-                                        else echo 1;
+                                        else echo 2;
                                         ?>">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" data-toggle="modal"
@@ -236,13 +233,6 @@ echo $this->Html->css(array('order'), array('inline' => false));
                 </div>
             </div>
             <div class="col-md-12">
-                <?php
-                if ($this->request->action == 'admin_edit'){
-                    ?>
-                    <textarea style="display: none" name="data[oldData]"><?php echo $this->request->data['oldData'];?></textarea>
-                <?php
-                }
-                ?>
                 <div class="text-center bt-done">
                     <div class="btn-group">
                         <a class="btn btn-danger" onclick="history.back()">Trở về</a>

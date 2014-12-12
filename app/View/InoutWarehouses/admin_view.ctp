@@ -76,6 +76,7 @@ echo $this->Form->hidden('received');
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.product_id',array('value'=>$item['product_id']));
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.options',array('value'=>$item['options']));
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.price',array('value'=>$item['price']));
+                                    echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.retail_price',array('value'=>$item['retail_price']));
                                     echo $this->Form->hidden('InoutWarehouseDetail.'.$key.'.sku',array('value'=>$item['sku']));
                                     ?></td>
                             </tr>

@@ -16,6 +16,7 @@
                    data-key="data<?php echo $key;?>"
                    data-limit="<?php echo $warehouse['qty'];?>"
                    data-price="<?php echo $warehouse['price'];?>"
+                   data-retail_price="<?php echo $warehouse['retail_price'];?>"
                    data-id="<?php echo $warehouse['id'];?>"
                    data-optionsName="<?php echo $warehouse['optionsName'];?>"
                    data-name="<?php echo $warehouse['name'];?>"
@@ -27,6 +28,7 @@
                         <span class="label label-warning"><?php echo $warehouse['code'];?></span>
                         <span class="label label-info"><?php echo $warehouse['optionsName'];?></span>
                         <span class="label label-danger"><?php echo number_format($warehouse['price'], 0, '.', ',');?></span>
+                        <span class="label label-danger"><?php echo number_format($warehouse['retail_price'], 0, '.', ',');?></span>
                     </div>
                 </a>
                 <div id="data<?php echo $key;?>" style="display: none"><?php echo $warehouse['data'];?></div>

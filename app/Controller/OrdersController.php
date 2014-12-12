@@ -67,6 +67,9 @@ class OrdersController extends AppController
             if(isset($this->request->data['user_id']) && $this->request->data['user_id'] !=''){
                 $settings['conditions']['Order.created_by'] = $this->request->data['user_id'];
             }
+            if(isset($this->request->data['type']) && $this->request->data['type'] !=''){
+                $settings['conditions']['Order.type'] = $this->request->data['type'];
+            }
 
             if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
                 switch ($this->request->data['optionsRadios']){
@@ -298,15 +301,26 @@ class OrdersController extends AppController
             $temp[] = array('value' => $key, 'label' => $val);
         }
         $customers = $temp;
-        $promoteData = $this->Order->Promote->find('all', array('recursive' => -1));
+
+        if($this->Session->read('Auth.User.group_id') == 1){
+            $promoteData = $this->Order->Promote->find('all', array('recursive' => 0));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', array('{0}({1})','{n}.Promote.name','{n}.Store.name'));
+        }else{
+            $promoteData = $this->Order->Promote->find('all', array(
+                'conditions'=>array(
+                    'Promote.global'=> 1,
+                ),'recursive' => -1));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+        }
+
         $categories = $this->Category->find('list');
-        $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+
         $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
         $this->layout = 'order';
         $this->set(compact('categories','customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
     }
     public function admin_save_cart(){
-        if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
+        if( empty($this->request->data['Order']['customer_id'])){
             $this->request->data['Order']['customer_id'] = 1;
         }
         if(isset($this->request->data['OrderDetail'])){
@@ -340,6 +354,9 @@ class OrdersController extends AppController
             $total = 0;
             $amount = 0;
             $order_detail = $this->request->data['OrderDetail'];
+            $oldDetail = json_decode($this->request->data['oldData'],true);
+            $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
+
             foreach ($order_detail as $detail) {
                 $data = json_decode($detail['data'], true);
                 $total += $detail['qty'] * $data['price'];
@@ -376,6 +393,9 @@ class OrdersController extends AppController
                 $storeDetail = array();
 
                 //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
+                $this->loadModel('Warehouse');
+                $warehouse = array();
+
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
                     $storeDetail[] = array(
@@ -389,8 +409,29 @@ class OrdersController extends AppController
                         'product_options' => $data['options'],
                         'data' => $detail['data'],
                     );
+                    $oldData = $this->Warehouse->find('first', array(
+                        'conditions' => array(
+                            'Warehouse.store_id' => $this->request->data['Order']['store_id'],
+                            'Warehouse.product_id' => $data['id'],
+                            'Warehouse.options' => $data['options']
+                        ),
+                        'recursive' => -1
+                    ));
+
+                    $t = array();
+                    if (isset($oldData['Warehouse'])) {
+                        $t['id'] = $oldData['Warehouse']['id'];
+                        if(isset($oldDetail[$data['id']])){
+                            $t['qty'] = $oldData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
+                        }else{
+                            $t['qty'] = $oldData['Warehouse']['qty'] - $detail['qty'];
+                        }
+                    }
+                    $warehouse[] = $t;
                 }
                 $this->Order->OrderDetail->saveMany($storeDetail);
+                $this->Warehouse->saveMany($warehouse);
+
                 $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                 $this->Session->delete('Cart');
 
@@ -426,6 +467,7 @@ class OrdersController extends AppController
         } else {
             $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
             $this->request->data = $this->Order->find('first', $options);
+            $this->request->data['oldData'] = json_encode($this->request->data);
         }
         $customers = $this->Order->Customer->find('list');
         $customersl = $customers;
@@ -434,9 +476,18 @@ class OrdersController extends AppController
             $temp[] = array('value' => $key, 'label' => $val);
         }
         $customers = $temp;
-        $promoteData = $this->Order->Promote->find('all', array('recursive' => -1));
+
+        if($this->Session->read('Auth.User.group_id') == 1){
+            $promoteData = $this->Order->Promote->find('all', array('recursive' => 0));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', array('{0}({1})','{n}.Promote.name','{n}.Store.name'));
+        }else{
+            $promoteData = $this->Order->Promote->find('all', array(
+                'conditions'=>array(
+                    'Promote.global'=> 1,
+                ),'recursive' => -1));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+        }
         $options = $this->Order->OrderDetail->Product->ProductOption->Option->find('list');
-        $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
         $this->layout = 'order';
         $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options', 'customersl'));
@@ -603,5 +654,394 @@ class OrdersController extends AppController
         $this->loadModel('Store');
         $stores = $this->Store->find('list');
         $this->set(compact('stores'));
+    }
+
+
+//    retail
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function admin_viewretail($id = null)
+    {
+        if (!$this->Order->exists($id)) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
+        $this->request->data = $this->Order->find('first', $options);
+        $customers = $this->Order->Customer->find('list');
+        $promoteData = $this->Order->Promote->find('all', array('recursive' => -1));
+        $options = $this->Order->OrderDetail->Product->ProductOption->Option->find('list');
+        $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+        $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
+        $this->layout = 'order';
+        $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options'));
+    }
+    public function admin_addretail()
+    {
+        if ($this->request->is('post')) {
+            if(isset($this->request->data['OrderDetail'])){
+                $this->Order->create();
+                $total = 0;
+                $amount = 0;
+                $order_detail = $this->request->data['OrderDetail'];
+                foreach ($order_detail as $detail) {
+                    $data = json_decode($detail['data'], true);
+                    $total += $detail['qty'] * $data['retail_price'];
+                }
+                if(empty($this->request->data['Order']['promote_value'])){
+                    $this->request->data['Order']['promote_value'] = 0;
+                }
+                $promote = $this->request->data['Order']['promote_value'];
+                if ($this->request->data['Order']['promote_type'] == 1) {
+                    $promote = $total * ($promote / 100);
+                }
+                $amount = $total - $promote;
+
+                if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
+                    $this->request->data['Order']['customer_id'] = 2;
+                }
+                if(empty($this->request->data['Order']['receive'])){
+                    $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
+                    return $this->redirect(array('action' => 'add'));
+                }
+                if(empty($this->request->data['Order']['refund'])){
+                    $this->request->data['Order']['refund'] = 0;
+                }
+                $orCode = 'BS'.date('dmYhms');
+                $saveData = array(
+                    'Order' => array(
+                        'customer_id' => $this->request->data['Order']['customer_id'],
+                        'promote_id' => $this->request->data['Order']['promote_id'],
+                        'promote_value' => $this->request->data['Order']['promote_value'],
+                        'promote_type' => $this->request->data['Order']['promote_type'],
+                        'note' => $this->request->data['Order']['note'],
+                        'store_id' => $this->request->data['Order']['store_id'],
+                        'total' => $total,
+                        'status' => 1,
+                        'code' => $orCode,
+                        'total_promote' => $promote,
+                        'amount' => $amount,
+                        'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                        'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
+                        'type' => 1
+                    )
+                );
+
+                if ($this->Order->save($saveData)) {
+                    $storeDetail = array();
+
+                    $id = $this->Order->id;
+                    //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
+                    $this->loadModel('Warehouse');
+                    $warehouse = array();
+                    foreach ($order_detail as $detail) {
+                        $data = json_decode($detail['data'], true);
+                        $storeDetail[] = array(
+                            'order_id' => $id,
+                            'product_id' => $data['id'],
+                            'name' => $data['name'],
+                            'price' => $detail['mod_price'],
+                            'sku' => $data['sku'],
+                            'qty' => $detail['qty'],
+                            'code' => $data['code'],
+                            'product_options' => $data['options'],
+                            'data' => $detail['data'],
+                        );
+                        $oldData = $this->Warehouse->find('first', array(
+                            'conditions' => array(
+                                'Warehouse.store_id' => $this->request->data['Order']['store_id'],
+                                'Warehouse.product_id' => $data['id'],
+                                'Warehouse.options' => $data['options']
+                            ),
+                            'recursive' => -1
+                        ));
+
+                        $t = array();
+                        if (isset($oldData['Warehouse'])) {
+                            $t['id'] = $oldData['Warehouse']['id'];
+                            $t['qty'] = $oldData['Warehouse']['qty']-$detail['qty'];
+                        }
+                        $warehouse[] = $t;
+                    }
+                    $this->Order->OrderDetail->saveMany($storeDetail);
+                    $this->Warehouse->saveMany($warehouse);
+                    $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
+                    $this->Session->delete('CartRetail');
+
+
+
+                    $this->loadModel('OrderLog');
+
+                    $this->OrderLog->save(array(
+                        'OrderLog'=>array(
+                            'order_id' => $id,
+                            'type' => '0',
+                            'data' => json_encode(array(
+                                'Order' =>$saveData,
+                                'OrderDetail' => $order_detail
+                            ))
+                        )
+                    ));
+
+
+                    $storeName = $this->Session->read('Auth.User.Store.name');
+
+                    $message = '[<strong>Đơn hàng bán sỉ</strong>]['.$storeName.'] Đơn hàng [<a href="javascript:;" data-type="order" data-order="'.$orCode.'">'.$orCode.'</a>]'.
+                        ' đã được tạo bởi <strong>'.$this->Session->read('Auth.User.name').'</strong>';
+
+                    $this->loadModel('ActionLog');
+                    $this->ActionLog->save(array(
+                        'ActionLog'=>array(
+                            'message' => $message
+                        )
+                    ));
+
+                    return $this->redirect(array('action' => 'viewretail',$id));
+                } else {
+                    $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
+                }
+            }else{
+                $this->Session->setFlash(__('Vui lòng nhập hàng.'), 'message', array('class' => 'alert-danger'));
+            }
+        }
+        if($this->Session->read('CartRetail')){
+            $this->request->data =  $this->Session->read('CartRetail');
+        }
+        $this->loadModel('Category');
+
+        $this->loadModel('Warehouse');
+        $warehouse = $this->Warehouse->filterWarehouseData($this->Session->read('Auth.User.store_id'));
+
+        $customers = $this->Order->Customer->find('list');
+        $customersl = $customers;
+        $temp = array();
+        foreach ($customers as $key => $val) {
+            $temp[] = array('value' => $key, 'label' => $val);
+        }
+        $customers = $temp;
+
+        if($this->Session->read('Auth.User.group_id') == 1){
+            $promoteData = $this->Order->Promote->find('all', array('recursive' => 0));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', array('{0}({1})','{n}.Promote.name','{n}.Store.name'));
+        }else{
+            $promoteData = $this->Order->Promote->find('all', array(
+                'conditions'=>array(
+                    'Promote.global'=> 1,
+                ),'recursive' => -1));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+        }
+
+        $categories = $this->Category->find('list');
+        $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
+        $this->layout = 'order';
+        $this->set(compact('categories','customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
+    }
+    public function admin_save_cartretail(){
+        if(empty($this->request->data['Order']['customer_id'])){
+            $this->request->data['Order']['customer_id'] = 1;
+        }
+        if(isset($this->request->data['OrderDetail'])){
+            $temp = array();
+            foreach($this->request->data['OrderDetail'] as $key=>$detail){
+                $data = json_decode($detail['data'],true);
+                $data['mod_price'] = $detail['mod_price'];
+                $temp[$key]['mod_price'] = $detail['mod_price'];
+                $temp[$key]['qty'] = $detail['qty'];
+                $temp[$key]['data'] = json_encode($data);
+            }
+            $this->request->data['OrderDetail'] = $temp;
+            debug($this->request->data['OrderDetail']);
+        }
+        $this->Session->write('CartRetail',$this->request->data);
+        die;
+    }
+    public function admin_editretail($id = null)
+    {
+        if (!$this->Order->exists($id)) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
+            $total = 0;
+            $amount = 0;
+            $order_detail = $this->request->data['OrderDetail'];
+            $oldDetail = json_decode($this->request->data['oldData'],true);
+            $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
+
+            foreach ($order_detail as $detail) {
+                $data = json_decode($detail['data'], true);
+                $total += $detail['qty'] * $data['retail_price'];
+            }
+            $promote = $this->request->data['Order']['promote_value'];
+            if ($this->request->data['Order']['promote_type'] == 1) {
+                $promote = $total * ($promote / 100);
+            }
+            $amount = $total - $promote;
+            $id = $this->request->data['Order']['id'];
+            $saveData = array(
+                'Order' => array(
+                    'id' => $this->request->data['Order']['id'],
+                    'customer_id' => $this->request->data['Order']['customer_id'],
+                    'promote_id' => $this->request->data['Order']['promote_id'],
+                    'promote_value' => $this->request->data['Order']['promote_value'],
+                    'promote_type' => $this->request->data['Order']['promote_type'],
+                    'note' => $this->request->data['Order']['note'],
+                    'store_id' => $this->request->data['Order']['store_id'],
+                    'total' => $total,
+                    'code' => $this->request->data['Order']['code'],
+                    'total_promote' => $promote,
+                    'status' => 1,
+                    'amount' => $amount,
+                    'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                    'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
+                    'type' => 1,
+                )
+            );
+            if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
+                $saveData['Order']['created'] = $this->request->data['Order']['created'];
+            }
+            if ($this->Order->save($saveData)) {
+                $this->Order->OrderDetail->deleteAll(array('OrderDetail.order_id' => $id), false);
+                $storeDetail = array();
+
+                //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
+                $this->loadModel('Warehouse');
+                $warehouse = array();
+                foreach ($order_detail as $detail) {
+                    $data = json_decode($detail['data'], true);
+                    $storeDetail[] = array(
+                        'order_id' => $id,
+                        'product_id' => $data['id'],
+                        'name' => $data['name'],
+                        'price' => $detail['mod_price'],
+                        'sku' => $data['sku'],
+                        'qty' => $detail['qty'],
+                        'code' => $data['code'],
+                        'product_options' => $data['options'],
+                        'data' => $detail['data'],
+                    );
+                    $oldData = $this->Warehouse->find('first', array(
+                        'conditions' => array(
+                            'Warehouse.store_id' => $this->request->data['Order']['store_id'],
+                            'Warehouse.product_id' => $data['id'],
+                            'Warehouse.options' => $data['options']
+                        ),
+                        'recursive' => -1
+                    ));
+
+                    $t = array();
+                    if (isset($oldData['Warehouse'])) {
+                        $t['id'] = $oldData['Warehouse']['id'];
+                        if(isset($oldDetail[$data['id']])){
+                            $t['qty'] = $oldData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
+                        }else{
+                            $t['qty'] = $oldData['Warehouse']['qty'] - $detail['qty'];
+                        }
+                    }
+                    $warehouse[] = $t;
+                }
+                $this->Order->OrderDetail->saveMany($storeDetail);
+                $this->Warehouse->saveMany($warehouse);
+                $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
+                $this->Session->delete('CartRetail');
+
+                $this->loadModel('OrderLog');
+
+                $this->OrderLog->save(array(
+                    'OrderLog'=>array(
+                        'order_id' => $this->request->data['Order']['id'],
+                        'type' => '1',
+                        'data' => json_encode(array(
+                            'Order' =>$saveData,
+                            'OrderDetail' => $order_detail
+                        ))
+                    )
+                ));
+                $orCode = $this->request->data['Order']['code'];
+
+                $message = '[<strong>Đơn hàng bán sỉ</strong>]Đơn hàng [<a href="javascript:;" data-type="order" data-order="'.$orCode.'">'.$orCode.'</a>]'.
+                    ' đã thay đổi bởi <strong>'.$this->Session->read('Auth.User.name').'</strong>';
+
+                $this->loadModel('ActionLog');
+                $this->ActionLog->save(array(
+                    'ActionLog'=>array(
+                        'message' => $message
+                    )
+                ));
+                return $this->redirect(array('action' => 'viewretail',$id));
+            } else {
+                $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
+            }
+        } else {
+            $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
+            $this->request->data = $this->Order->find('first', $options);
+            $this->request->data['oldData'] = json_encode($this->request->data);
+        }
+        $customers = $this->Order->Customer->find('list');
+        $customersl = $customers;
+        $temp = array();
+        foreach ($customers as $key => $val) {
+            $temp[] = array('value' => $key, 'label' => $val);
+        }
+        $customers = $temp;
+
+        if($this->Session->read('Auth.User.group_id') == 1){
+            $promoteData = $this->Order->Promote->find('all', array('recursive' => 0));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', array('{0}({1})','{n}.Promote.name','{n}.Store.name'));
+        }else{
+            $promoteData = $this->Order->Promote->find('all', array(
+                'conditions'=>array(
+                    'Promote.global'=> 1,
+                ),'recursive' => -1));
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+        }
+
+        $options = $this->Order->OrderDetail->Product->ProductOption->Option->find('list');
+        $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
+        $this->layout = 'order';
+        $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options', 'customersl'));
+    }
+
+
+
+
+    //   AJAX
+    function admin_view_order(){
+
+        die;
+    }
+    function admin_list_orders(){
+        $this->layout = 'ajax';
+        if(isset($this->request->data['request']) && isset($this->request->data['id']) && isset($this->request->data['store_id'])){
+            $request = urldecode($this->request->data['request']);
+            $request = json_decode($request,true);
+            $id = urldecode($this->request->data['id']);
+            $store_id = urldecode($this->request->data['store_id']);
+
+            $options = array();
+            if(isset($request['from']) && isset($request['to'])){
+                $options['conditions']['Order.created >='] = $request['from'].' 00:00:00';
+                $options['conditions']['Order.created <='] = $request['to'].' 23:59:59';
+            }else if(isset($request['from'])){
+                $options['conditions']['Order.created >='] = $request['from'].' 00:00:00';
+                $options['conditions']['Order.created <='] = $request['from'].' 23:59:59';
+            }else if(isset($request['to'])){
+                $options['conditions']['Order.created >='] = $request['to'].' 00:00:00';
+                $options['conditions']['Order.created <='] = $request['to'].' 23:59:59';
+            }else{
+                $request['from'] = date('Y-m-d');
+                $request['to'] = date('Y-m-d');
+                $options['conditions']['Order.created >='] = $request['from'].' 00:00:00';
+                $options['conditions']['Order.created <='] = $request['to'].' 23:59:59';
+            }
+            $options['conditions']['Order.store_id'] = $store_id;
+            $options['conditions']['Order.type'] = 0;
+            $options['conditions']['OrderDetail.product_id'] = $id;
+            $options['fields'] = 'Order.id,Order.code';
+            $result = $this->Order->OrderDetail->getOrderList($options);
+            $this->set(compact('result'));
+        }
     }
 }

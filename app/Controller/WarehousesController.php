@@ -110,6 +110,7 @@ class WarehousesController extends AppController
             $sub['name'] = $item['Product']['name'];
             $sub['id'] = $item['Product']['id'];
             $sub['price'] = $item['Warehouse']['price'];
+            $sub['retail_price'] = $item['Warehouse']['retail_price'];
             $sub['options'] = $item['Warehouse']['options'];
             $sub['qty'] = $item['Warehouse']['qty'];
             $sub['warehouse'] = $item['Warehouse']['id'];
@@ -143,6 +144,7 @@ class WarehousesController extends AppController
             $sub['name'] = $item['Product']['name'];
             $sub['id'] = $item['Product']['id'];
             $sub['price'] = $item['Warehouse']['price'];
+            $sub['retail_price'] = $item['Warehouse']['retail_price'];
             $sub['options'] = $item['Warehouse']['options'];
             $sub['qty'] = $item['Warehouse']['qty'];
             $sub['warehouse'] = $item['Warehouse']['id'];
@@ -216,20 +218,27 @@ class WarehousesController extends AppController
                 $name =  $this->request->data['P']['name'];
                 $sku =  $this->request->data['P']['sku'];
                 $oldPrice =  $this->request->data['P']['price'];
+                $oldRetailPrice =  $this->request->data['P']['retail_price'];
                 $oldQty =  $this->request->data['P']['qty'];
 
                 $store =  $this->request->data['P']['store'];
 
                 $newQty =  $this->request->data['Warehouse']['qty'];
                 $newPrice =  $this->request->data['Warehouse']['price'];
+                $newRetailPrice =  $this->request->data['Warehouse']['retail_price'];
 
                 $saveLog = true;
 
                 $message = '[<strong>Kho hàng</strong>]['.$store.'] <strong>'.$this->Session->read('Auth.User.name') . '</strong> đã thay đổi ';
-                if($oldPrice != $newPrice && $newQty != $oldQty){
-                    $message .= 'giá và số lượng của sản phẩm ' . $name . '( '.$sku.' ) (Giá ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'] ;Số lượng  ['.$oldQty.']->['.$newQty.'])';
+                if($oldPrice != $newPrice && $newQty != $oldQty && $oldRetailPrice != $newRetailPrice){
+                    $message .= 'giá và số lượng của sản phẩm ' . $name . '( '.$sku.' ) '.
+                        '(Giá lẻ ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').']; '.
+                        'Giá sỉ ['.number_format($oldRetailPrice, 0, '.', ',').']->['.number_format($newRetailPrice, 0, '.', ',').']; '.
+                        'Số lượng  ['.$oldQty.']->['.$newQty.'])';
                 }else if( $oldPrice != $newPrice){
-                    $message .= 'giá của sản phẩm ' . $name . '( '.$sku.' ) (Giá ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'])';
+                    $message .= 'giá bán lẻ của sản phẩm ' . $name . '( '.$sku.' ) (Giá lẻ ['.number_format($oldPrice, 0, '.', ',').']->['.number_format($newPrice, 0, '.', ',').'])';
+                }else if( $oldRetailPrice != $newRetailPrice){
+                    $message .= 'giá bán sỉ của sản phẩm ' . $name . '( '.$sku.' ) (Giá sỉ ['.number_format($oldRetailPrice, 0, '.', ',').']->['.number_format($newRetailPrice, 0, '.', ',').'])';
                 }else if($oldQty != $newQty){
                     $message .= 'số lượng của sản phẩm ' . $name . '( '.$sku.' ) (Số lượng  ['.$oldQty.']->['.$newQty.'])';
                 }else{

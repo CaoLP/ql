@@ -34,9 +34,10 @@ $(document).ready(function () {
         pSku = $("#p-sku"),
         pName = $("#p-name"),
         pPrice = $("#p-price"),
+        pRetailPrice = $("#p-retail_price"),
         pData = $("#p-data"),
         optionsList = $("#options-list"),
-        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pSku).add(pName),
+        allFields = $([]).add(qty).add(pId).add(pData).add(pPrice).add(pRetailPrice).add(pSku).add(pName),
         tips = $(".validateTips");
     updatePrice();
     dialog = $("#dialog-form").dialog({
@@ -96,6 +97,7 @@ $(document).ready(function () {
             }
             pName.val(ui.item.Product.name);
             pPrice.val(ui.item.Product.price);
+            pRetailPrice.val(ui.item.Product.retail_price);
             pData.val(JSON.stringify(ui.item.Product));
             buildOptions(ui.item.ProductOption);
             dialog.dialog("open");
@@ -233,7 +235,8 @@ $(document).ready(function () {
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][product_id]" value="' + pId.val() + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][inout_warehouse_id]" value="' + inout_warehouse_id + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][sku]" value="' + pSku.val()+ extendCode + '">'+
-                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][price]" value="' + price + '">'+
+                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][price]" value="' + subPrice + '">'+
+                    '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][retail_price]" value="' + pRetailPrice.val() + '">'+
                     '<input type="hidden" name="data[InoutWarehouseDetail][' + uuid + '][name]" value="' + pName.val() + '">'+
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][options]">' + (JSON.stringify(optionIds)).replace(/[\[\"\]]/g,'') + '</textarea>' +
                     '<textarea style="display: none" name="data[InoutWarehouseDetail][' + uuid + '][option_names]">' + (JSON.stringify(optionNames)).replace(/[\[\"\]]/g,'') + '</textarea>' +

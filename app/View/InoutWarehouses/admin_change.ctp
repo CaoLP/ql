@@ -60,6 +60,7 @@ else
                                 <input type="hidden" name="data[InoutWarehouseDetail][<?php echo $key?>][inout_warehouse_id]" value="<?php echo $item['inout_warehouse_id']?>">
                                 <input type="hidden" name="data[InoutWarehouseDetail][<?php echo $key?>][sku]" value="<?php echo $item['sku']?>">
                                 <input type="hidden" name="data[InoutWarehouseDetail][<?php echo $key?>][price]" value="<?php echo $item['price']?>">
+                                <input type="hidden" name="data[InoutWarehouseDetail][<?php echo $key?>][retail_price]" value="<?php echo $item['retail_price']?>">
                                 <input type="hidden" name="data[InoutWarehouseDetail][<?php echo $key?>][name]" value="<?php echo $item['name']?>">
                                 <textarea
                                     style="display: none"
@@ -208,6 +209,7 @@ else
             <input type="hidden" name="sku" id="p-sku">
             <input type="hidden" name="name" id="p-name">
             <input type="hidden" name="price" id="p-price">
+            <input type="hidden" name="retail_price" id="p-retail_price">
             <input type="hidden" name="data" id="p-data">
             <hr>
             <p><strong>Thuộc tính</strong></p>

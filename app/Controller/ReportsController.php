@@ -48,6 +48,9 @@ class ReportsController extends AppController
         if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
             $options['conditions']['Order.store_id'] = $this->request->data['store_id'];
         }
+
+        $options['conditions']['Order.type'] = 0;
+
         $this->loadModel('Order');
         $this->loadModel('Store');
         $orders = $this->Order->getReportOrder($options);
@@ -118,6 +121,9 @@ class ReportsController extends AppController
         if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
             $options['conditions']['Order.store_id'] = $this->request->data['store_id'];
         }
+
+        $options['conditions']['Order.type'] = 0;
+
         $this->loadModel('Order');
         $this->loadModel('Store');
         $orders = $this->Order->getReportOrderDetails($options);

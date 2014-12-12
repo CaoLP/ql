@@ -1,3 +1,6 @@
+<?php
+$this->Html->script(array('report'),array('inline'=>false));
+?>
 <div class="row">
     <div class="col-md-12">
         <form class="inl" role="form" method="post">
@@ -35,6 +38,7 @@
 <div class="row">
     <div class="col-md-12">
         <?php
+        $summary = 0;
         foreach ($orders as $key => $order_details) {
             $order_details = Set::sort($order_details,'{n}.'.$filter, $side);
             ?>
@@ -64,7 +68,9 @@
                         <tr>
                             <td><?php echo $number; ?></td>
                             <td><?php echo $order['sku']; ?></td>
-                            <td><?php echo $order['name']; ?></td>
+                            <td><a href="javascript:;" class="pov" data-id="<?php echo $order['product_id']; ?>"
+                                   data-store_id="<?php echo $key; ?>"
+                                   data-request="<?php echo urlencode(json_encode($this->request->data))?>"><?php echo $order['name']; ?></a></td>
                             <td class="text-center"><?php echo $order['qty']; ?></td>
                             <td class="text-right price-text"><?php echo number_format($order['price'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo number_format($s_total, 0, '.', ','); ?></td>
@@ -72,6 +78,7 @@
                         <?php
                         $number++;
                     }
+                    $summary+= $total;
                     ?>
                     <tr>
                         <td></td>
@@ -86,5 +93,23 @@
         <?php
         }
         ?>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                Tổng cộng
+            </div>
+            <!-- Table -->
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2" class="text-right"><strong>Tổng cộng</strong></td>
+                    <td class="text-right price-text"><?php echo number_format($summary, 0, '.', ','); ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

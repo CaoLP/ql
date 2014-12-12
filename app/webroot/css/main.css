@@ -833,7 +833,7 @@ header .logo span {
 
 .dashboard-wrapper .widget .widget-header .title {
     color: #4d4d4d;
-    float: left;
+    text-align: left;
     font-weight: 100;
     font-size: 18px;
     font-family: 'Trykker'

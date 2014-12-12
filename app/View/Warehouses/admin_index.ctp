@@ -52,7 +52,8 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                                 <th><?php echo $this->Paginator->sort('id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('code'); ?></th>
                                 <th><?php echo $this->Paginator->sort('product_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('price'); ?></th>
+                                <th><?php echo $this->Paginator->sort('price','Bán lẻ'); ?></th>
+                                <th><?php echo $this->Paginator->sort('retail_price','Bán sỉ'); ?></th>
                                 <th><?php echo $this->Paginator->sort('store_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('qty','Số lượng'); ?></th>
                                 <th><?php echo $this->Paginator->sort('options'); ?></th>
@@ -68,6 +69,7 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                                         <?php echo $this->Html->link($warehouse['Product']['name'], array('controller' => 'products', 'action' => 'view', $warehouse['Product']['id'])); ?>
                                     </td>
                                     <td><?php echo number_format(h($warehouse['Warehouse']['price']), 0, '.', ','); ?>&nbsp;</td>
+                                    <td><?php echo number_format(h($warehouse['Warehouse']['retail_price']), 0, '.', ','); ?>&nbsp;</td>
                                     <td>
                                         <?php echo $this->Html->link($warehouse['Store']['name'], array('controller' => 'stores', 'action' => 'view', $warehouse['Store']['id'])); ?>
                                     </td>
@@ -88,6 +90,7 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                                            data-name="<?php echo $warehouse['Product']['name'];?>"
                                            data-sku="<?php echo $warehouse['Warehouse']['code'];?>"
                                            data-price="<?php echo $warehouse['Warehouse']['price'];?>"
+                                           data-retail_price="<?php echo $warehouse['Warehouse']['retail_price'];?>"
                                            data-store="<?php echo $warehouse['Store']['name'];?>"
                                            data-qty="<?php echo $warehouse['Warehouse']['qty'];?>"><i class="icon-pen"></i></a>
                                     </td>
@@ -136,6 +139,7 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                     <span class="input-group-addon">Tên hàng</span>
                     <input style="z-index: 1003;" type="text" readonly="readonly" class="form-control" name="data[P][name]" id="p-name" value="">
                     <input type="hidden" name="data[P][price]" id="hd-price">
+                    <input type="hidden" name="data[P][retail_price]" id="hd-retail_price">
                     <input type="hidden" name="data[P][qty]" id="hd-qty">
                     <input type="hidden" name="data[P][store]" id="hd-store">
                 </div>
@@ -144,6 +148,12 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">Giá</span>
                     <input style="z-index: 1003;" type="text" class="form-control" name="data[Warehouse][price]" id="p-price" value="">
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Giá bán sỉ</span>
+                    <input style="z-index: 1003;" type="text" class="form-control" name="data[Warehouse][retail_price]" id="p-retail_price" value="">
                 </div>
             </li>
             <li class="list-group-item">

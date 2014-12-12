@@ -7,11 +7,13 @@ $(document).ready(function () {
         pId = $("#p-id"),
         hQty = $("#hd-qty"),
         hPrice = $("#hd-price"),
+        hRetailPrice = $("#hd-retail_price"),
         hStore = $("#hd-store"),
         pSku = $("#p-sku"),
         pName = $("#p-name"),
         pPrice = $("#p-price"),
-        allFields = $([]).add(qty).add(pId).add(pPrice).add(pSku).add(pName).add(hQty).add(hPrice).add(hStore),
+        pRetailPrice = $("#p-retail_price"),
+        allFields = $([]).add(qty).add(pId).add(pPrice).add(pRetailPrice).add(pSku).add(pName).add(hQty).add(hPrice).add(hRetailPrice).add(hStore),
         tips = $(".validateTips");
 
 
@@ -40,7 +42,9 @@ $(document).ready(function () {
         qty.val($(this).data('qty'));
         hQty.val($(this).data('qty'));
         pPrice.val($(this).data('price'));
+        pRetailPrice.val($(this).data('retail_price'));
         hPrice.val($(this).data('price'));
+        hRetailPrice.val($(this).data('retail_price'));
         hStore.val($(this).data('store'));
         pId.val($(this).data('id'));
         pSku.val($(this).data('sku'));
@@ -52,6 +56,7 @@ $(document).ready(function () {
         var valid = true;
         allFields.removeClass("ui-state-error");
         valid = valid && checkRegexp(pPrice, /^[0-9]+$/i, "Gía tiền chỉ có thể là số");
+        valid = valid && checkRegexp(pRetailPrice, /^[0-9]+$/i, "Gía tiền chỉ có thể là số");
         valid = valid && checkRegexp(qty, /^[0-9]+$/i, "Số lượng chỉ có thể là số");
         if (valid) {
             $.ajax({

@@ -337,6 +337,7 @@ class InoutWarehousesController extends AppController
                             $temp['sku'] = $pItem['Product']['code'];
                             $temp['qty'] = $pItem['Product']['qty'];
                             $temp['price'] = $data['price'];
+                            $temp['retail_price'] = $data['retail_price'];
                             $temp['total'] = $total;
                             $temp['options'] = implode(',', json_decode($pItem['Product']['option']));
                             $temp['option_names'] = implode(',', json_decode($pItem['Product']['optionName']));
@@ -398,6 +399,7 @@ class InoutWarehousesController extends AppController
                             $temp['sku'] = $pItem['Product']['code'];
                             $temp['qty'] = $pItem['Product']['qty'];
                             $temp['price'] = $data['price'];
+                            $temp['retail_price'] = $data['retail_price'];
                             $temp['total'] = $total;
                             $temp['options'] = $pItem['Product']['option'];
                             $temp['option_names'] = $pItem['Product']['optionName'];
@@ -508,6 +510,7 @@ class InoutWarehousesController extends AppController
                         'inout_warehouse_id' => $detail['inout_warehouse_id'],
                         'sku' => $detail['sku'],
                         'price' => $detail['price'],
+                        'retail_price' => $detail['retail_price'],
                         'name' => $detail['name'],
                         'options' => $detail['options'],
                         'option_names' => $detail['option_names'],
@@ -556,6 +559,7 @@ class InoutWarehousesController extends AppController
                         'inout_warehouse_id' => $detail['inout_warehouse_id'],
                         'sku' => $detail['sku'],
                         'price' => $detail['price'],
+                        'retail_price' => $detail['retail_price'],
                         'name' => $detail['name'],
                         'options' => $detail['options'],
                         'option_names' => $detail['option_names'],
@@ -660,11 +664,16 @@ class InoutWarehousesController extends AppController
                     'product_id' => $item['product_id'],
                     'options' => $item['options'],
                     'price' => $item['price'],
+                    'retail_price' => $item['retail_price'],
                     'code' => $item['sku'],
                 );
                 if (isset($oldData['Warehouse'])) {
                     $t['id'] = $oldData['Warehouse']['id'];
+                    $t['price'] = $oldData['Warehouse']['price'];
                     $t['qty'] = $item['qty'] + $oldData['Warehouse']['qty'];
+                    if($oldData['Warehouse']['retail_price'] != 0) {
+                        $t['retail_price'] = $oldData['Warehouse']['retail_price'];
+                    }
                 } else {
                     $t['qty'] = $item['qty'];
                 }
@@ -719,11 +728,17 @@ class InoutWarehousesController extends AppController
                     'product_id' => $item['product_id'],
                     'options' => $item['options'],
                     'price' => $item['price'],
+                    'retail_price' => $item['retail_price'],
                     'code' => $item['sku'],
                 );
                 if (isset($oldData['Warehouse'])) {
+
                     $t['id'] = $oldData['Warehouse']['id'];
-                    $t['qty'] = $item['qty_received'] + $oldData['Warehouse']['qty'];
+                    $t['price'] = $oldData['Warehouse']['price'];
+                    $t['qty'] =$item['qty_received'] + $oldData['Warehouse']['qty'];
+                    if($oldData['Warehouse']['retail_price'] != 0) {
+                        $t['retail_price'] = $oldData['Warehouse']['retail_price'];
+                    }
                 } else {
                     $t['qty'] = $item['qty_received'];
                 }
