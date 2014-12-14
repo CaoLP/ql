@@ -308,7 +308,10 @@ class OrdersController extends AppController
         }else{
             $promoteData = $this->Order->Promote->find('all', array(
                 'conditions'=>array(
-                    'Promote.global'=> 1,
+                    'OR'=>array(
+                        'Promote.global'=> 1,
+                        'Promote.store_id'=> $this->Session->read('Auth.User.store_id')
+                    ),
                 ),'recursive' => -1));
             $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         }
@@ -483,7 +486,10 @@ class OrdersController extends AppController
         }else{
             $promoteData = $this->Order->Promote->find('all', array(
                 'conditions'=>array(
-                    'Promote.global'=> 1,
+                    'OR'=>array(
+                        'Promote.global'=> 1,
+                        'Promote.store_id'=> $this->Session->read('Auth.User.store_id')
+                    ),
                 ),'recursive' => -1));
             $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         }
@@ -829,7 +835,10 @@ class OrdersController extends AppController
         }else{
             $promoteData = $this->Order->Promote->find('all', array(
                 'conditions'=>array(
-                    'Promote.global'=> 1,
+                    'OR'=>array(
+                        'Promote.global'=> 1,
+                        'Promote.store_id'=> $this->Session->read('Auth.User.store_id')
+                    ),
                 ),'recursive' => -1));
             $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         }
@@ -993,7 +1002,10 @@ class OrdersController extends AppController
         }else{
             $promoteData = $this->Order->Promote->find('all', array(
                 'conditions'=>array(
-                    'Promote.global'=> 1,
+                    'OR'=>array(
+                        'Promote.global'=> 1,
+                        'Promote.store_id'=> $this->Session->read('Auth.User.store_id')
+                    ),
                 ),'recursive' => -1));
             $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
         }

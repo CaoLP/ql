@@ -645,9 +645,12 @@ class InoutWarehousesController extends AppController
                 $arrStore['InoutWarehouseDetail'][] = $temp;
             };
 //					$this->InoutWarehouse->InoutWarehouseDetail->saveMany($arrStore['InoutWarehouseDetail']);
+
+
             $this->loadModel('Warehouse');
             $warehouse = array();
-            $storeId = $this->Session->read('Auth.User.store_id');
+//            $storeId = $this->Session->read('Auth.User.store_id');
+            $storeId = $data['InoutWarehouse']['store_id'];
 
             foreach ($arrStore['InoutWarehouseDetail'] as $item) {
                 $oldData = $this->Warehouse->find('first', array(
