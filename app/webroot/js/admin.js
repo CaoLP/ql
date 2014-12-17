@@ -76,4 +76,21 @@ $(document).ready(function(){
         buttonText: 'Chọn ngày',
         dateFormat : 'yy-mm-dd'
     });
+    $('#real-log-btn').on('click',function(){
+        $('#real-log-btn').hide();
+        $('#real-log').css('right','0px');
+        $.ajax({
+            url : '/admin/action_logs',
+            beforeSend: function(){
+                $('#realtime-log').html('<img src="/img/select2-spinner.gif">');
+            },
+            success: function(response){
+                $('#realtime-log').html(response);
+            }
+        });
+    });
+    $('#real-log-close').on('click',function(){
+        $('#real-log').css('right','-350px');
+        $('#real-log-btn').show();
+    });
 });

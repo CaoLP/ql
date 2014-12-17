@@ -113,6 +113,9 @@ $(document).ready(function () {
             alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng đơn hàng.');
             return false;
         }
+        $('#save').attr('disabled','disabled');
+        $('#save').removeClass('btn-success');
+        $('#save').html('<img src="/img/select2-spinner.gif">Đang xử lý...');
     });
     $(document).on('keypress', '.qty', function (e) {
         e = e || window.event;

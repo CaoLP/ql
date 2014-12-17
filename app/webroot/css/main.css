@@ -3302,3 +3302,29 @@ Common SWITCH
 span.help-inline {
     color: red;
 }
+#real-log-btn{
+    position: fixed;
+    top: 50px;
+    right:0;
+}
+#real-log{
+    position: fixed;
+    top: 50px;
+    right: -350px;
+    transition: 0.5s;
+    height: 100%;
+    background: #FFFFFF;
+    width: 350px;
+    overflow-y: auto;
+    border-left: 1px solid rgba(82, 189, 255, 0.81);
+}
+#real-log .title{
+    font-size: 20px;
+    height: 35px;
+    z-index: 10;
+    text-align: center;
+    padding-top: 8px;
+}
+#real-log-close{
+    position: absolute;
+}

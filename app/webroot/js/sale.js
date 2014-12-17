@@ -102,7 +102,7 @@ $(document).ready(function () {
             return false;
         }
     });
-    $('#OrderAdminAddForm').on('submit',function(){
+    $('#OrderAdminAddForm').on('submit',function(e){
         if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
             alert('Vui nhập thông tin khách hàng khi dùng khuyến mãi.');
             return false;
@@ -113,6 +113,9 @@ $(document).ready(function () {
             alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng đơn hàng.');
             return false;
         }
+        $('#save').attr('disabled','disabled');
+        $('#save').removeClass('btn-success');
+        $('#save').html('<img src="/img/select2-spinner.gif">Đang xử lý...');
     });
     $(document).on('keypress', '.qty', function (e) {
         e = e || window.event;

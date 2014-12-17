@@ -79,3 +79,19 @@
         </div>
     </div>
 </div>
+
+<a href="javascript:;" class="btn btn-info real-log-btn text-center" id="real-log-btn" title="Thông tin hệ thống"><i class="icon icon-envelope"></i></a>
+<div class="real-log" id="real-log">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="javascript:;" class="btn btn-info real-log-btn text-center" id="real-log-close"><i class="icon icon-close"></i></a>
+            <div class="title">Thông tin hệ thống</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="realtime-log">
+
+        </div>
+    </div>
+
+</div>

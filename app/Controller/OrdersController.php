@@ -36,9 +36,23 @@ class OrdersController extends AppController
     public function admin_index()
     {
         $settings = array();
-
-        $this->Order->recursive = 0;
-        if ($this->request->is('post')) {
+        if($this->request->isAjax()){
+            if(isset($this->request->query['term'])){
+                $data = $this->Order->doFilter($this->request->query['term']);
+                $temp = array();
+                foreach($data as $d){
+                    $temp[]['Order'] = array(
+                        'id' =>$d['Order']['id'],
+                        'code' =>$d['Order']['code'],
+                        'customer' =>$d['Customer']['name'],
+                    );
+                }
+                echo json_encode($temp);
+            }
+            die;
+        }else{
+            $this->Order->recursive = 0;
+            if ($this->request->is('post')) {
 
 //            array(
 //                'optionsRadios' => '1',
@@ -48,83 +62,87 @@ class OrdersController extends AppController
 //                'to' => ''
 //            )
 
-            if(isset($this->request->data['q'])){
-                $input =$this->request->data['q'];
-                $settings['conditions']['Order.code like'] = '%' . $input . '%';
-            }
-            if($this->Session->read('Auth.User.group_id') == 1){
-                if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
-                    $settings['conditions']['Order.store_id'] = $this->request->data['store_id'];
+                if(isset($this->request->data['q'])){
+                    $input =$this->request->data['q'];
+                    $settings['conditions']['Order.code like'] = '%' . $input . '%';
                 }
-            }else{
-                $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
-            }
-            if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
-                $settings['conditions']['Order.status'] = $this->request->data['status'];
-            }else{
-                $settings['conditions']['Order.status'] = 1;
-            }
-            if(isset($this->request->data['user_id']) && $this->request->data['user_id'] !=''){
-                $settings['conditions']['Order.created_by'] = $this->request->data['user_id'];
-            }
-            if(isset($this->request->data['type']) && $this->request->data['type'] !=''){
-                $settings['conditions']['Order.type'] = $this->request->data['type'];
-            }
-
-            if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
-                switch ($this->request->data['optionsRadios']){
-                    case 2:
-                        $settings['conditions']['Order.created >='] = date('Y-m-d').' 00:00:00';
-                        $settings['conditions']['Order.created <='] = date('Y-m-d').' 23:59:59';
-                        break;
-                    case 3:
-                        $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
-                        $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
-
-                        $settings['conditions']['Order.created >='] = $first_date.' 00:00:00';
-                        $settings['conditions']['Order.created <='] = $last_date.' 23:59:59';
-                        break;
-                    case 4:
-                        $settings['conditions']['Order.created >='] = date('Y-m-01').' 00:00:00';
-                        $settings['conditions']['Order.created <='] = date('Y-m-t').' 23:59:59';
-                        break;
-                    case 5:
-                        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
-                        $settings['conditions']['Order.created >='] = $this->request->data['from'].' 00:00:00';
-                        $settings['conditions']['Order.created <='] = $this->request->data['to'].' 23:59:59';
-                        }
-                        break;
-                    case 1:
-                    default:
-                        break;
+                if($this->Session->read('Auth.User.group_id') == 1){
+                    if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+                        $settings['conditions']['Order.store_id'] = $this->request->data['store_id'];
+                    }
+                }else{
+                    $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
                 }
+                if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
+                    $settings['conditions']['Order.status'] = $this->request->data['status'];
+                }else{
+                    $settings['conditions']['Order.status'] = 1;
+                }
+                if(isset($this->request->data['user_id']) && $this->request->data['user_id'] !=''){
+                    $settings['conditions']['Order.created_by'] = $this->request->data['user_id'];
+                }
+                if(isset($this->request->data['type']) && $this->request->data['type'] !=''){
+                    $settings['conditions']['Order.type'] = $this->request->data['type'];
+                }
+
+                if(isset($this->request->data['optionsRadios']) && !empty($this->request->data['optionsRadios'])){
+                    switch ($this->request->data['optionsRadios']){
+                        case 2:
+                            $settings['conditions']['Order.created >='] = date('Y-m-d').' 00:00:00';
+                            $settings['conditions']['Order.created <='] = date('Y-m-d').' 23:59:59';
+                            break;
+                        case 3:
+                            $first_date =  (new DateTime())->modify('this week')->format('Y-m-d');
+                            $last_date =   (new DateTime())->modify('this week +6 days')->format('Y-m-d');
+
+                            $settings['conditions']['Order.created >='] = $first_date.' 00:00:00';
+                            $settings['conditions']['Order.created <='] = $last_date.' 23:59:59';
+                            break;
+                        case 4:
+                            $settings['conditions']['Order.created >='] = date('Y-m-01').' 00:00:00';
+                            $settings['conditions']['Order.created <='] = date('Y-m-t').' 23:59:59';
+                            break;
+                        case 5:
+                            if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
+                                $settings['conditions']['Order.created >='] = $this->request->data['from'].' 00:00:00';
+                                $settings['conditions']['Order.created <='] = $this->request->data['to'].' 23:59:59';
+                            }
+                            break;
+                        case 1:
+                        default:
+                            break;
+                    }
+                }
+                $settings['order'] = 'Order.created DESC';
+                $this->Session->write('Order.paginate',$settings);
+                $this->Session->write('Order.request.data',$this->request->data);
+                return $this->redirect(array('action'=>'index'));
             }
-            $settings['order'] = 'Order.created DESC';
-            $this->Session->write('Order.paginate',$settings);
-            $this->Session->write('Order.request.data',$this->request->data);
-            return $this->redirect(array('action'=>'index'));
+            if($this->Session->check('Order.paginate')){
+                $this->paginate = $this->Session->read('Order.paginate');
+            }else{
+                $this->paginate = array(
+                    'conditions'=>array(
+                        'Order.store_id'=> $this->Session->read('Auth.User.store_id'),
+                        'Order.status'=> 1,
+                    ),
+                    'order' => 'Order.created DESC',
+                );
+            }
+            if($this->Session->check('Order.request.data')){
+                $this->request->data = $this->Session->read('Order.request.data');
+            }
+            $this->set('orders', $this->Paginator->paginate());
+            $this->loadModel('Store');
+            $stores = $this->Store->find('list');
+            $this->set(compact('stores'));
+            $this->loadModel('User');
+            $users = $this->User->find('list');
+            $this->set(compact('users'));
         }
-        if($this->Session->check('Order.paginate')){
-            $this->paginate = $this->Session->read('Order.paginate');
-        }else{
-            $this->paginate = array(
-                'conditions'=>array(
-                    'Order.store_id'=> $this->Session->read('Auth.User.store_id'),
-                    'Order.status'=> 1,
-                ),
-                'order' => 'Order.created DESC',
-            );
-        }
-        if($this->Session->check('Order.request.data')){
-            $this->request->data = $this->Session->read('Order.request.data');
-        }
-        $this->set('orders', $this->Paginator->paginate());
-        $this->loadModel('Store');
-        $stores = $this->Store->find('list');
-        $this->set(compact('stores'));
-        $this->loadModel('User');
-        $users = $this->User->find('list');
-        $this->set(compact('users'));
+
+
+
     }
 
     /**
@@ -521,8 +539,27 @@ class OrdersController extends AppController
         return $this->redirect(array('action' => 'index'));
     }
 
-    public function admin_change(){
+    public function admin_change($id = null){
+        if($id == null){
+            $this->view = 'admin_change_input';
+        }else{
+            if (!$this->Order->exists($id)) {
+                throw new NotFoundException(__('Invalid order'));
+            }
+            if ($this->request->is('post')) {
 
+
+            }
+            $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
+            $this->request->data = $this->Order->find('first', $options);
+            $customers = $this->Order->Customer->find('list');
+            $promoteData = $this->Order->Promote->find('all', array('recursive' => -1));
+            $options = $this->Order->OrderDetail->Product->ProductOption->Option->find('list');
+            $promotes = Set::combine($promoteData, '{n}.Promote.id', '{n}.Promote.name');
+            $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
+            $this->layout = 'order';
+            $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options'));
+        }
     }
     public function admin_cancel($id = null){
         $this->Order->id = $id;
