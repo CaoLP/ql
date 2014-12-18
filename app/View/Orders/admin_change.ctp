@@ -24,8 +24,9 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                     ?>
                     <tr>
                         <th>Stt</th>
-                        <th class="text-left">Mã hàng</th>
-                        <th class="text-left">Tên hàng</th>
+                        <th></th>
+                        <th  style="width: 150px" class="text-left">Mã hàng</th>
+                        <th  style="width: 250px" class="text-left">Tên hàng</th>
                         <th class="text-right">Giá</th>
                         <th class="text-right">Số lượng</th>
                         <th class="text-right">Thành tiền</th>
@@ -36,6 +37,9 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                         <tr class="row<?php echo $key?>">
                             <td>
                                 <?php echo $key+1?>
+                            </td>
+                            <td>
+
                             </td>
                             <td class="text-left"><span><?php echo $order_detail['code']?></span></td>
                             <td class="text-left"><span><?php
@@ -58,6 +62,18 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                             <td class="text-right">
                                 <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
                             </td>
+                        </tr>
+                        <tr style="background-color: rgba(229, 255, 202, 0.33)">
+                            <td>
+                            </td>
+                            <td>
+                                <i class="icon icon-tab"></i>
+                            </td>
+                            <td><input class="form-control input-sm product-p"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     <?php
                     }
