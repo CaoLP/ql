@@ -28,8 +28,8 @@ class AdminMenusController extends AppController {
  */
 	public function admin_index() {
 		$this->AdminMenu->recursive = 0;
-//		$this->set('adminMenus', $this->AdminMenu->find('tree'));
-		$this->set('adminMenus', $this->Paginator->paginate());
+		$this->set('adminMenus', $this->AdminMenu->find('threaded'));
+//		$this->set('adminMenus', $this->Paginator->paginate());
 		$groups = $this->Group->find('list');
 		$this->set(compact('groups'));
 	}
