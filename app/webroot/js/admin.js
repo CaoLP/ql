@@ -76,6 +76,10 @@ $(document).ready(function(){
         buttonText: 'Chọn ngày',
         dateFormat : 'yy-mm-dd'
     });
+    $( ".datepicker3" ).datepicker({
+        buttonText: 'Chọn ngày',
+        dateFormat : 'yy-mm-dd'
+    });
     $('#real-log-btn').on('click',function(){
         $('#real-log-btn').hide();
         $('#real-log').css('right','0px');

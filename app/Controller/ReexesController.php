@@ -15,6 +15,18 @@ class ReexesController extends AppController {
  */
 	public $components = array('Paginator');
 
+    public $title_for_layout = 'Quản lý Thu - Chi';
+
+
+    public function beforeFilter(){
+
+        $this->set('types',array(
+            'Phiếu Thu',
+            'Phiếu Chi'
+        ));
+
+        parent::beforeFilter();
+    }
 /**
  * index method
  *

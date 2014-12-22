@@ -93,8 +93,8 @@ class AdminMenusController extends AppController {
 			$options = array('conditions' => array('AdminMenu.' . $this->AdminMenu->primaryKey => $id));
 			$this->request->data = $this->AdminMenu->find('first', $options);
 		}
-		$groups = $this->Group->find('list');
-		$parents = $this->AdminMenu->ParentAdminMenu->find('list');
+        $groups = $this->Group->find('list');
+        $parents = $this->AdminMenu->ParentAdminMenu->generateTreeList($conditions=null, $keyPath=null, $valuePath=null, $spacer= '╟─', $recursive=null);
 		$this->set(compact('groups', 'parents'));
 	}
 
