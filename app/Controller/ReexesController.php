@@ -60,6 +60,15 @@ class ReexesController extends AppController {
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Reex->create();
+            $this->request->data['Reex']['number'] = str_replace(' ','',$this->request->data['Reex']['number']);
+            $this->request->data['Reex']['total'] = str_replace(',','',$this->request->data['Reex']['total']);
+            if($this->request->data['Reex']['number']==''){
+                if($this->request->data['Reex']['type'] == 0){
+                    $this->request->data['Reex']['number'] = 'PT'.date('YmdHis');
+                }else{
+                    $this->request->data['Reex']['number'] = 'PC'.date('YmdHis');
+                }
+            }
 			if ($this->Reex->save($this->request->data)) {
 				$this->Session->setFlash(__('The reex has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -83,6 +92,15 @@ class ReexesController extends AppController {
 			throw new NotFoundException(__('Invalid reex'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+            $this->request->data['Reex']['number'] = str_replace(' ','',$this->request->data['Reex']['number']);
+            $this->request->data['Reex']['total'] = str_replace(',','',$this->request->data['Reex']['total']);
+            if($this->request->data['Reex']['number']==''){
+                if($this->request->data['Reex']['type'] == 0){
+                    $this->request->data['Reex']['number'] = 'PT'.date('YmdHis');
+                }else{
+                    $this->request->data['Reex']['number'] = 'PC'.date('YmdHis');
+                }
+            }
 			if ($this->Reex->save($this->request->data)) {
 				$this->Session->setFlash(__('The reex has been saved.'));
 				return $this->redirect(array('action' => 'index'));

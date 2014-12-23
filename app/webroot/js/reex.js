@@ -1,3 +1,5 @@
-/**
- * Created by USER on 12/22/14.
- */
+$(function(){
+
+    $(":input").inputmask();
+
+});

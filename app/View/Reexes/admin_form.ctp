@@ -38,15 +38,31 @@ echo $this->Html->script(array('jquery.inputmask','reex'), array('inline' => fal
                             )
                         ),
                     ));
-                    echo $this->Form->input('number',array (
-                        'label' => array ('text' => 'Mã chứng từ', 'class' => 'col-lg-2 control-label'),
-                        'placeholder' =>'Bỏ trống nếu muốn sử dụng mã tự động'
-                    ));
+                    $value1='';
+                    if(isset($this->request->data['Reex']['number'])){
+                        $value1 = $this->request->data['Reex']['number'];
+                    }
+                    if($this->request->params['action'] == 'admin_add'){
+                        echo $this->Form->input('number',array (
+                            'label' => array ('text' => 'Mã chứng từ', 'class' => 'col-lg-2 control-label'),
+                            'placeholder' =>'Bỏ trống nếu muốn sử dụng mã tự động',
+                            'value'=>$value1
+                        ));
+                    }else{
+                        echo $this->Form->input('number',array (
+                            'label' => array ('text' => 'Mã chứng từ', 'class' => 'col-lg-2 control-label'),
+                            'placeholder' =>'Bỏ trống nếu muốn sử dụng mã tự động',
+                            'value'=>$value1,
+                            'readonly'=>'readonly'
+                        ));
+                    }
                     echo $this->Form->input('type',array ('label' => array ('text' => 'Loại phiếu', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('store_id',array ('label' => array ('text' => 'Cửa hàng', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('total',array (
                             'label' => array ('text' => 'Số tiền', 'class' => 'col-lg-2 control-label'),
-
+                            'type'=>'text',
+                            'class'=>'form-control price-text',
+                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                         )
                     );
                     echo $this->Form->input('person_one',array ('label' => array ('text' => 'Người giao', 'class' => 'col-lg-2 control-label')));
@@ -54,7 +70,7 @@ echo $this->Html->script(array('jquery.inputmask','reex'), array('inline' => fal
                     echo $this->Form->input('note',array ('label' => array ('text' => 'Ghi chú', 'class' => 'col-lg-2 control-label')));
 
                     if(isset($this->request->data['Reex']['created_date'])){
-                        $value = $this->requset->data['Reex']['created_date'];
+                        $value = $this->request->data['Reex']['created_date'];
                     }else{
                         $value = date('Y-m-d');
                     }
