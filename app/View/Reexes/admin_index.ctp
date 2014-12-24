@@ -16,13 +16,14 @@
 						<th><?php echo $this->Paginator->sort ('number','Số chứng từ'); ?></th>
 						<th><?php echo $this->Paginator->sort ('type','Loại chứng từ'); ?></th>
 						<th><?php echo $this->Paginator->sort ('store_id','Cửa hàng'); ?></th>
-						<th><?php echo $this->Paginator->sort ('note','Ghi chú'); ?></th>
+						<th><?php echo $this->Paginator->sort ('cause','Loại phiếu'); ?></th>
 						<th><?php echo $this->Paginator->sort ('total','Số tiền'); ?></th>
 						<th><?php echo $this->Paginator->sort ('person_one','Bên A'); ?></th>
 						<th><?php echo $this->Paginator->sort ('person_two','Bên B'); ?></th>
 						<th><?php echo $this->Paginator->sort ('created_date','Ngày tạo'); ?></th>
 						<th><?php echo $this->Paginator->sort ('created_by','Người tạo'); ?></th>
-						<th class="actions"><?php echo __ ('Actions'); ?></th>
+                        <th><?php echo $this->Paginator->sort ('note','Ghi chú'); ?></th>
+                        <th class="actions"><?php echo __ ('Actions'); ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -33,13 +34,14 @@
 							<td>
 								<?php echo $this->Html->link ($reex['Store']['name'], array ('controller' => 'stores', 'action' => 'view', $reex['Store']['id'])); ?>
 							</td>
-							<td><?php echo h ($reex['Reex']['note']); ?>&nbsp;</td>
+							<td><?php echo h ($reex['Reex']['cause']); ?>&nbsp;</td>
 							<td class="price-text"><?php echo number_format($reex['Reex']['total'], 0, '.', ',');?></td>
 							<td><?php echo h ($reex['Reex']['person_one']); ?>&nbsp;</td>
 							<td><?php echo h ($reex['Reex']['person_two']); ?>&nbsp;</td>
 							<td><?php echo h (date('d/m/Y',strtotime($reex['Reex']['created_date']))); ?>&nbsp;</td>
 							<td><?php echo h ($reex['TrackableCreator']['name']); ?>&nbsp;</td>
-							<td class="actions">
+                            <td><?php echo h ($reex['Reex']['note']); ?>&nbsp;</td>
+                            <td class="actions">
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $reex['Reex']['id']), array('escape' => false,'title'=>'Xem thông tin')); ?>
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $reex['Reex']['id']), array('escape' => false,'title'=>'Thay đổi thông tin')); ?>
                                 <?php echo $this->Form->postLink('<i class="glyphicon glyphicon-trash"></i>', array('action' => 'delete', $reex['Reex']['id']), array('escape' => false,'title'=>'Xoá'), __('Are you sure you want to delete # %s?', $reex['Reex']['id'])); ?>

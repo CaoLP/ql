@@ -4,7 +4,7 @@ $this->Html->addCrumb ('<li>' . $title_for_layout . '</li>', array ('action' => 
 if ($this->request->params['action'] == 'admin_add') {
     $this->Html->addCrumb ('<li>Tạo phiếu</li>', '/'.$this->request->url, array ('escape' => false));
 } else {
-    $this->Html->addCrumb ('<li>' . $this->request->data['Reex']['id'] . '</li>', '/'.$this->request->url, array ('escape' => false));
+    $this->Html->addCrumb ('<li>' . $this->request->data['Reex']['number'] . '</li>', '/'.$this->request->url, array ('escape' => false));
 }
 echo $this->Html->script(array('jquery.inputmask','reex'), array('inline' => false));
 ?>
@@ -56,19 +56,6 @@ echo $this->Html->script(array('jquery.inputmask','reex'), array('inline' => fal
                             'readonly'=>'readonly'
                         ));
                     }
-                    echo $this->Form->input('type',array ('label' => array ('text' => 'Loại phiếu', 'class' => 'col-lg-2 control-label')));
-                    echo $this->Form->input('store_id',array ('label' => array ('text' => 'Cửa hàng', 'class' => 'col-lg-2 control-label')));
-                    echo $this->Form->input('total',array (
-                            'label' => array ('text' => 'Số tiền', 'class' => 'col-lg-2 control-label'),
-                            'type'=>'text',
-                            'class'=>'form-control price-text',
-                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
-                        )
-                    );
-                    echo $this->Form->input('person_one',array ('label' => array ('text' => 'Người giao', 'class' => 'col-lg-2 control-label')));
-                    echo $this->Form->input('person_two',array ('label' => array ('text' => 'Người nhận', 'class' => 'col-lg-2 control-label')));
-                    echo $this->Form->input('note',array ('label' => array ('text' => 'Ghi chú', 'class' => 'col-lg-2 control-label')));
-
                     if(isset($this->request->data['Reex']['created_date'])){
                         $value = $this->request->data['Reex']['created_date'];
                     }else{
@@ -82,6 +69,28 @@ echo $this->Html->script(array('jquery.inputmask','reex'), array('inline' => fal
                         'class'=>'datepicker3 form-control',
                         'value' => $value
                     ));
+
+                    echo $this->Form->input('type',array ('label' => array ('text' => 'Loại chứng từ', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('cause',array ('label' => array ('text' => 'Loại phiếu', 'class' => 'col-lg-2 control-label'),'options'=>$causes));
+                    ?>
+                    <div class="form-group required" style="display: none;" id="temp_div">
+                        <label for="temp" class="col-lg-2 control-label">Loại khác</label>
+                        <div class="col-lg-10"><input name="temp" class="form-control" id="temp" required>
+                        </div>
+                    </div>
+                    <?php
+                    echo $this->Form->input('store_id',array ('label' => array ('text' => 'Cửa hàng', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('total',array (
+                            'label' => array ('text' => 'Số tiền', 'class' => 'col-lg-2 control-label'),
+                            'type'=>'text',
+                            'class'=>'form-control price-text',
+                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                        )
+                    );
+                    echo $this->Form->input('person_one',array ('label' => array ('text' => 'Người giao', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('person_two',array ('label' => array ('text' => 'Người nhận', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('note',array ('label' => array ('text' => 'Ghi chú', 'class' => 'col-lg-2 control-label')));
+
                     ?>
                     <div class="btn-group" style="position: fixed;bottom: 0; right: 0;z-index: 1;">
                         <?php echo $this->Form->submit ('Lưu lại', array ('div' => false, 'class' => 'btn btn-success')) ?>

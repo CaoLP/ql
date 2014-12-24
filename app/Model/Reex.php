@@ -108,4 +108,14 @@ class Reex extends AppModel {
 			'order' => ''
 		)
 	);
+
+    public function getCauses(){
+        $this->belongsTo = array();
+        $causes= $this->find('all', array(
+            'fields'=>'DISTINCT cause',
+        ));
+        $causes = Set::combine($causes,'{n}.Reex.cause','{n}.Reex.cause');
+        $causes['other'] = 'Loại khác';
+        return $causes;
+    }
 }

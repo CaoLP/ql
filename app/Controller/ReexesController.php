@@ -78,6 +78,8 @@ class ReexesController extends AppController {
 		}
 		$stores = $this->Reex->Store->find('list');
 		$this->set(compact('stores'));
+        $causes = $this->Reex->getCauses();
+        $this->set(compact('causes'));
 	}
 
 /**
@@ -113,6 +115,8 @@ class ReexesController extends AppController {
 		}
 		$stores = $this->Reex->Store->find('list');
 		$this->set(compact('stores'));
+        $causes = $this->Reex->getCauses();
+        $this->set(compact('causes'));
 	}
 
 /**
