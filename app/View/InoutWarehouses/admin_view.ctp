@@ -52,7 +52,7 @@ echo $this->Form->hidden('received');
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="hidden-qty form-control" data-limit="<?php echo $item['qty'] ?>" data-price="<?php echo $item['price'] ?>"
                                                name="data[InoutWarehouseDetail][<?php echo $key ?>][qty_received]"
-                                               value="<?php echo $item['qty_received']?$item['qty_received']:0;?>">
+                                               value="<?php echo $item['qty_received']?$item['qty_received']:$item['qty'];?>">
                                           <span class="input-group-btn">
                                             <a href="javascript:;"  class="btn btn-info btn-sm btn-fill-all">All</a>
                                           </span>

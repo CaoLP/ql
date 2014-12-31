@@ -6,7 +6,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
 <script>
     var product_ajax = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'ajax_product'))?>';
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
-    var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
+    var store_id = '<?php echo $this->request->data['Order']['store_id'];?>';
 </script>
 <div class="row">
 <div class="col-md-8">
@@ -63,17 +63,21 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                                 <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
                             </td>
                         </tr>
-                        <tr style="background-color: rgba(229, 255, 202, 0.33)">
-                            <td>
+                        <tr>
+                            <td colspan="7" style="padding: 0">
+                                <table id="tb-<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
+                                    <tr style="background-color: rgba(229, 255, 202, 0.33)">
+                                        <td style="width: 10px; padding: 0">
+                                            <a href="javascript:;" class="btn add-more" data-key="#tb-<?php echo $key;?>"><i class="icon icon-plus"></i></a>
+                                        </td>
+                                        <td style="width: 150px"><input class="form-control input-sm product-p"></td>
+                                        <td style="width: 250px"><div class="p-name"></div></td>
+                                        <td><div class="p-price price-text text-right"></div></td>
+                                        <td><div class="p-qty text-right"></div></td>
+                                        <td><div class="p-total price-text text-right"></div></td>
+                                    </tr>
+                            </table>
                             </td>
-                            <td>
-                                <i class="icon icon-tab"></i>
-                            </td>
-                            <td><input class="form-control input-sm product-p"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                         </tr>
                     <?php
                     }

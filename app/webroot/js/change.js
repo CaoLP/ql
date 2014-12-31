@@ -30,6 +30,58 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 });
 
 $(function(){
+    setupAutocomplete();
+
+    $(document).on('click','.add-more',function(){
+       var template = '<tr style="background-color: rgba(229, 255, 202, 0.33)">'+
+        '   <td  style="width: 10px; padding: 0">'+
+        '   <a href="javascript:;" class="btn add-more" data-key="{key}"><i class="icon icon-plus"></i></a>'+
+        '   </td>'+
+        '    <td style="width: 150px"><input class="form-control input-sm product-p"></td>'+
+        '    <td style="width: 250px"><div class="p-name"></div></td>'+
+        '    <td><div class="p-price price-text text-right"></div></td>'+
+        '    <td><div class="p-qty text-right"></div></td>'+
+        '    <td><div class="p-total price-text text-right"></div></td>'+
+        '</tr>';
+
+        var id = $(this).data('key');
+
+        var total = $(id).data('total');
+        if(countTr(id) < total && countQty(id) < total){
+            $(id).append(template.replace('{key}',id));
+            $(this).html('<i class="icon icon-remove-2"></i>').removeClass('add-more').addClass('remove-item');
+            setupAutocomplete();
+        }
+    });
+    $(document).on('click','.remove-item',function(){
+        $(this).closest('tr').remove();
+    });
+});
+function addProduct(tr,pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
+    var name = tr.find('.p-name'),
+        price = tr.find('.p-price'),
+        qty = tr.find('.p-qty'),
+        total = tr.find('.p-total');
+    name.html('<span>'+pName+'</span>');
+    price.html('<span>'+digits(pPrice)+'</span>');
+    qty.html('<input value="'+1+'" type="number" class="form-control input-sm pull-right" min="1" max="'+limit+'" style="width: 60px;">');
+    total.html('<span>'+digits(pPrice)+'</span>');
+}
+function countQty(table){
+    var total = 0;
+    $(table + ' .p-qty input').each(function(){
+        total+= ($(this).val()*1);
+    });
+    return total;
+}
+function countTr(table){
+    var total = 0;
+    $(table + ' tr').each(function(){
+        total+= 1;
+    });
+    return total;
+}
+function setupAutocomplete(){
     $(".product-p").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.
         showHeader: true,
@@ -57,6 +109,7 @@ $(function(){
         // Event handler for when a list item is selected.
         select: function (event, ui) {
             addProduct(
+                $(this).closest('tr'),
                 ui.item.Product.id,
                 ui.item.Product.code,
                 ui.item.Product.name,
@@ -74,7 +127,7 @@ $(function(){
         minLength: 1,
         autoFocus: true,
         open:function(){
-          $('.ui-autocomplete').css('width','270px');
+            $('.ui-autocomplete').css('width','270px');
         },
         focus: function (event, ui) {
             event.preventDefault();
@@ -96,7 +149,7 @@ $(function(){
     }).click(function () {
             $(this).mcautocomplete("search");
         });
-});
-function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
-
+}
+function digits(number) {
+    return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 }

@@ -546,9 +546,9 @@ class OrdersController extends AppController
             if (!$this->Order->exists($id)) {
                 throw new NotFoundException(__('Invalid order'));
             }
-            if ($this->request->is('post')) {
-
-
+            if ($this->request->is(array('post', 'put'))) {
+                debug($this->request->data);
+                die;
             }
             $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
             $this->request->data = $this->Order->find('first', $options);
