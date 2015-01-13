@@ -105,8 +105,8 @@ class Store extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'OrderDetail' => array(
-			'className' => 'OrderDetail',
+		'Order' => array(
+			'className' => 'Order',
 			'foreignKey' => 'store_id',
 			'dependent' => false,
 			'conditions' => '',
