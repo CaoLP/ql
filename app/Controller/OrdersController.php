@@ -217,6 +217,7 @@ class OrdersController extends AppController
                         'promote_type' => $this->request->data['Order']['promote_type'],
                         'note' => $this->request->data['Order']['note'],
                         'store_id' => $this->request->data['Order']['store_id'],
+                        'store_id' => $this->request->data['Order']['flag_type'],
                         'total' => $total,
                         'status' => 1,
                         'code' => $orCode,
@@ -354,8 +355,8 @@ class OrdersController extends AppController
                 $temp[$key]['data'] = json_encode($data);
             }
             $this->request->data['OrderDetail'] = $temp;
-            debug($this->request->data['OrderDetail']);
         }
+        debug($this->request->data);
         $this->Session->write('Cart',$this->request->data);
         die;
     }

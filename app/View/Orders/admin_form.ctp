@@ -99,6 +99,9 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
                                         ?>
+                                        <?php
+                                        echo $this->Form->hidden('flag_type');
+                                        ?>
                                         <input id="input-customer" class="form-control" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                             echo $customersl[$this->request->data['Order']['customer_id']];

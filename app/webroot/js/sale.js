@@ -283,6 +283,11 @@ $(document).ready(function () {
         }
     });
     $(document).on('click','.popover-content button',function(){
+
+        if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
+            alert('Vui nhập thông tin khách hàng khi giảm giá.');
+            return false;
+        }
         var i_key = $(this).data('key');
         var s_price = $(this).data('price');
         var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
@@ -303,8 +308,10 @@ $(document).ready(function () {
                 $('.pov').each(function () {
                     $(this).popover('destroy');
                 });
+                $('#OrderFlagType').val('1');
             }else{
-                alert('Giá thay đổi không được quá 10% giá gốc');
+                $('#OrderFlagType').val('2');
+                //alert('Giá thay đổi không được quá 10% giá gốc');
             }
         }else{
             if(i_price >= 0 && i_price <= 10){
@@ -319,8 +326,10 @@ $(document).ready(function () {
                 $('.pov').each(function () {
                     $(this).popover('destroy');
                 });
+                $('#OrderFlagType').val('1');
             }else{
-                alert('Giá thay đổi không được quá 10% giá gốc');
+                $('#OrderFlagType').val('2');
+                //alert('Giá thay đổi không được quá 10% giá gốc');
             }
         }
 

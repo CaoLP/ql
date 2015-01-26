@@ -6,6 +6,14 @@ $(document).ready(function () {
         select: function( event, ui ) {
             $( "#input-customer" ).val( ui.item.label );
             $( "#input-customer-id" ).val( ui.item.value );
+
+            if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
+
+            }else{
+                if($('#OrderFlagType').val() == ''){
+                    $('#OrderFlagType').val('3');
+                }
+            }
             return false;
         }
     }).focus(function(){
