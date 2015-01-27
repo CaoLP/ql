@@ -147,7 +147,15 @@ setlocale(LC_MONETARY, "vi_VN");
                     foreach ($orders as $order):
                         $total += $order['Order']['amount'];
                         ?>
-                        <tr class="table-toggle-expand" <?php  if($order['Order']['type'] == 1){?>style="background-color: rgba(234, 217, 253, 0.71)"<?php } ?>>
+                        <tr class="table-toggle-expand <?php
+                        if($order['Order']['flag_type'] == 1) echo ' bg-green ';
+                        if($order['Order']['flag_type'] == 2) echo ' bg-red ';
+                        if($order['Order']['flag_type'] == 3) echo ' bg-yellow ';
+                        if($order['Order']['flag_type'] == 4) echo '  ';
+                        ?>" <?php
+                        if($order['Order']['type'] == 1){
+                        ?>style="background-color: rgba(234, 217, 253, 0.71)"<?php
+                        }?>>
                             <td>
                                 <?php
                                 if($order['Order']['type'] == 0)

@@ -1,0 +1,39 @@
+
+
+@media print {
+    header, .container, footer{
+        display: none;
+    }
+    #print-form{
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+    #print-form table{
+        width: 100%;
+        display: table !important;
+    }
+    .dot-bottom{
+        border-bottom: 1px dotted #000
+    }
+    .bill-table td, .bill-table th{
+        border: 1px solid rgba(0, 0, 0, 0.45);
+        padding: 2px;
+    }
+    .bill-shop-name {
+        font-weight: bold;
+    }
+    .bill-title {
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .bill-bold {
+        font-weight: bold;
+    }
+    .bill-italic {
+        font-style: italic;
+    }
+}
+#print-form table{
+    display: none;
+}

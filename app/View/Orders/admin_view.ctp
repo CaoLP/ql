@@ -27,12 +27,14 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                         <th>Stt</th>
                         <th class="text-left">Mã hàng</th>
                         <th class="text-left">Tên hàng</th>
+                        <th class="text-right">Giá gốc</th>
                         <th class="text-right">Giá</th>
                         <th class="text-right">Số lượng</th>
                         <th class="text-right">Thành tiền</th>
                     </tr>
                     <?php
                     foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
+                        $data = json_decode($order_detail['data'], true);
                         ?>
                         <tr class="row<?php echo $key?>">
                             <td>
@@ -52,6 +54,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                                     $op = implode(',',$temp);
                                     echo $op;
                                     ?></span></td>
+                            <td class="text-right"><span class="price-text"><?php echo number_format($data['price'], 0, '.', ','); ?></span></td>
                             <td class="text-right"><span class="price-text"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></span></td>
                             <td class="text-right">
                                 <?php echo $order_detail['qty']?>

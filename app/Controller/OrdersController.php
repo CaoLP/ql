@@ -185,9 +185,11 @@ class OrdersController extends AppController
                 $total = 0;
                 $amount = 0;
                 $order_detail = $this->request->data['OrderDetail'];
+                $basic_total = 0;
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
-                    $total += $detail['qty'] * $data['price'];
+                    $basic_total += $detail['qty'] * $data['price'];
+                    $total += $detail['qty'] * $detail['mod_price'];
                 }
                 if(empty($this->request->data['Order']['promote_value'])){
                     $this->request->data['Order']['promote_value'] = 0;
@@ -196,9 +198,11 @@ class OrdersController extends AppController
                 if ($this->request->data['Order']['promote_type'] == 1) {
                     $promote = $total * ($promote / 100);
                 }
+                if($promote == 0){
+                    $promote = $basic_total - $total;
+                }
                 $amount = $total - $promote;
-
-                if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
+                if( empty($this->request->data['Order']['customer_id'])){
                     $this->request->data['Order']['customer_id'] = 1;
                 }
                 if(empty($this->request->data['Order']['receive'])){
@@ -217,7 +221,8 @@ class OrdersController extends AppController
                         'promote_type' => $this->request->data['Order']['promote_type'],
                         'note' => $this->request->data['Order']['note'],
                         'store_id' => $this->request->data['Order']['store_id'],
-                        'store_id' => $this->request->data['Order']['flag_type'],
+                        'flag_type' => $this->request->data['Order']['flag_type'],
+                        'basic_total' => $basic_total,
                         'total' => $total,
                         'status' => 1,
                         'code' => $orCode,
@@ -356,7 +361,7 @@ class OrdersController extends AppController
             }
             $this->request->data['OrderDetail'] = $temp;
         }
-        debug($this->request->data);
+        print_r($this->request->data);
         $this->Session->write('Cart',$this->request->data);
         die;
     }
@@ -369,23 +374,30 @@ class OrdersController extends AppController
      */
     public function admin_edit($id = null)
     {
+
         if (!$this->Order->exists($id)) {
             throw new NotFoundException(__('Invalid order'));
         }
         if ($this->request->is(array('post', 'put'))) {
+
             $total = 0;
             $amount = 0;
             $order_detail = $this->request->data['OrderDetail'];
             $oldDetail = json_decode($this->request->data['oldData'],true);
             $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
 
+            $basic_total = 0;
             foreach ($order_detail as $detail) {
                 $data = json_decode($detail['data'], true);
-                $total += $detail['qty'] * $data['price'];
+                $basic_total += $detail['qty'] * $data['price'];
+                $total += $detail['qty'] * $detail['mod_price'];
             }
             $promote = $this->request->data['Order']['promote_value'];
             if ($this->request->data['Order']['promote_type'] == 1) {
                 $promote = $total * ($promote / 100);
+            }
+            if($promote == 0){
+                $promote = $basic_total - $total;
             }
             $amount = $total - $promote;
             $id = $this->request->data['Order']['id'];
@@ -398,6 +410,8 @@ class OrdersController extends AppController
                     'promote_type' => $this->request->data['Order']['promote_type'],
                     'note' => $this->request->data['Order']['note'],
                     'store_id' => $this->request->data['Order']['store_id'],
+                    'flag_type' => $this->request->data['Order']['flag_type'],
+                    'basic_total' => $basic_total,
                     'total' => $total,
                     'code' => $this->request->data['Order']['code'],
                     'total_promote' => $promote,
@@ -452,6 +466,11 @@ class OrdersController extends AppController
                     $warehouse[] = $t;
                 }
                 $this->Order->OrderDetail->saveMany($storeDetail);
+
+//                $refill  = $saveData;
+//                $refill['OrderDetail'] = $storeDetail;
+//                debug($refill);die;
+
                 $this->Warehouse->saveMany($warehouse);
 
                 $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));

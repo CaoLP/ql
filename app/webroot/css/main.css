@@ -651,11 +651,11 @@ header .logo span {
 }
 
 /*#mini-nav ul li a {*/
-    /*display: block;*/
-    /*padding: 13px 15px;*/
-    /*color: #999;*/
-    /*font-size: 13px;*/
-    /*text-align: left*/
+/*display: block;*/
+/*padding: 13px 15px;*/
+/*color: #999;*/
+/*font-size: 13px;*/
+/*text-align: left*/
 /*}*/
 
 #mini-nav ul li a {
@@ -3238,7 +3238,7 @@ Common SWITCH
 }
 
 .onoffswitch-inner:after {
-    content: "VNĐ";
+    content: "VND";
     padding-right: 8px;
     background-color: #EEEEEE;
     color: #F51111;
@@ -3279,15 +3279,15 @@ Common SWITCH
 }
 .popover-footer {
     text-align: right;
-     margin: 0;
-     padding: 8px 14px;
-     font-size: 14px;
-     font-weight: 400;
-     line-height: 18px;
-     background-color: #F7F7F7;
-     border-bottom: 1px solid #EBEBEB;
-     border-radius: 5px 5px 0 0;
- }
+    margin: 0;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 5px 5px 0 0;
+}
 .hidden-qty-text .input-group.input-group-sm {
     width:100px
 }
@@ -3327,4 +3327,18 @@ span.help-inline {
 }
 #real-log-close{
     position: absolute;
+}
+/*back Color*/
+.bg-red{
+    background: rgba(255, 0, 0, 0.17);
+}
+.bg-green{
+    background: rgba(0, 255, 61, 0.17);
+}
+.bg-yellow{
+    background: rgba(255, 232, 0, 0.17);
+}
+
+.bg-red:hover,.bg-green:hover,.bg-yellow:hover{
+    color: rgba(255, 0, 0, 0.90);
 }

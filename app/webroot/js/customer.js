@@ -1,22 +1,29 @@
+var custName = '';
 $(document).ready(function () {
-
     $( "#input-customer" ).autocomplete({
         minLength: 0,
         source: customers,
         select: function( event, ui ) {
+            if($('#OrderFlagType').val() != '' || $('#OrderFlagType').val() != '0' || $('#OrderPromoteValue').val() !='0'){
+                console.log(custName);
+                if(ui.item.value == '1'){
+                    document.getElementById('input-customer').value = custName;
+                    return false;
+                }
+            }else{
+
+            }
             $( "#input-customer" ).val( ui.item.label );
             $( "#input-customer-id" ).val( ui.item.value );
-
-            if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
-
-            }else{
-                if($('#OrderFlagType').val() == ''){
-                    $('#OrderFlagType').val('3');
-                }
-            }
+            custName =  ui.item.label;
+            document.getElementById('input-customer').value = custName;
+            document.getElementById('input-customer').setAttribute('value',custName);
+            saveCart();
+//            document.getElementById('input-customer').value =  ui.item.label;
             return false;
         }
     }).focus(function(){
+            custName = document.getElementById('input-customer').getAttribute('value');
             //Use the below line instead of triggering keydown
             $(this).data("autocomplete").search($(this).val());
         })

@@ -56,7 +56,13 @@ class ReportsController extends AppController
         $orders = $this->Order->getReportOrder($options);
         $orders = Set::combine($orders, '{n}.Order.id', '{n}.Order', '{n}.Order.store_id');
         $stores = $this->Store->find('list');
-        $this->set(compact('orders', 'stores'));
+        $this->loadModel('Customer');
+        $customers = $this->Customer->find('all',array(
+            'fields' => 'id,name,phone',
+            'recursive'=>-1
+        ));
+        $customers = Set::combine($customers,'{n}.Customer.id','{n}.Customer');
+        $this->set(compact('orders', 'stores','customers'));
 //        (int) 7 => array(
 //        'Order' => array(
 //            'id' => '10',

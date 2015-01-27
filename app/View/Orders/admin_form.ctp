@@ -31,13 +31,22 @@ echo $this->Html->css(array('order'), array('inline' => false));
             ?>
             <div class="widget-body order-w-b" id="order-product">
                 <table id="order-product-list">
+                    <tr>
+                        <th></th>
+                        <th class="text-left">Mã hàng</th>
+                        <th class="text-left">Tên hàng</th>
+                        <th class="text-right">Giá gốc</th>
+                        <th class="text-right">Giá</th>
+                        <th class="text-right">Số lượng</th>
+                        <th class="text-right">Thành tiền</th>
+                    </tr>
                     <?php
                     if(isset($this->request->data['OrderDetail'])){
                         ?>
                         <?php
                         foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                             $data = json_decode($order_detail['data'], true);
-                            if(!isset($data['mod_price'])) $data['mod_price'] = $data['price'];
+                            if(!isset($data['mod_price'])) $data['mod_price'] = $order_detail['price'];
                             ?>
                             <tr class="row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo $data['options']?>">
                                 <td>
@@ -47,6 +56,9 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-left"><span><?php echo $data['name']?></span><br><span class="opt">
                                    <?php echo $data['optionsName']?></span></td>
                                 <td class="text-right">
+                                    <span class="price-text"><?php echo number_format($data['price'], 0, '.', ','); ?></span>
+                                </td>
+                                <td class="text-right">
                                     <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
                                     <span class="price-text" id="<?php echo $key?>-price-text">
                                         <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
@@ -55,7 +67,8 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 </td>
                                 <td class="text-right">
                                     <a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>
-                                    <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" data-price="<?php echo $data['mod_price']?>" value="<?php echo $order_detail['qty']?>">
+                                    <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>"
+                                           data-price="<?php echo $data['mod_price']?>" data-basic_price="<?php echo $data['price']?>" value="<?php echo $order_detail['qty']?>">
                                     <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                                 </td>
                                 <td class="text-right">
@@ -98,6 +111,9 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <span class="input-group-addon">Khách hàng</span>
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
+                                        ?>
+                                        <?php
+                                        echo $this->Form->hidden('basic_price');
                                         ?>
                                         <?php
                                         echo $this->Form->hidden('flag_type');

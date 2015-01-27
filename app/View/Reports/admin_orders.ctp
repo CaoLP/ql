@@ -46,8 +46,8 @@
                         <th class="text-center" style="width: 100px">Tổng tiền</th>
                         <th class="text-right" style="width: 150px">Khuyến mãi</th>
                         <th class="text-right" style="width: 150px">Thành tiền</th>
-                        <th class="text-right" style="width: 150px">Khách trả</th>
-                        <th class="text-right" style="width: 150px">Trả lại</th>
+                        <th class="text-right" style="width: 150px">Khách hàng</th>
+                        <th class="text-right" style="width: 150px">Điện thoại</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -75,14 +75,19 @@
                         $summary5 += $o['refund'];
 
                         ?>
-                        <tr>
+                        <tr class="<?php
+                        if($o['flag_type'] == 1) echo ' bg-green ';
+                        if($o['flag_type'] == 2) echo ' bg-red ';
+                        if($o['flag_type'] == 3) echo ' bg-yellow ';
+                        if($o['flag_type'] == 4) echo '  ';
+                        ?>">
                             <td><?php echo $numb; ?></td>
                             <td><?php echo $o['code']; ?></td>
                             <td class="text-right price-text"><?php echo number_format($o['total'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo number_format($o['total_promote'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo number_format($o['amount'], 0, '.', ','); ?></td>
-                            <td class="text-right price-text"><?php echo number_format($o['receive'], 0, '.', ','); ?></td>
-                            <td class="text-right price-text"><?php echo number_format($o['refund'], 0, '.', ','); ?></td>
+                            <td class="text-right price-text"><?php echo $customers[$o['customer_id']]['name'];//echo number_format($o['receive'], 0, '.', ','); ?></td>
+                            <td class="text-right price-text"><?php echo $customers[$o['customer_id']]['phone'];//echo number_format($o['refund'], 0, '.', ','); ?></td>
                         </tr>
                         <?php
                         $numb++;
@@ -94,8 +99,8 @@
                         <td class="text-right price-text"><?php echo number_format($total1, 0, '.', ','); ?></td>
                         <td class="text-right price-text"><?php echo number_format($total2, 0, '.', ','); ?></td>
                         <td class="text-right price-text"><?php echo number_format($total3, 0, '.', ','); ?></td>
-                        <td class="text-right price-text"><?php echo number_format($total4, 0, '.', ','); ?></td>
-                        <td class="text-right price-text"><?php echo number_format($total5, 0, '.', ','); ?></td>
+                        <td class="text-right price-text"><?php //echo number_format($total4, 0, '.', ','); ?></td>
+                        <td class="text-right price-text"><?php// echo number_format($total5, 0, '.', ','); ?></td>
                     </tr>
                     </tbody>
                 </table>
@@ -112,14 +117,25 @@
                 Tổng cộng
             </div>
             <table class="table">
+                <thead>
+                <tr>
+                    <th style="width: 50px"></th>
+                    <th></th>
+                    <th class="text-center" style="width: 100px">Tổng tiền</th>
+                    <th class="text-right" style="width: 150px">Khuyến mãi</th>
+                    <th class="text-right" style="width: 150px">Thành tiền</th>
+                    <th class="text-right" style="width: 150px"></th>
+                    <th class="text-right" style="width: 150px"></th>
+                </tr>
+                </thead>
                 <tr>
                     <td style="width: 50px"></td>
                     <td></td>
                     <td class="text-center price-text" style="width: 100px"><?php echo number_format($summary1, 0, '.', ','); ?></td>
                     <td class="text-right price-text" style="width: 150px"><?php echo number_format($summary2, 0, '.', ','); ?></td>
                     <td class="text-right price-text" style="width: 150px"><?php echo number_format($summary3, 0, '.', ','); ?></td>
-                    <td class="text-right price-text" style="width: 150px"><?php echo number_format($summary4, 0, '.', ','); ?></td>
-                    <td class="text-right price-text" style="width: 150px"><?php echo number_format($summary5, 0, '.', ','); ?></td>
+                    <td class="text-right price-text" style="width: 150px"><?php //echo number_format($summary4, 0, '.', ','); ?></td>
+                    <td class="text-right price-text" style="width: 150px"><?php //echo number_format($summary5, 0, '.', ','); ?></td>
                 </tr>
             </table>
         </div>
