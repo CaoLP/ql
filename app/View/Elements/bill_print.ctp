@@ -32,13 +32,15 @@
                         <th>TT</th>
                         <th class="text-left">Tên hàng</th>
                         <th class="text-center">SL</th>
-                        <th class="text-right">Đơn giá</th>
+                        <th class="text-right">Giá gốc</th>
+                        <th class="text-right">Giá</th>
                         <th class="text-right">Thành tiền</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
                     foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
+                        $data = json_decode($order_detail['data'], true);
                         ?>
                         <tr>
                             <td><?php echo $key+1;?></td>
@@ -58,6 +60,7 @@
                                     ?></span>
                             </td>
                             <td  class="text-center"><?php echo $order_detail['qty']?></td>
+                            <td  class="text-right"><?php echo number_format($data['price'], 0, '.', ','); ?></td>
                             <td  class="text-right"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></td>
                             <td  class="text-right"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></td>
                         </tr>
@@ -65,6 +68,7 @@
                     }?>
                     <tr>
                         <td colspan="2" class="bill-bold">Tổng cộng</td>
+                        <td colspan="1"></td>
                         <td colspan="1"></td>
                         <td colspan="2" class="text-right"><?php echo number_format($this->request->data['Order']['total'], 0, '.', ',');?></td>
                     </tr>
