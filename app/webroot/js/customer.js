@@ -1,13 +1,14 @@
 var custName = '';
 $(document).ready(function () {
+    $('#OrderPromoteId').attr('readonly','readonly');
     $( "#input-customer" ).autocomplete({
         minLength: 0,
         source: customers,
         select: function( event, ui ) {
             if($('#OrderFlagType').val() != '' || $('#OrderFlagType').val() != '0' || $('#OrderPromoteValue').val() !='0'){
-                console.log(custName);
                 if(ui.item.value == '1'){
                     document.getElementById('input-customer').value = custName;
+                    $('#OrderPromoteId').attr('readonly','readonly');
                     return false;
                 }
             }else{
@@ -18,6 +19,7 @@ $(document).ready(function () {
             custName =  ui.item.label;
             document.getElementById('input-customer').value = custName;
             document.getElementById('input-customer').setAttribute('value',custName);
+            $('#OrderPromoteId').attr('readonly',false);
             saveCart();
 //            document.getElementById('input-customer').value =  ui.item.label;
             return false;
