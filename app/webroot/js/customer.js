@@ -1,6 +1,15 @@
 var custName = '';
 $(document).ready(function () {
-    $('#OrderPromoteId').attr('readonly','readonly');
+    if($('#input-customer-id').val() == 1){
+        $('#OrderPromoteId').attr('readonly','readonly');
+    }
+    $('#OrderPromoteId').on('change',function(e){
+        if($('#OrderPromoteId').attr('readonly') == 'readonly'){
+            e.preventDefault();
+            $('#OrderPromoteId').val('');
+            return false;
+        }
+    });
     $( "#input-customer" ).autocomplete({
         minLength: 0,
         source: customers,
@@ -8,6 +17,7 @@ $(document).ready(function () {
             if($('#OrderFlagType').val() != '' || $('#OrderFlagType').val() != '0' || $('#OrderPromoteValue').val() !='0'){
                 if(ui.item.value == '1'){
                     document.getElementById('input-customer').value = custName;
+                    $('#OrderPromoteId').val('').change();
                     $('#OrderPromoteId').attr('readonly','readonly');
                     return false;
                 }
