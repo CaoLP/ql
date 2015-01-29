@@ -38,6 +38,7 @@
         <div class="actions">
             <?php echo $this->Form->button('Login',array('class'=>'btn btn-danger'))?>
             <a class="link" href="<?php echo $this->Html->url(array('admin'=>true,'controller'=>'users','action'=>'register'))?>">Đăng ký mới</a>
+            <a class="link pull-left" href="<?php echo $this->Html->url(array('admin'=>true,'controller'=>'staff_attendances','action'=>'add'))?>">Điểm danh</a>
             <div class="clearfix"></div>
         </div>
         <?php echo $this->Form->end(); ?>

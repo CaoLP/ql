@@ -47,7 +47,7 @@
 <div id="mini-nav" class="hidden-phone">
     <ul>
         <li class="attendance">
-            <a href="#attendance" data-toggle="modal">
+            <a href="<?php echo $this->Html->url(array('admin'=>true,'controller'=>'staff_attendances','action'=>'add'))?>" data-toggle="modal">
                 <i class="fs1 icon-star-3" aria-hidden="true" data-icon="&#xe088;"></i>
                 <span class="will-hidden">Điểm danh</span>
             </a>
