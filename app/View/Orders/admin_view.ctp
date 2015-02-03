@@ -227,7 +227,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                             __('Bạn có muốn huỷ đơn hàng này không?'));
                     }
                         ?>
-                    <a onclick="window.print();" class="btn btn-success">In hóa đơn</a>
+                    <a id="print-bill" class="btn btn-success">In hóa đơn</a>
                 </div>
             </div>
         </div>

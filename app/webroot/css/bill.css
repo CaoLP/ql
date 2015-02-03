@@ -33,6 +33,20 @@
     .bill-italic {
         font-style: italic;
     }
+
+    /*print A6 css*/
+    .A6-main-container{
+        margin: 0;
+        font: normal 10px 'Open Sans', arial, sans-serif;
+        line-height: 15px;
+    }
+    .A6-dashboard-wrapper{
+        padding: 5px;
+    }
+    .A6-hr{
+        margin-top: 5px!important;
+        margin-bottom: 5px!important;
+    }
 }
 #print-form table{
     display: none;
