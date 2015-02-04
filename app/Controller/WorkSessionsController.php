@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class WorkSessionsController extends AppController {
 
-    public $title_for_layout = 'Hệ thống cửa hàng';
+    public $title_for_layout = 'Quản lý ca làm';
     /**
      * Components
      *

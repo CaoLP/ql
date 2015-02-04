@@ -55,6 +55,10 @@ class StaffWorkSessionsController extends AppController {
             } else {
                 $this->Session->setFlash(__('The staff_work_session could not be saved. Please, try again.'));
             }
+        }else{
+            $staffs = $this->StaffWorkSession->User->find('list');
+            $workSessions = $this->StaffWorkSession->WorkSession->find('list');
+            $this->set(compact('staffs','workSessions'));
         }
     }
 
@@ -79,6 +83,9 @@ class StaffWorkSessionsController extends AppController {
         } else {
             $options = array('conditions' => array('StaffWorkSession.' . $this->StaffWorkSession->primaryKey => $id));
             $this->request->data = $this->StaffWorkSession->find('first', $options);
+            $staffs = $this->StaffWorkSession->User->find('list');
+            $workSessions = $this->StaffWorkSession->WorkSession->find('list');
+            $this->set(compact('staffs','workSessions'));
         }
     }
 
