@@ -37,8 +37,8 @@
     /*print A6 css*/
     .A6-main-container{
         margin: 0;
-        font: normal 10px 'Open Sans', arial, sans-serif;
-        line-height: 15px;
+        font: normal 8px 'Open Sans', arial, sans-serif;
+        line-height: 12px;
     }
     .A6-dashboard-wrapper{
         padding: 5px;
