@@ -268,7 +268,7 @@ $(document).ready(function () {
                         if (check)
                             check = 'checked="checked"';
                         radio += '<li style="display: inline; padding: 5px">' +
-                            '<input class="radio-op"  data-code="' + code + '" data-name="' + name + '" type="radio" name="radio' + group_id + '" value="' + this[key]['option_id'] + '" ' + check + '>' +
+                            '<input class="radio-op"  data-code="' + code + '" data-name="' + name + '" type="radio" name="radio' + group_id + '" value="' + this[key]['option_id'] + '">' +
                             '<span style="margin-left: 3px">' + name + '</span>' +
                             '</li>';
                         renderIt = true;
