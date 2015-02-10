@@ -56,16 +56,21 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                                     echo $op;
                                     ?></span></td>
                             <td class="text-right"><span class="price-text"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></span></td>
-                            <td class="text-right">
+                            <td class="text-right" id="old-qty-text-<?php echo $key;?>" qty="<?php echo $order_detail['qty']?>" staticQty="<?php echo $order_detail['qty']?>">
                                 <?php echo $order_detail['qty']?>
                             </td>
                             <td class="text-right">
-                                <span class="new-total-price price-text"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
+                                <span id="new-total-price-<?php echo $key;?>" class="price-text get-total" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
                             </td>
+                            <?php
+                            $temp_data = $order_detail;
+                            unset($temp_data['data'])
+                            ?>
+                            <textarea style="display: none;" name="OrderDetail[<?php echo $key;?>][oldData]" ><?php echo json_encode($temp_data);?></textarea>
                         </tr>
                         <tr>
                             <td colspan="7" style="padding: 0">
-                                <table id="tb-<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
+                                <table id="tb-<?php echo $key;?>" data-id="<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
                                     <tr style="background-color: rgba(229, 255, 202, 0.33)">
                                         <td style="width: 10px; padding: 0">
                                             <a href="javascript:;" class="btn add-more" data-key="#tb-<?php echo $key;?>"><i class="icon icon-plus"></i></a>
@@ -74,7 +79,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                                         <td style="width: 250px"><div class="p-name"></div></td>
                                         <td><div class="p-price price-text text-right"></div></td>
                                         <td><div class="p-qty text-right"></div></td>
-                                        <td><div class="p-total price-text text-right"></div></td>
+                                        <td><div class="get-total p-total price-text text-right" total="0"></div><div style="display: none" class="p-hidden-info"></div></td>
                                     </tr>
                             </table>
                             </td>

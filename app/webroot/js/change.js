@@ -31,7 +31,13 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 
 $(function(){
     setupAutocomplete();
-
+    $(document).on("keyup keypress",'input,select', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
     $(document).on('click','.add-more',function(){
        var template = '<tr style="background-color: rgba(229, 255, 202, 0.33)">'+
         '   <td  style="width: 10px; padding: 0">'+
@@ -41,7 +47,8 @@ $(function(){
         '    <td style="width: 250px"><div class="p-name"></div></td>'+
         '    <td><div class="p-price price-text text-right"></div></td>'+
         '    <td><div class="p-qty text-right"></div></td>'+
-        '    <td><div class="p-total price-text text-right"></div></td>'+
+        '    <td><div class="p-total price-text text-right"></div><div style="display: none" class="p-hidden-info"></div>' +
+        '    </td>'+
         '</tr>';
 
         var id = $(this).data('key');
@@ -56,16 +63,68 @@ $(function(){
     $(document).on('click','.remove-item',function(){
         $(this).closest('tr').remove();
     });
+
+    $(document).on('change','.p-qty input',function(){
+        var id = $(this).data('id'),
+            price = $(this).data('price'),
+            qty = parseInt($(this).val()),
+            total = $('#total-'+id),
+            pQty = $('#p-qty-data-'+id);
+        var min = parseInt($(this).attr('min')),
+            max = parseInt($(this).attr('max'));
+        if(qty < min){
+            $(this).val(min);
+            qty = min;
+        }
+        if(qty > max){
+            $(this).val(max);
+            qty = max;
+        }
+        var resTotal = qty * price;
+        total.html('<span id="total-'+id+'">'+digits(resTotal)+'</span>');
+        total.parent().attr('total',resTotal);
+        pQty.val(qty);
+        var table = $(this).closest('table');
+        var tableId = table.data('id');
+        var oldQtyField = $('#old-qty-text-'+tableId);
+        var newTotalField = $('#new-total-price-'+tableId);
+        var q = 0;
+        table.find('.p-qty input').each(function(){
+            q += parseInt($(this).val());
+        });
+        var oldQty = parseInt(oldQtyField.attr('qty'));
+        var newOldQty = oldQty - q;
+        if(newOldQty < 0) newOldQty =0;
+        var oldPrice = parseInt(newTotalField.attr('price'));
+        var newTotal = newOldQty * oldPrice;
+
+//        oldQtyField.attr('qty',newOldQty);
+        oldQtyField.html(digits(newOldQty));
+        newTotalField.attr('total',newTotal);
+        newTotalField.html(digits(newTotal));
+
+        //#new-total-price-
+        //#old-qty-text-
+    });
 });
 function addProduct(tr,pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
+    var id= uniqId();
     var name = tr.find('.p-name'),
         price = tr.find('.p-price'),
         qty = tr.find('.p-qty'),
-        total = tr.find('.p-total');
+        total = tr.find('.p-total'),
+        hidden = tr.find('.p-hidden-info');
     name.html('<span>'+pName+'</span>');
     price.html('<span>'+digits(pPrice)+'</span>');
-    qty.html('<input value="'+1+'" type="number" class="form-control input-sm pull-right" min="1" max="'+limit+'" style="width: 60px;">');
-    total.html('<span>'+digits(pPrice)+'</span>');
+    qty.html('<input value="'+1+'" type="number" data-id="'+id+'" data-price="'+pPrice+'" class="form-control input-sm pull-right" min="1" max="'+limit+'" style="width: 60px;">');
+    total.html('<span id="total-'+id+'">'+digits(pPrice)+'</span>');
+    total.attr('total',pPrice);
+    var template = '<input type="hidden" id="p-qty-data-'+id+'" name="OrderDetail['+id+'][qty]" value="1">';
+    template += '<textarea style="display: none" name="OrderDetail['+id+'][data]">'+pData+'</textarea>';
+    template += '<input type="hidden" id="replace-'+id+'" name="OrderDetail['+id+'][replace]" value="1">';
+    hidden.html(template);
+
+    tr.find('.p-qty input').change();
 }
 function countQty(table){
     var total = 0;
@@ -152,4 +211,7 @@ function setupAutocomplete(){
 }
 function digits(number) {
     return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+}
+function uniqId() {
+    return Math.round(new Date().getTime() + (Math.random() * 100));
 }
