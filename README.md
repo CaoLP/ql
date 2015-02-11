@@ -27,7 +27,7 @@ Some Handy Links
 
 [Cake Software Foundation](http://cakefoundation.org) - Promoting development related to CakePHP
 
-Get Support! ok
+Get Support! oki
 ------------
 
 [#cakephp](http://webchat.freenode.net/?channels=#cakephp) on irc.freenode.net - Come chat with us, we have cake
