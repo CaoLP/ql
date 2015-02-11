@@ -77,6 +77,13 @@
             </td>
         </tr>
         <tr class="dot-bottom">
+            <td colspan="4" class="bill-bold">Tổng cộng</td>
+            <?php
+
+            ?>
+            <td class="text-right"><?php echo number_format($this->request->data['Order']['basic_total'], 0, '.', ',');?></td>
+        </tr>
+        <tr class="dot-bottom">
             <td colspan="4" class="bill-bold">Giảm giá</td>
             <?php
 

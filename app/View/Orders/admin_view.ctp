@@ -138,7 +138,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon">Thành tiền</span>
                                     <?php
-                                    echo $this->Form->input('total', array('label' => false, 'type' => 'text', 'div' => false,
+                                    echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
                                         'readonly' => 'readonly',
                                         'id' => 'summary-total',
                                         'class' => 'form-control',
