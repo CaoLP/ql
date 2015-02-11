@@ -197,11 +197,12 @@ class OrdersController extends AppController
                 $promote = $this->request->data['Order']['promote_value'];
                 if ($this->request->data['Order']['promote_type'] == 1) {
                     $promote = $total * ($promote / 100);
+                    $amount = $total - $promote;
                 }
                 if($promote == 0){
                     $promote = $basic_total - $total;
+                    $amount = $total;
                 }
-                $amount = $total - $promote;
                 if( empty($this->request->data['Order']['customer_id'])){
                     $this->request->data['Order']['customer_id'] = 1;
                 }
@@ -385,7 +386,6 @@ class OrdersController extends AppController
             $order_detail = $this->request->data['OrderDetail'];
             $oldDetail = json_decode($this->request->data['oldData'],true);
             $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
-
             $basic_total = 0;
             foreach ($order_detail as $detail) {
                 $data = json_decode($detail['data'], true);
@@ -395,11 +395,13 @@ class OrdersController extends AppController
             $promote = $this->request->data['Order']['promote_value'];
             if ($this->request->data['Order']['promote_type'] == 1) {
                 $promote = $total * ($promote / 100);
+                $amount = $total - $promote;
             }
             if($promote == 0){
                 $promote = $basic_total - $total;
+                $amount = $total;
             }
-            $amount = $total - $promote;
+
             $id = $this->request->data['Order']['id'];
             $saveData = array(
                 'Order' => array(

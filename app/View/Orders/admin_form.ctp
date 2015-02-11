@@ -63,6 +63,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                     <span class="price-text" id="<?php echo $key?>-price-text">
                                         <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
                                     <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
+
                                     </a>
                                 </td>
                                 <td class="text-right">
@@ -109,6 +110,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Khách hàng</span>
+
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
                                         ?>
