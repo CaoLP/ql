@@ -27,4 +27,14 @@ class StaffAttendance extends AppModel
             'order' => ''
         )
     );
+
+
+    public function getWorkingTimebyCode($code){
+
+        return $this->StaffWorkSession->find('all',array(
+            'conditions' => array(
+                'User.code' => $code
+            )
+        ));
+    }
 }

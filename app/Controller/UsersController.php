@@ -22,7 +22,7 @@ class UsersController extends AppController
     {
 
         parent::beforeFilter();
-        $this->Auth->allow('admin_login', 'admin_register');
+        $this->Auth->allow('admin_login', 'admin_register', 'admin_user_list');
 
 //		$this->User->bindModel(array('belongsTo'=>array(
 //			'Group' => array(
@@ -236,5 +236,16 @@ class UsersController extends AppController
             $this->Session->setFlash(__('The user could not be deleted. Please, try again.'), 'message', array('class' => 'alert-danger'));
         }
         return $this->redirect(array('action' => 'index'));
+    }
+
+    public function admin_user_list(){
+        if($this->request->isAjax()){
+            $code = $this->request->query('q');
+            $data = $this->User->getUserbyCode($code);
+            if(count($data) > 0){
+                echo count($data);
+            }
+        }
+        die;
     }
 }

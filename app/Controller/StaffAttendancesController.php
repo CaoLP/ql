@@ -6,7 +6,8 @@ App::uses('AppController', 'Controller');
  * @property StaffAttendance $StaffAttendance
  * @property PaginatorComponent $Paginator
  */
-class StaffAttendancesController extends AppController {
+class StaffAttendancesController extends AppController
+{
 
     public $title_for_layout = 'Điểm danh nhân viên';
     /**
@@ -19,14 +20,16 @@ class StaffAttendancesController extends AppController {
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('admin_add');
+        $this->Auth->allow('admin_add', 'admin_user_list');
     }
+
     /**
      * index method
      *
      * @return void
      */
-    public function admin_index() {
+    public function admin_index()
+    {
         $this->StaffAttendance->recursive = 0;
         $this->set('staff_attendances', $this->Paginator->paginate());
     }
@@ -38,7 +41,8 @@ class StaffAttendancesController extends AppController {
      * @param string $id
      * @return void
      */
-    public function admin_view($id = null) {
+    public function admin_view($id = null)
+    {
         if (!$this->StaffAttendance->exists($id)) {
             throw new NotFoundException(__('Invalid staff_attendance'));
         }
@@ -51,7 +55,8 @@ class StaffAttendancesController extends AppController {
      *
      * @return void
      */
-    public function admin_add() {
+    public function admin_add()
+    {
         if ($this->request->is('post')) {
             $this->StaffAttendance->create();
             if ($this->StaffAttendance->save($this->request->data)) {
@@ -60,6 +65,15 @@ class StaffAttendancesController extends AppController {
             } else {
                 $this->Session->setFlash(__('The staff_attendance could not be saved. Please, try again.'));
             }
+        }
+        if ($this->request->isAjax()) {
+            $user_id = $this->request->data('id');
+            $data = $this->StaffAttendance->StaffWorkSession->find('all', array(
+                'conditions' => array(
+                    'User.id' => $user_id
+                )
+            ));
+            $this->set(compact('data'));
         }
     }
 
@@ -70,7 +84,8 @@ class StaffAttendancesController extends AppController {
      * @param string $id
      * @return void
      */
-    public function admin_edit($id = null) {
+    public function admin_edit($id = null)
+    {
         if (!$this->StaffAttendance->exists($id)) {
             throw new NotFoundException(__('Invalid staff_attendance'));
         }
@@ -94,7 +109,8 @@ class StaffAttendancesController extends AppController {
      * @param string $id
      * @return void
      */
-    public function admin_delete($id = null) {
+    public function admin_delete($id = null)
+    {
         $this->StaffAttendance->id = $id;
         if (!$this->StaffAttendance->exists()) {
             throw new NotFoundException(__('Invalid staff_attendance'));
@@ -106,5 +122,24 @@ class StaffAttendancesController extends AppController {
             $this->Session->setFlash(__('The staff_attendance could not be deleted. Please, try again.'));
         }
         return $this->redirect(array('action' => 'index'));
+    }
+
+    public function admin_user_list(){
+//        if($this->request->isAjax()){
+            $code = $this->request->query('term');
+            $data = $this->StaffAttendance->getWorkingTimebyCode($code);
+            if(count($data) > 0){
+                $result = array();
+                $result[0]['id'] = $data[0]['User']['id'];
+                $result[0]['label'] = $data[0]['User']['name'];
+                $result[0]['value'] = $data[0]['User']['name'];
+                $result[0]['work_session'] = array();
+                foreach($data as $d){
+                    array_push($result[0]['work_session'],$d['WorkSession']);
+                }
+                echo json_encode($result);
+            }
+//        }
+        die;
     }
 }

@@ -201,7 +201,13 @@ class User extends AppModel {
 	}
 
 
-
+    function getUserbyCode($code){
+       return $this->find('first',array(
+           'conditions' => array(
+               'code' => $code
+           )
+       ));
+    }
 
 
 /**
