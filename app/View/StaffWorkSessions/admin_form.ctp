@@ -40,6 +40,7 @@ $this->Html->script(array('staff_work_session'),array('inline'=>false));
                     ));
                     echo $this->Form->input('staff_id',array ('label' => array ('text' => 'Nhân viên', 'class' => 'col-lg-2 control-label'), 'class' => 'form-control'));
                     echo $this->Form->input('work_session_id',array ('label' => array ('text' => 'Ca làm', 'class' => 'col-lg-2 control-label')));
+                    echo $this->Form->input('basic_salary',array ('label' => array ('text' => 'Lương cơ bản', 'class' => 'col-lg-2 control-label')));
                     ?>
                     <div class="btn-group" style="position: fixed;bottom: 0; right: 0;z-index: 1;">
                         <?php echo $this->Form->submit ('Lưu lại', array ('div' => false, 'class' => 'btn btn-success')) ?>

@@ -16,6 +16,7 @@
                     <tr>
                         <th><?php echo $this->Paginator->sort('staff_id','Nhân viên'); ?></th>
                         <th><?php echo $this->Paginator->sort('work_session_id','Ca làm'); ?></th>
+                        <th><?php echo $this->Paginator->sort('basic_salary','Lương cơ bản'); ?></th>
                         <th class="actions"><?php echo __('Actions'); ?></th>
                     </tr>
                     </thead>
@@ -26,6 +27,7 @@
                         <tr class="table-toggle-expand">
                             <td><?php echo h($staff_work_session['User']['name']); ?></td>
                             <td><?php echo h($staff_work_session['WorkSession']['name']); ?></td>
+                            <td><?php echo h($staff_work_session['StaffWorkSession']['basic_salary']); ?></td>
                             <td class="actions">
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $staff_work_session['StaffWorkSession']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>
                                 <?php echo $this->Form->postLink('<i class="glyphicon glyphicon-trash"></i>', array('action' => 'delete', $staff_work_session['StaffWorkSession']['id']), array('escape' => false,'title'=>'Xoá'), __('Are you sure you want to delete # %s?', $staff_work_session['StaffWorkSession']['id'])); ?>
