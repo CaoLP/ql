@@ -156,6 +156,16 @@ class StaffAttendancesController extends AppController
             $delay = $this->request->data['delay'];
             $allow = $minutes - $delay;
 
+            $available = $this->StaffAttendance->find('list', array(
+                'conditions'=>array(
+                    'staff_id' => $this->request->data['staff_id'],
+                    'staff_work_session_id' => $this->request->data['staff_work_session_id'],
+                    'StaffAttendance.time like' => $now->format('Y-m-d') .'%'
+                )
+            ));
+            if(count($available) > 0){
+                $saveData['StaffAttendance']['id'] = array_keys($available)[0];
+            }
             if($this->request->data['type'] == 1){
                 $saveData['StaffAttendance']['begin_time'] = date('c');
                 $saveData['StaffAttendance']['delay_time_begin'] =$allow;
