@@ -179,7 +179,7 @@ echo $this->Html->script(
                             'class' => 'checkbox col-lg-2',
                             'error' => array(
                                 'attributes' => array(
-                                    '					wrap' => 'span', 'class' => 'help-inline'
+                                    'wrap' => 'span', 'class' => 'help-inline'
                                 )
                             )
                         ));

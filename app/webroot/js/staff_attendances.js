@@ -26,10 +26,10 @@ $(function () {
             '<div class="row">' +
             '<div class="col-lg-12">' +
             '<div class="col-lg-6">' +
-            '<label class="radio-inline col-lg-6"><input type="radio" name="type" value="1">Vào làm</label>' +
+            '<label class="radio-inline col-lg-6"><input type="radio" {d1} name="type" value="1">Vào làm</label>' +
             '</div>' +
             '<div class="col-lg-6">' +
-            '<label class="radio-inline"><input type="radio" name="type" value="0">Ra về</label>' +
+            '<label class="radio-inline"><input type="radio" name="type" {d2} value="2">Ra về</label>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -47,7 +47,7 @@ $(function () {
             '<p></p>' +
             '<div class="row">' +
             '<div class="col-lg-12">' +
-            '<a href="javascript:;" class="btn btn-success col-lg-12 submit" onclick="submitForm(this)" data-target="#action_{id}">Xác nhận</a>' +
+            '<a href="javascript:;" class="btn btn-success col-lg-12 submit" {disabled} onclick="submitForm(this)" data-target="#action_{id}">Xác nhận</a>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -62,7 +62,6 @@ $(function () {
             $(".ui-menu-item:first a").click();
         },
         select: function (event, ui) {
-            console.log(ui.item);
             var html = '';
             $.each(ui.item.work_session, function (index, item) {
                 var content = template;
@@ -73,6 +72,19 @@ $(function () {
                 content= content.replace(/{delay}/g,item.delay);
                 content= content.replace(/{staffId}/g,ui.item.id);
                 content= content.replace(/{staffWorkSession}/g,item.id);
+                var d1 = '';
+                var d2 = '';
+                $.each(item.attended,function(i,it){
+                    if(it==1) d1 = 'disabled';
+                    if(it==2) d2 = 'disabled';
+                });
+                var disabled = '';
+                if(d1 == 'disabled' && d2 == 'disabled'){
+                    disabled = 'disabled';
+                }
+                content= content.replace(/{d1}/g,d1);
+                content= content.replace(/{d2}/g,d2);
+                content= content.replace(/{disabled}/g,disabled);
                 html+= content;
             });
             $('#select-session').html(html);

@@ -58,13 +58,55 @@ class StaffAttendancesController extends AppController
     public function admin_add()
     {
         if ($this->request->is('post')) {
+            $now =  new DateTime();
+            $begin =  new DateTime($this->request->data['begin']);
+            $end =  new DateTime($this->request->data['end']);
+            $late_early = false;
+            if($this->request->data['type'] == 1){
+                if($now > $begin){
+                    $late_early = true;
+                }
+                $since_start = $now->diff($begin);
+            }
+            else{
+                if($now < $end){
+                    $late_early = true;
+                }
+                $since_start = $now->diff($end);
+            }
+            $minutes = $since_start->days * 24 * 60;
+            $minutes += $since_start->h * 60;
+            $minutes += $since_start->i;
+            $delay = $this->request->data['delay'];
+            $allow = $minutes - $delay;
+
+
+            $saveData = array('StaffAttendance'=>array(
+                'staff_id' => $this->request->data['staff_id'],
+                'staff_work_session_id' => $this->request->data['staff_work_session_id'],
+                'type' => $this->request->data['type'],
+                'time' => date('c'),
+                'delay_time' => $allow,
+                'note' => $this->request->data['note'],
+            ));
+//            debug($this->request->data);die;
             $this->StaffAttendance->create();
-            debug($this->request->data);die;
-            if ($this->StaffAttendance->save($this->request->data)) {
-                $this->Session->setFlash(__('The staff_attendance has been saved.'));
-                return $this->redirect(array('action' => 'index'));
+            if ($this->StaffAttendance->save($saveData)) {
+                $this->view = 'success';
+                if($this->request->data['type'] == 1 && $late_early){
+                    $msg = 'Bạn đã trể hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                }else if ($this->request->data['type'] == 2 && $late_early){
+                    $msg = 'Bạn về sớm hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                }else{
+                    if($this->request->data['type'] == 1){
+                        $msg = 'Bạn đi làm đúng giờ <br> Cảm ơn đã điểm danh !';
+                    }else{
+                        $msg = 'Bạn về đúng giờ <br> Cảm ơn đã điểm danh !';
+                    }
+                }
+                $this->set(compact('msg'));
             } else {
-                $this->Session->setFlash(__('The staff_attendance could not be saved. Please, try again.'));
+
             }
         }
         if ($this->request->isAjax()) {
@@ -128,15 +170,23 @@ class StaffAttendancesController extends AppController
     public function admin_user_list(){
 //        if($this->request->isAjax()){
             $code = $this->request->query('term');
-            $data = $this->StaffAttendance->getWorkingTimebyCode($code);
-            if(count($data) > 0){
+            $full_data = $this->StaffAttendance->getWorkingTimebyCode($code);
+            if(count($full_data) > 0){
+                $data = $full_data['work_session'];
+                $attended = $full_data['today_attendance'];
+                $attended = Set::combine($attended,'{n}.StaffAttendance.type','{n}.StaffAttendance.type','{n}.StaffAttendance.staff_work_session_id');
                 $result = array();
                 $result[0]['id'] = $data[0]['User']['id'];
                 $result[0]['label'] = $data[0]['User']['name'];
                 $result[0]['value'] = $data[0]['User']['name'];
                 $result[0]['work_session'] = array();
                 foreach($data as $d){
-                    array_push($result[0]['work_session'],$d['WorkSession']);
+                    $temp = $d['WorkSession'];
+                    $temp['attended'] = array();
+                    if(isset($attended[$temp['id']])){
+                        $temp['attended'] = $attended[$temp['id']];
+                    }
+                    array_push($result[0]['work_session'],$temp);
                 }
                 echo json_encode($result);
             }
