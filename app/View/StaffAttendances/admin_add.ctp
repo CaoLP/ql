@@ -3,13 +3,15 @@ $this->Html->script(array('staff_attendances'), array('inline' => false));
 ?>
 <script>
     var linkUsers = '<?php echo $this->Html->url(array('action'=>'user_list'));?>';
+    var submitLink = '<?php echo $this->Html->url(array('action'=>'add'));?>';
+    var serverTime = new Date("'<?php echo date('m/d/Y h:i:s a', time());?>'");
 </script>
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6">
         <div class="widget">
             <div class="widget-header">
-                <h3>Điểm danh</h3>
+                <h3>Điểm danh <span id="timer" class="pull-right"></span></h3>
             </div>
             <div class="widget-body">
                 <div class="input-group">

@@ -13,39 +13,72 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-setlocale(LC_MONETARY,"vi_VN");
+setlocale(LC_MONETARY, "vi_VN");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<?php echo $this->Html->charset (); ?>
-	<title>
-		<?php echo $title_for_layout; ?>
-	</title>
-	<?php
-	echo $this->Html->meta ('icon');
+    <?php echo $this->Html->charset(); ?>
+    <title>
+        <?php echo $title_for_layout; ?>
+    </title>
+    <?php
+    echo $this->Html->meta('icon');
 
-	echo $this->Html->script(array(
-								'html5-trunk'
-							 ));
+    echo $this->Html->script(array(
+        'html5-trunk'
+    ));
 
-	echo $this->Html->css (array (
-								 'style',
-								 'bootstrap.min',
-								 'main',
-								 'bootstrap-modal',
-								 '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css',
-						   ));
-	echo $this->fetch ('meta');
-	echo $this->fetch ('css');
-	?>
-	<?php
-	echo $this->Html->script (array (
-									'wysiwyg/wysihtml5-0.3.0',
+    echo $this->Html->css(array(
+        'style',
+        'bootstrap.min',
+        'main',
+        'bootstrap-modal',
+        '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css',
+        'custom.core'
+    ));
+    echo $this->fetch('meta');
+    echo $this->fetch('css');
+    ?>
+
+</head>
+<body>
+
+<!-- Header start -->
+<header>
+
+    <?php echo $this->element('header') ?>
+
+</header>
+<!-- Header end -->
+
+<!-- Main Container start -->
+<div class="main-container">
+    <!-- Dashboard wrapper start -->
+    <div class="dashboard-wrapper">
+        <div class="container">
+            <?php echo $this->element('content_header') ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->Session->flash(); ?>
+                </div>
+            </div>
+            <?php echo $this->fetch('content'); ?>
+        </div>
+    </div>
+    <!-- Dashboard wrapper end -->
+</div>
+<!-- Main Container end -->
+<footer>
+    <?php echo $this->element('footer') ?>
+</footer>
+<?php
+echo $this->Html->script(array(
+    'wysiwyg/wysihtml5-0.3.0',
 //									'jquery.min',
-									'//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
-									'bootstrap',
-									'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js',
+    '//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
+    'bootstrap',
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js',
 //									'jquery-ui-1.8.23.custom.min',
 //									'flot/jquery.flot',
 //									'flot/jquery.flot.resize.min',
@@ -54,47 +87,16 @@ setlocale(LC_MONETARY,"vi_VN");
 //									'tiny-scrollbar',
 //									'jquery.sparkline',
 //									'rating/jquery.raty',
-									'/ElFinder/elfinder/js/elfinder.min',
-									//								'custom-index',
-									//								'custom',
-                                    'admin',
-                                    'bootstrap-modalmanager',
-                                    'bootstrap-modal',
+    '/ElFinder/elfinder/js/elfinder.min',
+    //								'custom-index',
+    //								'custom',
+    'admin',
+    'bootstrap-modalmanager',
+    'bootstrap-modal',
 
-    ));
-	echo $this->fetch ('script');
-	?>
-	<?php echo $this->fetch('scriptBottom');?>
-</head>
-<body>
-
-<!-- Header start -->
-<header>
-
-<?php echo $this->element('header')?>
-
-</header>
-<!-- Header end -->
-
-<!-- Main Container start -->
-<div class="main-container">
-<!-- Dashboard wrapper start -->
-<div class="dashboard-wrapper">
-	<div class="container">
-		<?php echo $this->element('content_header')?>
-        <div class="row">
-            <div class="col-md-12">
-                <?php echo $this->Session->flash(); ?>
-            </div>
-        </div>
-		<?php echo $this->fetch('content'); ?>
-	</div>
-</div>
-<!-- Dashboard wrapper end -->
-</div>
-<!-- Main Container end -->
-<footer>
-    <?php echo $this->element('footer')?>
-</footer>
+));
+echo $this->fetch('script');
+?>
+<?php echo $this->fetch('scriptBottom'); ?>
 </body>
 </html>

@@ -59,6 +59,7 @@ class StaffAttendancesController extends AppController
     {
         if ($this->request->is('post')) {
             $this->StaffAttendance->create();
+            debug($this->request->data);die;
             if ($this->StaffAttendance->save($this->request->data)) {
                 $this->Session->setFlash(__('The staff_attendance has been saved.'));
                 return $this->redirect(array('action' => 'index'));

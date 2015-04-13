@@ -1,9 +1,26 @@
-$(function () {
+//Users time
+var localTime = new Date();
+var millDiff = localTime - serverTime;
 
+window.onload=function(){
+    //set the interval so clock ticks
+    var timeClock=setInterval("TimeTick()",10);
+}
+function TimeTick(){
+    //grab updated time
+    var timeLocal = new Date();
+    //add time difference
+    timeLocal.setMilliseconds(timeLocal.getMilliseconds() - millDiff);
+    var dateString = timeLocal.getHours() + ":" + timeLocal.getMinutes()+ ":" + timeLocal.getSeconds();
+    //display the value
+    document.getElementById("timer").innerHTML = dateString;
+}
+$(function () {
     var template =
         '<div class="widget" id="action_{id}">' +
+            '<form method="post" action="'+submitLink+'">'+
             '<div class="widget-header">' +
-            '<h4>{name} ({begin} - {end}) - Đã trể {late} phút/ {delay} phút</h4>' +
+            '<h4>{name} ({begin} - {end}) - Được phép trể {delay} phút</h4>' +
             '</div>' +
             '<div class="widget-body">' +
             '<div class="row">' +
@@ -20,15 +37,21 @@ $(function () {
             '<div class="row">' +
             '<div class="col-lg-12">' +
             '<textarea class="col-lg-12" name="note"></textarea>' +
+            '<input type="hidden" name="staff_id" value="{staffId}">'+
+            '<input type="hidden" name="staff_work_session_id" value="{staffWorkSession}">'+
+            '<input type="hidden" name="delay" value="{delay}">'+
+            '<input type="hidden" name="begin" value="{begin}">'+
+            '<input type="hidden" name="end" value="{end}">'+
             '</div>' +
             '</div>' +
             '<p></p>' +
             '<div class="row">' +
             '<div class="col-lg-12">' +
-            '<button class="btn btn-success col-lg-12 submit" data-target="action_{id}">Xác nhận</button>' +
+            '<a href="javascript:;" class="btn btn-success col-lg-12 submit" onclick="submitForm(this)" data-target="#action_{id}">Xác nhận</a>' +
             '</div>' +
             '</div>' +
             '</div>' +
+            '</form>' +
             '</div>';
     $("#p-search").autocomplete({
         source: linkUsers,
@@ -39,19 +62,31 @@ $(function () {
             $(".ui-menu-item:first a").click();
         },
         select: function (event, ui) {
+            console.log(ui.item);
             var html = '';
             $.each(ui.item.work_session, function (index, item) {
                 var content = template;
                 content= content.replace(/{id}/g,item.id);
                 content= content.replace('{name}',item.name);
-                content= content.replace('{begin}',item.begin);
-                content= content.replace('{end}',item.end);
-                content= content.replace('{delay}',item.delay);
+                content= content.replace(/{begin}/g,item.begin);
+                content= content.replace(/{end}/g,item.end);
+                content= content.replace(/{delay}/g,item.delay);
+                content= content.replace(/{staffId}/g,ui.item.id);
+                content= content.replace(/{staffWorkSession}/g,item.id);
                 html+= content;
-                console.log(item);
             });
             $('#select-session').html(html);
         }
     });
 });
+function submitForm(obj){
+    var target = $(obj).data('target');
+    var isCheck = $(target + ' input[type=radio]').is(':checked');
+    if(isCheck){
+        $(target + ' form').submit();
+    }else{
+        alert('Vui lòng chọn trạng thái làm việc.');
+    }
+}
+
 //1833161723
