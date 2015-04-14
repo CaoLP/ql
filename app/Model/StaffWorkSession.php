@@ -10,7 +10,9 @@ App::uses('AppModel', 'Model');
 class StaffWorkSession extends AppModel
 {
     public $useTable = 'staff_work_sessions';
-
+    public $virtualFields = array(
+        'temp_id' => 'CONCAT(StaffWorkSession.staff_id, "-", StaffWorkSession.work_session_id)'
+    );
     public $belongsTo = array(
         'WorkSession' => array(
             'className' => 'WorkSession',

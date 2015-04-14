@@ -32,8 +32,11 @@ class StaffAttendancesController extends AppController
     {
         $this->StaffAttendance->recursive = -1;
         $users = $this->StaffAttendance->User->find('list');
+        $salaries = $this->StaffAttendance->StaffWorkSession->find('list',array(
+            'fields' =>'temp_id, basic_salary'
+        ));
         $this->loadModel('WorkSession');
-        $worksessions = $this->WorkSession->find('all');
+        $worksessions_d = $this->WorkSession->find('all', array('recursive'=>-1));
         $res = array();
         $date = date('Y-m-01');
         $end = date('Y-m-t');
@@ -48,6 +51,7 @@ class StaffAttendancesController extends AppController
                 $dateDiff = $date2->diff($date1);
                 $total = $dateDiff->h + round($dateDiff->m/60,0);
                 $temp['StaffAttendance']['total'] = $total;
+                $temp['StaffAttendance']['date'] = strtotime($date2->format('Y-m-d'));
                 array_push($res,$temp);
             }
             $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
@@ -59,9 +63,8 @@ class StaffAttendancesController extends AppController
 //                debug($staff_at['StaffAttendance']['time']);
 //            }
 //        }
-        debug($res);die;
-
-        $this->set(compact('staff_attendances','users','worksessions'));
+        $staff_attendances = $res;
+        $this->set(compact('staff_attendances','users','worksessions_d','salaries'));
 
         if(isset($this->request->query['sample'])){
             $listAt = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive'=>-1));
