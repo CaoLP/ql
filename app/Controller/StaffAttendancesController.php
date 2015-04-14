@@ -103,7 +103,7 @@ class StaffAttendancesController extends AppController
      *
      * @throws NotFoundException
      * @param string $id
-     * @return void
+     * @return voidaaaaaa
      */
     public function admin_view($id = null)
     {
