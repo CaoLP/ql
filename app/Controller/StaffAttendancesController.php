@@ -39,10 +39,16 @@ class StaffAttendancesController extends AppController
         $end = date('Y-m-t');
         while (strtotime($date) <= strtotime($end)) {
             $staff_attendances = $this->StaffAttendance->find('all',array(
-                'conditions' => array('StaffAttendance.time like' => $date .'%'),
+                'conditions' => array('StaffAttendance.begin_time like' => $date .'%'),
             ));
             foreach($staff_attendances as $s){
-                array_push($res,$s);
+                $date2 =  new DateTime($s['StaffAttendance']['end_time']);
+                $date1 =  new DateTime($s['StaffAttendance']['begin_time']);
+                $temp = $s;
+                $dateDiff = $date2->diff($date1);
+                $total = $dateDiff->h + round($dateDiff->m/60,0);
+                $temp['StaffAttendance']['total'] = $total;
+                array_push($res,$temp);
             }
             $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
         }
@@ -73,24 +79,17 @@ class StaffAttendancesController extends AppController
                 $saveData=array();
                 for($i=0;$i<60;$i++){
                     $date->modify( '+1 day' );
-                    $saveData[] = array(
-                        'staff_id' => $staff_id,
-                        'staff_work_session_id' => $at['StaffWorkSession']['work_session_id'],
-                        'time' => $date->format('Y-m-d H:i:s'),
-                        'type' => '1',
-                        'delay_time' => '0',
-                        'note' => '',
-                    );
-
                     $clone = clone $date;
                     $clone->modify( '+5 hours' );
                     $saveData[] = array(
                         'staff_id' => $staff_id,
                         'staff_work_session_id' => $at['StaffWorkSession']['work_session_id'],
-                        'time' => $clone->format('Y-m-d H:i:s'),
-                        'type' => '2',
-                        'delay_time' => '0',
-                        'note' => '',
+                        'begin_time' => $date->format('Y-m-d H:i:s'),
+                        'end_time' => $clone->format('Y-m-d H:i:s'),
+                        'delay_time_begin' => '0',
+                        'delay_time_end' => '0',
+                        'note_begin' => '0',
+                        'note_end' => '0',
                     );
                 }
                 $this->StaffAttendance->saveMany($saveData);
@@ -133,7 +132,6 @@ class StaffAttendancesController extends AppController
             $saveData = array('StaffAttendance'=>array(
                 'staff_id' => $this->request->data['staff_id'],
                 'staff_work_session_id' => $this->request->data['staff_work_session_id'],
-                'note' => $this->request->data['note'],
             ));
 
 
@@ -155,27 +153,34 @@ class StaffAttendancesController extends AppController
             $minutes += $since_start->i;
             $delay = $this->request->data['delay'];
             $allow = $minutes - $delay;
+            if(!$late_early){
+               $allow = 0;
+            }
 
             $available = $this->StaffAttendance->find('list', array(
                 'conditions'=>array(
                     'staff_id' => $this->request->data['staff_id'],
                     'staff_work_session_id' => $this->request->data['staff_work_session_id'],
-                    'StaffAttendance.time like' => $now->format('Y-m-d') .'%'
+                    'OR' =>array(
+                        'StaffAttendance.begin_time like' => $now->format('Y-m-d') .'%',
+                        'StaffAttendance.end_time like' => $now->format('Y-m-d') .'%'
+                    )
                 )
             ));
+
             if(count($available) > 0){
                 $saveData['StaffAttendance']['id'] = array_keys($available)[0];
             }
             if($this->request->data['type'] == 1){
                 $saveData['StaffAttendance']['begin_time'] = date('c');
                 $saveData['StaffAttendance']['delay_time_begin'] =$allow;
+                $saveData['StaffAttendance']['note_begin'] =$this->request->data['note'];
             }else{
                 $saveData['StaffAttendance']['end_time'] = date('c');
                 $saveData['StaffAttendance']['delay_time_end'] = $allow;
+                $saveData['StaffAttendance']['note_end'] =$this->request->data['note'];
             }
-
 //            debug($this->request->data);die;
-            $this->StaffAttendance->create();
             if ($this->StaffAttendance->save($saveData)) {
                 $this->view = 'success';
                 if($this->request->data['type'] == 1 && $late_early){
@@ -259,7 +264,7 @@ class StaffAttendancesController extends AppController
             if(count($full_data) > 0){
                 $data = $full_data['work_session'];
                 $attended = $full_data['today_attendance'];
-                $attended = Set::combine($attended,'{n}.StaffAttendance.type','{n}.StaffAttendance.type','{n}.StaffAttendance.staff_work_session_id');
+                $attended = Set::combine($attended,'{n}.StaffAttendance.id','{n}.StaffAttendance','{n}.StaffAttendance.staff_work_session_id');
                 $result = array();
                 $result[0]['id'] = $data[0]['User']['id'];
                 $result[0]['label'] = $data[0]['User']['name'];

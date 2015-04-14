@@ -40,10 +40,12 @@ class StaffAttendance extends AppModel
 
         if(isset($result['work_session'][0]))
         $result['today_attendance'] = $this->find('all',array(
-            'fields' => 'staff_work_session_id,type',
             'conditions' => array(
                 'StaffAttendance.staff_id' => $result['work_session'][0]['StaffWorkSession']['staff_id'],
-                'StaffAttendance.time like' => date('Y-m-d') . '%'
+                'OR' => array(
+                    'StaffAttendance.begin_time like' => date('Y-m-d') . '%',
+                    'StaffAttendance.end_time like' => date('Y-m-d') . '%'
+                )
             ),
             'recursive' => -1
         ));

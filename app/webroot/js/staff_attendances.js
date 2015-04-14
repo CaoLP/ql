@@ -75,8 +75,8 @@ $(function () {
                 var d1 = '';
                 var d2 = '';
                 $.each(item.attended,function(i,it){
-                    if(it==1) d1 = 'disabled';
-                    if(it==2) d2 = 'disabled';
+                    if(it.begin_time !='0000-00-00 00:00:00') d1 = 'disabled';
+                    if(it.end_time !='0000-00-00 00:00:00') d2 = 'disabled';
                 });
                 var disabled = '';
                 if(d1 == 'disabled' && d2 == 'disabled'){
