@@ -27,6 +27,7 @@ class WarehousesController extends AppController
         $settings = array();
         $this->Warehouse->recursive = 0;
 //        $store_id = $this->Session->read('Auth.User.store_id');
+
         if($this->request->is('post')){
             if(isset($this->request->data['q'])){
                 $input =$this->request->data['q'];
@@ -34,6 +35,11 @@ class WarehousesController extends AppController
                     'Product.name like' => '%' . $input . '%',
                     'Warehouse.code like' => '%' . $input . '%'
                 );
+            }
+            if(isset($this->request->data['showEmpty']) && !empty($this->request->data['showEmpty'])){
+                $settings['conditions']['Warehouse.qty'] = 0;
+            }else{
+                $settings['conditions']['Warehouse.qty <>'] = 0;
             }
             if(isset($this->request->data['category_id']) && !empty($this->request->data['category_id'])){
                 $settings['conditions']['Product.category_id'] = $this->request->data['category_id'];
@@ -56,6 +62,8 @@ class WarehousesController extends AppController
         }
         if($this->Session->check('Warehouse.paginate')){
             $this->paginate = $this->Session->read('Warehouse.paginate');
+        }else{
+            $this->paginate = $settings['conditions']['Warehouse.qty <>'] = 0;
         }
         if($this->Session->check('Warehouse.request.data')){
             $this->request->data = $this->Session->read('Warehouse.request.data');
