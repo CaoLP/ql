@@ -102,7 +102,7 @@ class StaffWorkSessionsController extends AppController {
             throw new NotFoundException(__('Invalid staff_work_session'));
         }
         $this->request->allowMethod('post', 'delete');
-        if ($this->StaffWorkSessionn->delete()) {
+        if ($this->StaffWorkSession->delete()) {
             $this->Session->setFlash(__('The staff_work_session has been deleted.'));
         } else {
             $this->Session->setFlash(__('The staff_work_session could not be deleted. Please, try again.'));

@@ -18,17 +18,17 @@
 </div>
 <?php $this->Html->scriptStart(array('inline'=>false));?>
 $(document).ready(function() {
-$("#acos").treeview({collapsed: true});
+    $("#acos").treeview({collapsed: true});
 });
 $(function() {
-var btn = $('#gen').click(function () {
-btn.button('loading');
-$.get('<?php echo $this->Html->url(array('admin'=>true,'controller'=>'user_permissions','action'=>'sync'));?>', {},
-function(data){
-btn.button('reset');
-$("#acos").html(data);
-}
-);
-})
+    var btn = $('#gen').click(function () {
+        btn.button('loading');
+        $.get('<?php echo $this->Html->url(array('admin'=>true,'controller'=>'user_permissions','action'=>'sync'));?>', {},
+            function(data){
+                btn.button('reset');
+                $("#acos").html(data);
+            }
+        );
+    })
 });
 <?php echo $this->Html->scriptEnd();?>
