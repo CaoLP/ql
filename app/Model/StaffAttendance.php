@@ -31,17 +31,25 @@ class StaffAttendance extends AppModel
 
     public function getWorkingTimebyCode($code){
         $result = array();
+        $user = $this->User->find('first',array('conditions'=>array( 'User.code' => $code),'recursive'=>-1));
+        $sessions = $this->StaffWorkSession->WorkSession->find('all');
+        $temp = array();
+        foreach($sessions as $key=>$sss){
+            $temp[] = array('User'=>$user['User'],'WorkSession'=>$sss['WorkSession']);
+        }
+        $result['work_session'] = $temp;
 
-        $result['work_session'] = $this->StaffWorkSession->find('all',array(
-            'conditions' => array(
-                'User.code' => $code
-            )
-        ));
-
+//        $result['work_session'] = $this->StaffWorkSession->find('all',array(
+//            'conditions' => array(
+//                'User.code' => $code
+//            )
+//        ));
+//        debug($result);die;
         if(isset($result['work_session'][0]))
         $result['today_attendance'] = $this->find('all',array(
             'conditions' => array(
-                'StaffAttendance.staff_id' => $result['work_session'][0]['StaffWorkSession']['staff_id'],
+//                'StaffAttendance.staff_id' => $result['work_session'][0]['StaffWorkSession']['staff_id'],
+                'StaffAttendance.staff_id' => $result['work_session'][0]['User']['id'],
                 'OR' => array(
                     'StaffAttendance.begin_time like' => date('Y-m-d') . '%',
                     'StaffAttendance.end_time like' => date('Y-m-d') . '%'
