@@ -27,7 +27,6 @@ class WarehousesController extends AppController
         $settings = array();
         $this->Warehouse->recursive = 0;
 //        $store_id = $this->Session->read('Auth.User.store_id');
-
         if($this->request->is('post')){
             if(isset($this->request->data['q'])){
                 $input =$this->request->data['q'];
@@ -36,11 +35,6 @@ class WarehousesController extends AppController
                     'Warehouse.code like' => '%' . $input . '%'
                 );
             }
-            if(isset($this->request->data['showEmpty']) && !empty($this->request->data['showEmpty'])){
-                $settings['conditions']['Warehouse.qty'] = 0;
-            }else{
-                $settings['conditions']['Warehouse.qty <>'] = 0;
-            }
             if(isset($this->request->data['category_id']) && !empty($this->request->data['category_id'])){
                 $settings['conditions']['Product.category_id'] = $this->request->data['category_id'];
             }
@@ -48,14 +42,18 @@ class WarehousesController extends AppController
                 $settings['conditions']['Warehouse.store_id'] = $this->request->data['store_id'];
             }
 
-            if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
-                $settings['conditions']['Warehouse.store_id'] = $this->request->data['store_id'];
+            if(isset($this->request->data['qty']) && $this->request->data['qty'] == 0 && $this->request->data['qty'] !=  ''){
+                    $settings['conditions']['Warehouse.qty'] = 0;
+            }else{
+                $settings['conditions']['Warehouse.qty <>'] = 0;
             }
-            if(isset($this->request->data['option_id']) && count($this->request->data['option_id'])>0){
+
+            if(isset($this->request->data['option_id']) && !empty($this->request->data['option_id'])  && count($this->request->data['option_id'])>0){
                 foreach($this->request->data['option_id'] as $option){
                     $settings['conditions']['AND'][] = 'FIND_IN_SET(\''. $option .'\',Warehouse.options)';
                 }
             }
+            $settings['order'] = array('Warehouse.id' =>'DESC');
             $this->Session->write('Warehouse.paginate',$settings);
             $this->Session->write('Warehouse.request.data',$this->request->data);
             return $this->redirect(array('action'=>'index'));
@@ -63,12 +61,13 @@ class WarehousesController extends AppController
         if($this->Session->check('Warehouse.paginate')){
             $this->paginate = $this->Session->read('Warehouse.paginate');
         }else{
-            $this->paginate = $settings['conditions']['Warehouse.qty <>'] = 0;
+            $settings['conditions']['Warehouse.qty <>'] = 0;
+            $settings['order'] = array('Warehouse.id' =>'DESC');
+            $this->Paginator->settings = $settings;
         }
         if($this->Session->check('Warehouse.request.data')){
             $this->request->data = $this->Session->read('Warehouse.request.data');
         }
-//        $this->Paginator->settings = $settings;
         $this->loadModel('Option');
         $options = $this->Option->find('all');
         $stores = $this->Warehouse->Store->find('list');
@@ -76,7 +75,6 @@ class WarehousesController extends AppController
         $categories = $this->Category->find('list');
         $optionsData = Set::combine($options,'{n}.Option.id','{n}.Option.name');
         $options = Set::combine($options,'{n}.Option.id',array('{0} ({1})','{n}.Option.name','{n}.Option.code'),'{n}.OptionGroup.name');
-
         $this->set(compact('options','optionsData','stores','categories'));
         $this->set('warehouses', $this->Paginator->paginate('Warehouse'));
     }

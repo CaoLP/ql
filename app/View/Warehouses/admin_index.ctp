@@ -23,6 +23,7 @@ echo $this->Html->script(array('product','warehouse_edit'),array('inline'=>false
                     <?php
                     echo $this->Form->input('category_id',array('label'=>array('text'=>'Danh mục'),'empty'=>true,'div'=>array('class'=>'form-group'),'class'=>'form-control'));
                     echo $this->Form->input('store_id',array('label'=>array('text'=>'Cửa hàng'),'empty'=>true,'div'=>array('class'=>'form-group'),'class'=>'form-control'));
+                    echo $this->Form->input('qty',array('label'=>array('text'=>'Số lượng'),'empty'=>"--Còn hàng--",'options'=>array(0=>'Đã hết',1=>'Còn hàng'),'div'=>array('class'=>'form-group'),'class'=>'form-control'));
                     echo $this->Form->input('option_id', array('label'=>array('text'=>'Tuỳ chọn'), 'multiple' => 'checkbox','div'=>array('id'=>'option_group','class'=>'form-group'),'class'=>'form-control'));
                     ?>
                     <div class="form-group">

@@ -40,7 +40,8 @@ foreach($worksessions_d as $wk){
                                         <td><?php echo $users[$k]?></td>
                                         <?php
                                         $time = 0;
-                                        $salary = $salaries[$k.'-'.$key];
+//                                        $salary = $salaries[$k.'-'.$key];
+                                        $salary = 0;
                                         $w_time = $total_time[$key];
                                         $per_day = round($salary / (date('t')*$w_time),0);
                                         echo $this->Common->createCalendarTable(date('Y-m-d'),'td',$staff, $time);?>
