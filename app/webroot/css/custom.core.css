@@ -5,6 +5,9 @@
 .td-warning{
     background-color: rgb(253, 170, 66);
 }
+.td-warning-1{
+    background-color: rgb(222, 253, 124);
+}
 .td-error{
     background-color: rgb(251, 26, 26);
     color: #FFFFFF;

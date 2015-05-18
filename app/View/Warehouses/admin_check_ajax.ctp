@@ -7,15 +7,24 @@
  */
 foreach ($warehouses as $warehouse) {
     $class = '';
+    $message = '';
     if($warehouse['WarehouseCheckDetail']['warehouse_id'] == 0){
         $class = 'td-error';
+        $message = 'Kho không có';
     }else{
-        if($warehouse['WarehouseCheckDetail']['qty'] <  $warehouse['WarehouseCheckDetail']['real_qty'] )
+        if($warehouse['WarehouseCheckDetail']['qty'] <  $warehouse['WarehouseCheckDetail']['real_qty'] ){
             $class = 'td-warning';
+            $message = 'Dư hàng';
+        }
+        if($warehouse['WarehouseCheckDetail']['real_qty'] <  $warehouse['WarehouseCheckDetail']['qty'] ){
+            $class = 'td-warning-1';
+            $message = 'Thiếu hàng';
+        }
+
     }
     ?>
     <tr id="<?php echo $warehouse['WarehouseCheckDetail']['code'] ?>" class="<?php echo $class?>">
-        <td><?php if($warehouse['WarehouseCheckDetail']['warehouse_id'] == 0) echo 'Kho không có' ?></td>
+        <td><?php echo $message  ?></td>
         <td><?php echo $warehouse['WarehouseCheckDetail']['code'] ?></td>
         <td><?php echo $warehouse['Product']['name'] ?></td>
         <td><?php echo $warehouse['WarehouseCheckDetail']['price'] ?></td>

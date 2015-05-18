@@ -48,12 +48,12 @@ echo $this->Html->script(array('product', 'warehouse_check'), array('inline' => 
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12">
-        <div class="form-group">
-            <label>Ghi chú</label>
-            <textarea class="form-control"></textarea>
-        </div>
-    </div>
+<!--    <div class="col-lg-12">-->
+<!--        <div class="form-group">-->
+<!--            <label>Ghi chú</label>-->
+<!--            <textarea class="form-control"></textarea>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="col-lg-12">
         <table class="table table-condensedtable-hover no-margin">
             <thead>
@@ -73,15 +73,24 @@ echo $this->Html->script(array('product', 'warehouse_check'), array('inline' => 
             <?php
             foreach ($warehouse_check_detail as $warehouse) {
                 $class = '';
+                $message = '';
                 if($warehouse['WarehouseCheckDetail']['warehouse_id'] == 0){
                     $class = 'td-error';
+                    $message = 'Kho không có';
                 }else{
-                    if($warehouse['WarehouseCheckDetail']['qty'] <  $warehouse['WarehouseCheckDetail']['real_qty'] )
+                    if($warehouse['WarehouseCheckDetail']['qty'] <  $warehouse['WarehouseCheckDetail']['real_qty'] ){
                         $class = 'td-warning';
+                        $message = 'Dư hàng';
+                    }
+                    if($warehouse['WarehouseCheckDetail']['real_qty'] <  $warehouse['WarehouseCheckDetail']['qty'] ){
+                        $class = 'td-warning-1';
+                        $message = 'Thiếu hàng';
+                    }
+
                 }
                 ?>
                 <tr id="<?php echo $warehouse['WarehouseCheckDetail']['code'] ?>" class="<?php echo $class?>">
-                    <td><?php if($warehouse['WarehouseCheckDetail']['warehouse_id'] == 0) echo 'Kho không có' ?></td>
+                    <td><?php echo $message ?></td>
                     <td><?php echo $warehouse['WarehouseCheckDetail']['code'] ?></td>
                     <td><?php echo $warehouse['Product']['name'] ?></td>
                     <td><?php echo $warehouse['WarehouseCheckDetail']['price'] ?></td>
