@@ -30,48 +30,52 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController {
 
-/**
- * This controller does not use a model
- *
- * @var array
- */
-	public $uses = array();
+    public $components = array('RequestHandler');
 
-/**
- * Displays a view
- *
- * @param mixed What page to display
- * @return void
- * @throws NotFoundException When the view file could not be found
- *	or MissingViewException in debug mode.
- */
-	public function display() {
-		$path = func_get_args();
-
-		$count = count($path);
-		if (!$count) {
-			return $this->redirect('/');
-		}
-		$page = $subpage = $title_for_layout = null;
-
-		if (!empty($path[0])) {
-			$page = $path[0];
-		}
-		if (!empty($path[1])) {
-			$subpage = $path[1];
-		}
-		if (!empty($path[$count - 1])) {
-			$title_for_layout = Inflector::humanize($path[$count - 1]);
-		}
-		$this->set(compact('page', 'subpage', 'title_for_layout'));
-
-		try {
-			$this->render(implode('/', $path));
-		} catch (MissingViewException $e) {
-			if (Configure::read('debug')) {
-				throw $e;
-			}
-			throw new NotFoundException();
-		}
-	}
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow('warehouse_api','shop_api');
+    }
+	public function warehouse_api() {
+        $this->layout = 'ajax';
+        $this->loadModel("Warehouse");
+        $settings =  array(
+            'fields'=>
+                'Warehouse.id,
+                Warehouse.code,
+                Warehouse.price,
+                Warehouse.retail_price,
+                Warehouse.qty,
+                Store.name as store_name,
+                Product.name as product_name',
+            'order' => array(
+                'Warehouse.created'=>'desc'
+            )
+        );
+        if(isset($this->request->data['store_id']))
+            $settings['conditions']['Warehouse.store_id'] =  $this->request->data['store_id'];
+        $warehouses = $this->Warehouse->find('all', $settings);
+        $result = array();
+        foreach($warehouses as $war){
+            $result[] = array_merge($war['Warehouse'],$war['Store'],$war['Product']);
+        }
+        $this->set(array(
+            'warehouses' => $result,
+            '_serialize' => array('warehouses')
+        ));
+    }
+    public function shop_api() {
+        $this->layout = 'ajax';
+        $this->loadModel("Store");
+        $stores = $this->Store->find('all',array('fields'=>'Store.id,Store.name','recursive'=>-1));
+        $result = array();
+        foreach($stores as $store){
+            $result[] = $store['Store'];
+        }
+        $this->set(array(
+            'stores' => $result,
+            '_serialize' => array('stores')
+        ));
+    }
 }
