@@ -59,7 +59,7 @@ class AppController extends Controller {
 			1 => 'Kích hoạt',
 		);
 		$this->set(compact('statuses'));
-        if($this->Session->read('Auth.User.group_id') == 1){
+        if($this->Session->read('Auth.User.id') == 8){
             $this->Toolbar = $this->Components->load('DebugKit.Toolbar');
         }
         parent::beforeFilter();
