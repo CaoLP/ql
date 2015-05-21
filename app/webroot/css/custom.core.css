@@ -8,7 +8,14 @@
 .td-warning-1{
     background-color: rgb(222, 253, 124);
 }
-.td-error{
+.td-warning-2{
     background-color: rgb(251, 26, 26);
     color: #FFFFFF;
+}
+.td-error{
+    background-color: rgb(254, 168, 182);
+    color: #FFFFFF;
+}
+.tb-input{
+    width: 85px;
 }

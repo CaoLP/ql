@@ -310,20 +310,26 @@ class WarehousesController extends AppController
         if ($this->request->is('ajax') && isset($this->request->data["check"])) {
             $this->layout = "ajax";
             $this->view = "admin_check_ajax";
-            $this->set('store_name', $this->request->data['store_name']);
-
-            if($this->request->data['WarehouseCheck']['code'] != ''){
+            $this->Session->write('WarehouseCheck.store_id', $this->request->data['WarehouseCheck']['store_id']);
+            $real_qty = 1;
+            if (isset($this->request->data['WarehouseCheck']['real_qty']))
+                $real_qty = $this->request->data['WarehouseCheck']['real_qty'];
+            if ($this->request->data['WarehouseCheck']['code'] != '') {
                 $save = array();
-
                 $warehouse = $this->WarehouseCheckDetail->find("first", array(
                     'conditions' => array(
                         'WarehouseCheckDetail.code' => trim($this->request->data['WarehouseCheck']['code']),
-                        'WarehouseCheckDetail.store_id' => $this->request->data['WarehouseCheck']['store_id']
+                        'WarehouseCheckDetail.store_id' => $this->request->data['WarehouseCheck']['store_id'],
+                        'WarehouseCheck.date' => strtotime(date('Y-m-d'))
                     )
                 ));
                 if (count($warehouse) > 0) {
                     $save = $warehouse;
-                    $save['WarehouseCheckDetail']['real_qty'] = $save['WarehouseCheckDetail']['real_qty'] + 1;
+                    unset($save['WarehouseCheckDetail']['updated']);
+                    if (isset($this->request->data['WarehouseCheck']['real_qty']))
+                        $save['WarehouseCheckDetail']['real_qty'] = $real_qty;
+                    else
+                        $save['WarehouseCheckDetail']['real_qty'] = $save['WarehouseCheckDetail']['real_qty'] + $real_qty;
                 } else {
                     $warehouse = $this->Warehouse->find("first", array(
                         'conditions' => array(
@@ -339,7 +345,7 @@ class WarehousesController extends AppController
                         unset($save['WarehouseCheckDetail']['created_by']);
                         unset($save['WarehouseCheckDetail']['updated']);
                         unset($save['WarehouseCheckDetail']['updated_by']);
-                        $save['WarehouseCheckDetail']['real_qty'] = 1;
+                        $save['WarehouseCheckDetail']['real_qty'] = $real_qty;
                     } else {
                         $product = $this->Warehouse->Product->find('first',
                             array(
@@ -359,7 +365,7 @@ class WarehousesController extends AppController
                                     'retail_price' => $product['Product']['retail_price'],
                                     'qty' => 0,
                                     'code' => $product['Product']['sku'],
-                                    'real_qty' => 1
+                                    'real_qty' => $real_qty
                                 )
                             );
                         } else {
@@ -381,7 +387,7 @@ class WarehousesController extends AppController
                                         'retail_price' => $product_option['Product']['retail_price'],
                                         'qty' => 0,
                                         'code' => $product_option['ProductOption']['code'],
-                                        'real_qty' => 1
+                                        'real_qty' => $real_qty
                                     )
                                 );
                             } else {
@@ -399,11 +405,11 @@ class WarehousesController extends AppController
                             )
                         )
                     );
-                    if(count($check) > 0){
+                    if (count($check) > 0) {
                         $save['WarehouseCheckDetail']['warehouse_check_id'] = $check['WarehouseCheck']['id'];
-                    }else{
+                    } else {
                         $check = array(
-                            'WarehouseCheck'=> array(
+                            'WarehouseCheck' => array(
                                 'date' => strtotime(date('Y-m-d')),
                                 'store_id' => $this->request->data['WarehouseCheck']['store_id'],
                                 'note' => '',
@@ -414,51 +420,78 @@ class WarehousesController extends AppController
                     }
                     $this->WarehouseCheckDetail->save($save);
 
-                    $warehouses = $warehouse = $this->WarehouseCheckDetail->find('all', array(
+                    $warehouses  = $this->WarehouseCheckDetail->find('all', array(
                         'conditions' => array(
-                            'WarehouseCheckDetail.warehouse_check_id'=> $save['WarehouseCheckDetail']['warehouse_check_id']
+                            'WarehouseCheckDetail.warehouse_check_id' => $save['WarehouseCheckDetail']['warehouse_check_id']
+                        ),
+                        'order' =>array(
+                            'WarehouseCheckDetail.updated' => 'desc'
                         )
                     ));
                     $this->set(compact('warehouses'));
+                    $this->set('w',$check);
                 }
-            }else{
+            } else {
                 $warehouse_check_detail = $this->WarehouseCheck->find('first', array(
                     'conditions' => array(
-                        'WarehouseCheck.date'=> strtotime(date('Y-m-d')),
+                        'WarehouseCheck.date' => strtotime(date('Y-m-d')),
                         'WarehouseCheck.store_id' => $this->request->data['WarehouseCheck']['store_id'],
                     )
                 ));
                 $warehouses = array();
-                if(count($warehouse_check_detail) > 0)
-                    $warehouses = $warehouse = $this->WarehouseCheckDetail->find('all', array(
+                if (count($warehouse_check_detail) > 0)
+                    $warehouses  = $this->WarehouseCheckDetail->find('all', array(
                         'conditions' => array(
-                            'WarehouseCheckDetail.warehouse_check_id'=>$warehouse_check_detail['WarehouseCheck']['id']
+                            'WarehouseCheckDetail.warehouse_check_id' => $warehouse_check_detail['WarehouseCheck']['id']
+                        ),
+                        'order' =>array(
+                            'WarehouseCheckDetail.updated' => 'desc'
                         )
                     ));
-                $this->set(compact('warehouses','warehouse_check_detail'));
+                $this->set(compact('warehouses', 'warehouse_check_detail'));
+                $this->set('w',$warehouse_check_detail);
             }
         } else {
             if ($this->request->is('post')) {
 
-            }else{
+            } else {
+                if(isset($this->request->query['store_id']))
+                    $this->Session->write('WarehouseCheck.store_id', $this->request->query['store_id']);
+                $store_id = 1;
+                if ($this->Session->check('WarehouseCheck.store_id'))
+                    $store_id = $this->Session->read('WarehouseCheck.store_id');
+                $date_filter = strtotime(date('Y-m-d'));
+                if(isset($this->request->query['date']) && !empty($this->request->query['date']))
+                    $date_filter = $this->request->query['date'];
+                $this->request->data['WarehouseCheck']['store_id'] = $store_id;
                 $warehouses = $this->WarehouseCheck->find('first', array(
                     'conditions' => array(
-                        'WarehouseCheck.date'=> strtotime(date('Y-m-d')),
-                        'WarehouseCheck.store_id' => 1,
+                        'WarehouseCheck.date' => $date_filter,
+                        'WarehouseCheck.store_id' => $store_id,
                     )
                 ));
                 $warehouse_check_detail = array();
-                if(count($warehouses) > 0)
-                $warehouse_check_detail = $warehouse = $this->WarehouseCheckDetail->find('all', array(
+                if (count($warehouses) > 0)
+                    $warehouse_check_detail = $this->WarehouseCheckDetail->find('all', array(
+                        'conditions' => array(
+                            'WarehouseCheckDetail.warehouse_check_id' => $warehouses['WarehouseCheck']['id']
+                        ),
+                        'order' =>array(
+                            'WarehouseCheckDetail.updated' => 'desc'
+                        )
+                    ));
+                $timetable = $this->WarehouseCheck->find('all', array(
                     'conditions' => array(
-                        'WarehouseCheckDetail.warehouse_check_id'=>$warehouses['WarehouseCheck']['id']
+                        'WarehouseCheck.store_id' => $store_id,
                     )
                 ));
-                $this->set(compact('warehouses','warehouse_check_detail'));
+                $this->set(compact('warehouses', 'warehouse_check_detail','timetable','date_filter'));
             }
         }
     }
-    public function admin_warehouse_check_delete($id){
+
+    public function admin_warehouse_check_delete($id)
+    {
         $this->layout = 'ajax';
         $this->view = 'admin_check_ajax';
         $this->loadModel("WarehouseCheck");
@@ -467,17 +500,125 @@ class WarehousesController extends AppController
 
         $warehouse_check_detail = $this->WarehouseCheck->find('first', array(
             'conditions' => array(
-                'WarehouseCheck.date'=> strtotime(date('Y-m-d')),
+                'WarehouseCheck.date' => strtotime(date('Y-m-d')),
                 'WarehouseCheck.store_id' => $this->request->data['store_id'],
             )
         ));
         $warehouses = array();
-        if(count($warehouse_check_detail) > 0)
-            $warehouses = $warehouse = $this->WarehouseCheckDetail->find('all', array(
+        if (count($warehouse_check_detail) > 0)
+            $warehouses  = $this->WarehouseCheckDetail->find('all', array(
                 'conditions' => array(
-                    'WarehouseCheckDetail.warehouse_check_id'=>$warehouse_check_detail['WarehouseCheck']['id']
+                    'WarehouseCheckDetail.warehouse_check_id' => $warehouse_check_detail['WarehouseCheck']['id']
+                ),
+                'order' =>array(
+                    'WarehouseCheckDetail.updated' => 'desc'
                 )
             ));
-        $this->set(compact('warehouses','warehouse_check_detail'));
+        $this->set(compact('warehouses', 'warehouse_check_detail'));
+        $this->set('w',$warehouse_check_detail);
+    }
+
+    public function admin_check_incorrect($store_id){
+        $this->layout = 'ajax';
+        $this->view = 'admin_check_ajax';
+        $this->loadModel("WarehouseCheck");
+        $this->loadModel("WarehouseCheckDetail");
+        if(isset($this->request->data['store_id'])){
+            $store_id = $this->request->data['store_id'];
+            $list_checked = array();
+            $w = $this->WarehouseCheck->find('first',
+                array(
+                    'conditions' => array(
+                        'WarehouseCheck.store_id' => $store_id,
+                        'WarehouseCheck.date' => strtotime(date('Y-m-d')),
+                    )
+                )
+            );
+            if (count($w) > 0) {
+                $list_checked = $w['WarehouseCheckDetail'];
+            } else {
+                $w = array(
+                    'WarehouseCheck' => array(
+                        'date' => strtotime(date('Y-m-d')),
+                        'store_id' => $store_id,
+                        'note' => '',
+                    )
+                );
+                $this->WarehouseCheck->save($w);
+                $w = $this->WarehouseCheck->findById($this->WarehouseCheck->id);
+                $list_checked = $w['WarehouseCheckDetail'];
+            }
+
+        $list_checked = Set::combine($list_checked,'{n}.id','{n}.warehouse_id');
+        $data = $this->Warehouse->find('all',array(
+            'conditions' => array(
+                'NOT' => array(
+                    'Warehouse.id'=> $list_checked
+                ),
+                'Warehouse.qty >' => 0,
+                'Warehouse.store_id' => $store_id
+            ),
+            'recursive' => -1
+        ));
+        $save = array();
+        foreach($data as $key=>$d){
+            $d['Warehouse']['real_qty'] = 0;
+            $d['Warehouse']['warehouse_check_id'] = $w['WarehouseCheck']['id'];
+            $d['Warehouse']['warehouse_id'] = $d['Warehouse']['id'];
+            unset($d['Warehouse']['id']);
+            unset($d['Warehouse']['created']);
+            unset($d['Warehouse']['created_by']);
+            unset($d['Warehouse']['updated']);
+            unset($d['Warehouse']['updated_by']);
+            $save[] = $d['Warehouse'];
+        }
+        $this->WarehouseCheckDetail->saveMany($save);
+        $warehouses = $this->WarehouseCheckDetail->find('all', array(
+            'conditions' => array(
+                'WarehouseCheckDetail.warehouse_check_id' => $w['WarehouseCheck']['id']
+            ),
+            'order' =>array(
+                'WarehouseCheckDetail.updated' => 'desc'
+            )
+        ));
+        $this->set(compact('warehouses','w'));
+        }else{
+            die;
+        }
+    }
+    function admin_check_print(){
+        $this->layout = 'print';
+        $this->loadModel("WarehouseCheck");
+        $this->loadModel("WarehouseCheckDetail");
+        if(isset($this->request->query['store_id']))
+            $this->Session->write('WarehouseCheck.store_id', $this->request->query['store_id']);
+        $store_id = 1;
+        if ($this->Session->check('WarehouseCheck.store_id'))
+            $store_id = $this->Session->read('WarehouseCheck.store_id');
+        $date_filter = strtotime(date('Y-m-d'));
+        if(isset($this->request->query['date']) && !empty($this->request->query['date']))
+            $date_filter = $this->request->query['date'];
+        $warehouses = $this->WarehouseCheck->find('first', array(
+            'conditions' => array(
+                'WarehouseCheck.date' => $date_filter,
+                'WarehouseCheck.store_id' => $store_id,
+            )
+        ));
+        $warehouse_check_detail = array();
+        if (count($warehouses) > 0)
+            $warehouse_check_detail = $warehouse = $this->WarehouseCheckDetail->find('all', array(
+                'conditions' => array(
+                    'WarehouseCheckDetail.warehouse_check_id' => $warehouses['WarehouseCheck']['id']
+                ),
+                'order' =>array(
+                    'WarehouseCheckDetail.updated' => 'desc'
+                )
+            ));
+        $timetable = $this->WarehouseCheck->find('all', array(
+            'conditions' => array(
+                'WarehouseCheck.store_id' => $store_id,
+            )
+        ));
+        $this->set(compact('warehouses', 'warehouse_check_detail','timetable','date_filter'));
     }
 }
