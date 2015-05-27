@@ -84,8 +84,8 @@ $today = strtotime(date('Y-m-d'));
             </thead>
             <tbody id="check-body">
             <input type="hidden" id="store_id" value="<?php
-            if(isset($warehouses['WarehouseCheck']['id']))
-                echo $warehouses['WarehouseCheck']['id'];
+            if(isset($warehouses['WarehouseCheck']['store_id']))
+                echo $warehouses['WarehouseCheck']['store_id'];
             else
                 if($this->Session->check('WarehouseCheck.store_id'))
                     echo $this->Session->read('WarehouseCheck.store_id');

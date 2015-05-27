@@ -106,7 +106,14 @@ class Reex extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+        'Dept' => array(
+            'className' => 'Dept',
+            'foreignKey' => 'dept_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        )
 	);
 
     public function getCauses(){
