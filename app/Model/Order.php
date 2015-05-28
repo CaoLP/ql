@@ -137,7 +137,7 @@ class Order extends AppModel
         return $this->find('all', $option);
     }
 
-    public function doFilter($input)
+    public function doFilter($inputs)
     {
         $this->belongsTo = array(
             'Customer' => array(
@@ -148,11 +148,18 @@ class Order extends AppModel
                 'order' => ''
             )
         );
+
+        $conditions = array(
+            'Order.status' => 1
+        );
+        if(isset($inputs['term'])){
+            $conditions['Order.code like'] = '%'.$inputs['term'].'%';
+        }
+        if(isset($inputs['customer_id'])){
+            $conditions['Order.customer_id'] = $inputs['customer_id'];
+        }
         return $this->find('all',array(
-           'conditions' =>array(
-               'Order.code like' => '%'.$input.'%',
-               'Order.status' => 1
-           ),
+           'conditions' => $conditions,
             'limit'=>10
         ));
     }

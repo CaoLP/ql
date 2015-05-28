@@ -1,5 +1,5 @@
 <script>
-    var customers = <?php echo json_encode($customers);?>;
+    var linkCustomer =  '<?php echo $this->Html->url(array('controller'=>'customers','action'=>'index'));?>';
     var linkOrder = '<?php echo $this->Html->url(array('controller'=>'orders','action'=>'index'));?>';
 </script>
 <?php
@@ -8,7 +8,7 @@ $this->Html->addCrumb('<li>' . $title_for_layout . '</li>', array('action' => 'i
 if ($this->request->params['action'] == 'admin_add') {
     $this->Html->addCrumb('<li>Tạo phiếu</li>', '/' . $this->request->url, array('escape' => false));
 } else {
-    $this->Html->addCrumb('<li>' . $this->request->data['Dept']['number'] . '</li>', '/' . $this->request->url, array('escape' => false));
+    $this->Html->addCrumb('<li>' . $this->request->data['Dept']['name'] . '</li>', '/' . $this->request->url, array('escape' => false));
 }
 echo $this->Html->script(array('jquery.inputmask', 'dept'), array('inline' => false));
 ?>
@@ -49,8 +49,8 @@ echo $this->Html->script(array('jquery.inputmask', 'dept'), array('inline' => fa
                         <label for="input-customer" class="col-lg-2 control-label">Khách hàng</label>
                         <div class="col-lg-10">
                             <input id="input-customer" class="form-control" value="<?php
-                            if (isset($this->request->data['Dept']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
-                                echo $customersl[$this->request->data['Dept']['customer_id']];
+                            if (isset($this->request->data['Dept']['customer_id']) && !empty($this->request->data['Customer']['id']))
+                                echo $this->request->data['Customer']['name'];
                             ?>">
                         </div>
                     </div>
@@ -58,8 +58,8 @@ echo $this->Html->script(array('jquery.inputmask', 'dept'), array('inline' => fa
                         <label for="p-search" class="col-lg-2 control-label">Mã đơn hàng</label>
                         <div class="col-lg-10">
                             <input id="p-search" class="form-control" value="<?php
-                            if (isset($this->request->data['Dept']['order_id']) && !empty($this->request->data['Order']['order_id']))
-                                echo $customersl[$this->request->data['Dept']['order_id']];
+                            if (isset($this->request->data['Dept']['order_id']) && !empty($this->request->data['Order']['id']))
+                                echo $this->request->data['Order']['code'];
                             ?>">
                         </div>
                     </div>

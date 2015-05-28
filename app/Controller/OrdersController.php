@@ -38,7 +38,7 @@ class OrdersController extends AppController
         $settings = array();
         if($this->request->isAjax()){
             if(isset($this->request->query['term'])){
-                $data = $this->Order->doFilter($this->request->query['term']);
+                $data = $this->Order->doFilter($this->request->query);
                 $temp = array();
                 foreach($data as $d){
                     $temp[]['Order'] = array(
@@ -748,6 +748,7 @@ class OrdersController extends AppController
     public function admin_addretail()
     {
         if ($this->request->is('post')) {
+            debug($this->request->data);die;
             if(isset($this->request->data['OrderDetail'])){
                 $this->Order->create();
                 $total = 0;
@@ -910,7 +911,7 @@ class OrdersController extends AppController
     }
     public function admin_save_cartretail(){
         if(empty($this->request->data['Order']['customer_id'])){
-            $this->request->data['Order']['customer_id'] = 1;
+            $this->request->data['Order']['customer_id'] = 2;
         }
         if(isset($this->request->data['OrderDetail'])){
             $temp = array();

@@ -102,7 +102,7 @@ $(document).ready(function () {
             return false;
         }
     });
-    $('#OrderAdminAddForm').on('submit',function(){
+    $('#OrderAdminAddretailForm').on('submit',function(e){
         if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
             alert('Vui nhập thông tin khách hàng khi dùng khuyến mãi.');
             return false;
@@ -164,6 +164,7 @@ $(document).ready(function () {
             $('#OrderPromoteValue').val(value);
             $('#OrderPromoteType').val(type);
             $('#summary-total').change();
+            $('#OrderFlagType').val('3');
         }else{
             $('#OrderPromoteValue').val(0);
             $('#OrderPromoteType').val('');
@@ -178,6 +179,7 @@ $(document).ready(function () {
         var promote_type = $('#OrderPromoteType').val();
         var result = 0;
         var total = parseNumber($(this).val());
+        if($('#OrderFlagType').val() == '3' || $('#OrderFlagType').val() == ''){
         if(promote_type == 0){
             $('#OrderTotalPromote').val(promote_val);
         }else
@@ -188,6 +190,18 @@ $(document).ready(function () {
             $('#OrderTotalPromote').val(0);
         }
         var promote = parseNumber($('#OrderTotalPromote').val());
+        }else{
+            var summary1 = 0, summary2 = 0;
+            $('#order-product-list .qty').each(function () {
+                var basis_price = $(this).data('basic_price');
+                var price = $(this).data('price');
+                var qty = $(this).val();
+                summary1 += parseInt(basis_price) * parseInt(qty);
+                summary2 += parseInt(price) * parseInt(qty);
+            });
+            var promote = summary1 - summary2 ;
+            $('#OrderTotalPromote').val(promote);
+        }
         if (total >= promote) {
             result = total - promote;
         }
@@ -218,11 +232,41 @@ $(document).ready(function () {
             return false;
         }
     });
+//    Promoted
+    $('#OrderPromoteId').on('click',function(){
+        if($('#input-customer-id').val() == 1 || $('#input-customer-id').val() == ''){
+            alert('Vui lòng nhập tên khách trước khi giảm giá');
+            return false;
+        }
+       if($('#OrderFlagType').val() == '' || $('#OrderFlagType').val() == '0' || $('#OrderFlagType').val() == '3'){
+       }else{
+           alert('Hoá đơn thay đổi tiền không được giảm giá.');
+           return false;
+       }
+    });
 //    =============================================================
 //    BEGIN POPOVER
 //    =============================================================
+    $('#OrderAdminAddretailForm, #OrderAdminEditForm').on("keyup keypress", function(e) {
+        var code = e.keyCode || e.which;
+        if (code  == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
+    $(document).on('keydown','.input-box',function(e){
+        if (e.which == 13) {
+            $('.btn-approve').click();
+            e.preventDefault();
+            return false;
+        }
+    });
     $(document).on('click','.pov',function(){
+        if($('#OrderPromoteId').val() != ''){
+            alert('Hoá đơn giảm giá không được thay đổi tiền.');
+            return false;
+        }
         var template = '<div class="popover">' +
                         '       <div class="arrow"></div>' +
                         '            <h3 class="popover-title"></h3>' +
@@ -241,9 +285,9 @@ $(document).ready(function () {
             '</label>' +
             '</div>' +
             '</div>' +
-            '<input name="mod-price" class="form-control" value="{{value}}">' +
+            '<input name="mod-price" class="form-control input-box" value="{{value}}">' +
             '<div class="input-group-btn">' +
-            '<button type="button" class="btn btn-success btn-sm" data-price="{{price}}" data-key="{{key}}"><i class="icon-checkmark"></i></button>'+
+            '<button type="button" class="btn btn-success btn-sm btn-approve" data-price="{{price}}" data-key="{{key}}"><i class="icon-checkmark"></i></button>'+
             '</div>' +
             '</div>';
         var i_key = $(this).data('key');
@@ -283,8 +327,13 @@ $(document).ready(function () {
         }
     });
     $(document).on('click','.popover-content button',function(){
+        if($('#input-customer-id').val() == 1){
+            alert('Vui nhập thông tin khách hàng khi giảm giá.');
+            return false;
+        }
         var i_key = $(this).data('key');
         var s_price = $(this).data('price');
+        var tep = s_price;
         var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
         var type_box = $(this).closest('.popover-content').find('input[type=checkbox]');
         var type = 0;
@@ -295,6 +344,11 @@ $(document).ready(function () {
         var minPrice  = parseInt(s_price) - parseInt(s_price)*0.1;
         if(type == 0){
             if(i_price >= minPrice && i_price <= maxPrice){
+                $('#OrderFlagType').val('1');
+            }else{
+                $('#OrderFlagType').val('2');
+                //alert('Giá thay đổi không được quá 10% giá gốc');
+            }
                 var mod_price_field = $('#'+i_key+'-mod-price');
                 var price_field = $('#'+i_key+'-price-text');
                 mod_price_field.val(i_price);
@@ -304,10 +358,12 @@ $(document).ready(function () {
                     $(this).popover('destroy');
                 });
             }else{
-                alert('Giá thay đổi không được quá 10% giá gốc');
+            if(i_price >= -10 && i_price <= 10){
+                $('#OrderFlagType').val('1');
+            }else{
+                $('#OrderFlagType').val('2');
+                //alert('Giá thay đổi không được quá 10% giá gốc');
             }
-        }else{
-            if(i_price >= 0 && i_price <= 10){
                 var mod_price_field = $('#'+i_key+'-mod-price');
                 var price_field = $('#'+i_key+'-price-text');
 
@@ -319,9 +375,16 @@ $(document).ready(function () {
                 $('.pov').each(function () {
                     $(this).popover('destroy');
                 });
+        }
+        if(parseInt(tep) == i_price){
+            console.log('equal');
+            console.log($('#OrderPromoteId').val() == '');
+            if($('#OrderPromoteId').val() == ''){
+                $('#OrderFlagType').val('0');
             }else{
-                alert('Giá thay đổi không được quá 10% giá gốc');
+                $('#OrderFlagType').val('3');
             }
+            saveCart();
         }
 
     });
@@ -372,6 +435,9 @@ $(document).ready(function () {
                 '<br><span class="opt">' + optionNames + '</span>' +
                 '</td>' +
                 '<td class="text-right">' +
+                ' <span class="price-text">'+ digits(pPrice) +'</span>'+
+                '</td>'+
+                '<td class="text-right">' +
                 '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
                 '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
                 '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+pPrice+'">'+
@@ -379,7 +445,7 @@ $(document).ready(function () {
                 '</td>' +
                 '<td class="text-right">' +
                 '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-                '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
+                '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
                 '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
                 '</td>' +
                 '<td class="text-right">' +
@@ -391,18 +457,7 @@ $(document).ready(function () {
         }
         updatePrice();
     }
-    function saveCart(){
-        if($('#OrderAdminAddretailForm').length > 0){
-            $.ajax({
-                url: saveUrl,
-                type: 'post',
-                data: $('#OrderAdminAddretailForm').serialize(),
-                success: function (data){
 
-                }
-            });
-        }
-    }
     function removeRow(row) {
         $(row).remove();
         updatePrice();
@@ -412,7 +467,7 @@ $(document).ready(function () {
     function updatePrice() {
         var summary = 0;
         $('#order-product-list .qty').each(function () {
-            var price = $(this).data('price');
+            var price = $(this).data('basic_price');
             var qty = $(this).val();
             summary += parseInt(price) * parseInt(qty);
         });
@@ -502,3 +557,12 @@ $(document).ready(function () {
         });
     }
 });
+function saveCart(){
+    $.ajax({
+        url: saveUrl,
+        type: 'post',
+        data: $('#OrderAdminAddretailForm').serialize(),
+        success: function (data){
+        }
+    });
+}

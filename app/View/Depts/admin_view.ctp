@@ -1,86 +1,65 @@
-<div class="reexes view">
-<h2><?php echo __('Reex'); ?></h2>
+<div class="debts view">
+<h2><?php echo __('Dept'); ?></h2>
 	<dl>
 		<dt><?php echo __('Id'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['id']); ?>
+			<?php echo h($dept['Dept']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Number'); ?></dt>
+		<dt><?php echo __('Name'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['number']); ?>
+			<?php echo h($dept['Dept']['name']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Type'); ?></dt>
+		<dt><?php echo __('Customer'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['type']); ?>
+			<?php echo $this->Html->link($dept['Customer']['name'], array('controller' => 'customers', 'action' => 'view', $dept['Customer']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Store'); ?></dt>
+		<dt><?php echo __('Order'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($reex['Store']['name'], array('controller' => 'stores', 'action' => 'view', $reex['Store']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Description'); ?></dt>
-		<dd>
-			<?php echo h($reex['Reex']['description']); ?>
+            <?php echo $this->Html->link($dept['Order']['code'], array('controller' => 'orders', 'action' => 'view', $dept['Order']['id'])); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Total'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['total']); ?>
+			<?php echo h($dept['Dept']['total']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Person One'); ?></dt>
+		<dt><?php echo __('Paid'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['person_one']); ?>
+			<?php echo h($dept['Dept']['paid']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Person Two'); ?></dt>
+		<dt><?php echo __('Pending'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['person_two']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Company'); ?></dt>
-		<dd>
-			<?php echo h($reex['Reex']['company']); ?>
+			<?php echo h($dept['Dept']['pending']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Note'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['note']); ?>
+			<?php echo h($dept['Dept']['note']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['created']); ?>
+			<?php echo h($dept['Dept']['created']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created By'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['created_by']); ?>
+			<?php echo h($dept['Creater']['name']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Updated'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['updated']); ?>
+			<?php echo h($dept['Dept']['updated']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Updated By'); ?></dt>
 		<dd>
-			<?php echo h($reex['Reex']['updated_by']); ?>
+			<?php echo h($dept['Updater']['name']); ?>
 			&nbsp;
 		</dd>
 	</dl>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Reex'), array('action' => 'edit', $reex['Reex']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Reex'), array('action' => 'delete', $reex['Reex']['id']), array(), __('Are you sure you want to delete # %s?', $reex['Reex']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Reexes'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Reex'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Stores'), array('controller' => 'stores', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Store'), array('controller' => 'stores', 'action' => 'add')); ?> </li>
-	</ul>
 </div>

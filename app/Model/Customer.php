@@ -68,12 +68,16 @@ class Customer extends AppModel {
 		),
 	);
 
- public function search($name){
-     $result = $this->find('all',array(
-        'conditions'=>array(
-            'Customer.name LIKE'=>'%'.$name.'%'
-        )
-     ));
+ public function search($name, $not_recursive = false){
+     $params = array(
+         'conditions'=>array(
+             'Customer.name LIKE'=>'%'.$name.'%'
+         )
+     );
+    if($not_recursive){
+        $params['recursive'] = -1;
+    }
+     $result = $this->find('all', $params);
      return $result;
  }
 

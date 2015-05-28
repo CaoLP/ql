@@ -22,8 +22,17 @@ class CustomersController extends AppController {
  * @return void
  */
 	public function admin_index() {
-		$this->Customer->recursive = 0;
-		$this->set('customers', $this->Paginator->paginate());
+        if($this->request->is('ajax')){
+            $this->layout = 'ajax';
+            if(isset($this->request->query['term'])){
+                $customers = $this->Customer->search($this->request->query['term'], true);
+                echo json_encode($customers);
+            }
+            die;
+        }else{
+            $this->Customer->recursive = 0;
+            $this->set('customers', $this->Paginator->paginate());
+        }
 	}
     public function admin_search() {
         $name = $this->request->data('name');

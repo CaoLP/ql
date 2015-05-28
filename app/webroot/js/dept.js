@@ -30,27 +30,44 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 var custName = '';
 $(function(){
     $(":input").inputmask();
-    $( "#input-customer" ).autocomplete({
-        minLength: 0,
-        source: customers,
-        select: function( event, ui ) {
-            $( "#input-customer" ).val( ui.item.label );
-            $( "#input-customer-id" ).val( ui.item.value );
-            custName =  ui.item.label;
-            document.getElementById('input-customer').value = custName;
-            document.getElementById('input-customer').setAttribute('value',custName);
+    $( "#input-customer" ).mcautocomplete({
+        // These next two options are what this plugin adds to the autocomplete widget.
+        showHeader: true,
+        columns: [
+            {
+                name: 'Tên',
+                width: '100%',
+                Group : 'Customer',
+                Key: 'name'
+            }
+        ],
+
+        // Event handler for when a list item is selected.
+        select: function (event, ui) {
+            $("#input-customer").val(ui.item.Customer.name);
+            $("#input-customer-id").val(ui.item.Customer.id);
             return false;
+        },
+        // The rest of the options are for configuring the ajax webservice call.
+        minLength: 1,
+        autoFocus: true,
+        source: function (request, response) {
+            var data = {
+                term: request.term
+            };
+            $.ajax({
+                url: linkCustomer,
+                dataType: 'json',
+                data: data,
+                // The success event handler will display "No match found" if no items are returned.
+                success: function (data) {
+                    response(data);
+                }
+            });
         }
-    }).focus(function(){
-            custName = document.getElementById('input-customer').getAttribute('value');
-            //Use the below line instead of triggering keydown
-            $(this).data("autocomplete").search($(this).val());
-        })
-        .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        return $( "<li>" )
-            .append( "<a>" + item.label + "</a>" )
-            .appendTo( ul );
-    };
+    }).click(function () {
+            $(this).mcautocomplete("search");
+        });
 
     $("#p-search").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.
@@ -80,12 +97,17 @@ $(function(){
         minLength: 1,
         autoFocus: true,
         source: function (request, response) {
+            var cus_id =    $( "#input-customer-id" ).val();
+            var data = {
+                term: request.term
+            };
+            if(typeof cus_id != 'undefined' && cus_id){
+                data['customer_id'] = cus_id;
+            }
             $.ajax({
                 url: linkOrder,
                 dataType: 'json',
-                data: {
-                    term: request.term
-                },
+                data: data,
                 // The success event handler will display "No match found" if no items are returned.
                 success: function (data) {
                     response(data);

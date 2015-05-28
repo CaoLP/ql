@@ -54,6 +54,9 @@ class DeptsController extends AppController {
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Dept->create();
+            $this->request->data['Dept']['total'] = str_replace(',','',$this->request->data['Dept']['total']);
+            $this->request->data['Dept']['paid'] = str_replace(',','',$this->request->data['Dept']['paid']);
+            $this->request->data['Dept']['pending'] = str_replace(',','',$this->request->data['Dept']['pending']);
 			if ($this->Dept->save($this->request->data)) {
 				$this->Session->setFlash(__('The dept has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -61,8 +64,6 @@ class DeptsController extends AppController {
 				$this->Session->setFlash(__('The dept could not be saved. Please, try again.'));
 			}
 		}
-		$customers = $this->Dept->Customer->find('list');
-		$this->set(compact('customers'));
 	}
 
 /**
@@ -77,7 +78,11 @@ class DeptsController extends AppController {
 			throw new NotFoundException(__('Invalid dept'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Dept->save($this->request->data)) {
+            $this->request->data['Dept']['total'] = str_replace(',','',$this->request->data['Dept']['total']);
+            $this->request->data['Dept']['paid'] = str_replace(',','',$this->request->data['Dept']['paid']);
+            $this->request->data['Dept']['pending'] = str_replace(',','',$this->request->data['Dept']['pending']);
+
+            if ($this->Dept->save($this->request->data)) {
 				$this->Session->setFlash(__('The dept has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -87,8 +92,6 @@ class DeptsController extends AppController {
 			$options = array('conditions' => array('Dept.' . $this->Dept->primaryKey => $id));
 			$this->request->data = $this->Dept->find('first', $options);
 		}
-        $customers = $this->Dept->Customer->find('list');
-        $this->set(compact('customers'));
 	}
 
 /**
