@@ -223,6 +223,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>
+                                        <span class="input-group-addon"><input type="checkbox">Nợ</span>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
