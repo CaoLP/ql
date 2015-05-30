@@ -66,3 +66,19 @@
     padding-right: 15px;
     height: 184px;
 }
+
+
+.has-checkbox{
+    width: 65px !important;
+    font-weight: bold;
+}
+.has-checkbox input[type=checkbox]{
+    margin-top: 3px;
+    float: right;
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(2); /* IE */
+    -moz-transform: scale(2); /* FF */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    -o-transform: scale(2); /* Opera */
+    padding: 10px;
+}

@@ -109,7 +109,7 @@ $(document).ready(function () {
         }
         var receive = parseNumber($('#OrderReceive').val());
         var amount = parseNumber($('#OrderAmount').val());
-        if(receive < amount){
+        if(receive < amount && !$('#is_dept').is(':checked')){
             alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng đơn hàng.');
             return false;
         }
