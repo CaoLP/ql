@@ -1,0 +1,8 @@
+.table > thead > tr > th{
+    vertical-align: middle;
+    border-bottom: none;
+    text-align: center;
+}
+.table > thead{
+    border-bottom: 2px solid #ddd;
+}

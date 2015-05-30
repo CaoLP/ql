@@ -195,7 +195,31 @@ class ReportsController extends AppController
 
     public function admin_warehouse()
     {
-
+        $this->set('title_for_layout','Báo cáo thống kê lợi nhuận');
+        $conditions = array();
+        if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
+            $conditions['Warehouse.store_id'] = $this->request->data['store_id'];
+        }
+        $this->loadModel('Warehouse');
+        $products = $this->Warehouse->find('all', array(
+            'fields' => 'Warehouse.product_id, Sum(Warehouse.qty) as total, Product.name , Product.sku',
+            'recursive' => 1,
+            'conditions' => $conditions,
+            'group' => array('Warehouse.product_id'),
+            'order' => array('total' => 'desc'),
+        ));
+        $array_rebuild = array();
+        foreach($products as $p){
+            $array_rebuild[$p['Warehouse']['product_id']] = array(
+                'code' => $p['Product']['sku'],
+                'name' => $p['Product']['name'],
+                'total' => $p[0]['total']
+            );
+        }
+        $products = $array_rebuild;
+        $this->loadModel('Store');
+        $stores = $this->Store->find('list');
+        $this->set(compact('products','stores'));
     }
 
 }

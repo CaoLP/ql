@@ -748,15 +748,17 @@ class OrdersController extends AppController
     public function admin_addretail()
     {
         if ($this->request->is('post')) {
-            debug($this->request->data);die;
             if(isset($this->request->data['OrderDetail'])){
                 $this->Order->create();
                 $total = 0;
                 $amount = 0;
                 $order_detail = $this->request->data['OrderDetail'];
+                $basic_total = 0;
+                $debt = 0;
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
-                    $total += $detail['qty'] * $data['retail_price'];
+                    $basic_total += $detail['qty'] * $data['retail_price'];
+                    $total += $detail['qty'] * $detail['mod_price'];
                 }
                 if(empty($this->request->data['Order']['promote_value'])){
                     $this->request->data['Order']['promote_value'] = 0;
@@ -765,14 +767,21 @@ class OrdersController extends AppController
                 if ($this->request->data['Order']['promote_type'] == 1) {
                     $promote = $total * ($promote / 100);
                 }
-                $amount = $total - $promote;
-
+                if($promote == 0){
+                    $promote = $basic_total - $total;
+                    $amount = $total;
+                }else{
+                    $amount = $total - $promote;
+                }
                 if( empty($this->request->data['Order']['customer_id']) || !is_nan($this->request->data['Order']['customer_id'])){
                     $this->request->data['Order']['customer_id'] = 2;
                 }
-                if(empty($this->request->data['Order']['receive'])){
+                if(!isset($this->request->data['Order']['debt'])){
                     $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
-                    return $this->redirect(array('action' => 'add'));
+                    return $this->redirect(array('action' => 'addretail'));
+                }else{
+                    if(empty($this->request->data['Order']['receive'])) $this->request->data['Order']['receive'] = 0;
+                    $debt = $amount - $this->request->data['Order']['receive'];
                 }
                 if(empty($this->request->data['Order']['refund'])){
                     $this->request->data['Order']['refund'] = 0;
@@ -786,6 +795,8 @@ class OrdersController extends AppController
                         'promote_type' => $this->request->data['Order']['promote_type'],
                         'note' => $this->request->data['Order']['note'],
                         'store_id' => $this->request->data['Order']['store_id'],
+                        'flag_type' => $this->request->data['Order']['flag_type'],
+                        'basic_total' => $basic_total,
                         'total' => $total,
                         'status' => 1,
                         'code' => $orCode,
@@ -796,6 +807,8 @@ class OrdersController extends AppController
                         'type' => 1
                     )
                 );
+                debug($debt);
+                debug($saveData);die;
 
                 if ($this->Order->save($saveData)) {
                     $storeDetail = array();
@@ -905,6 +918,7 @@ class OrdersController extends AppController
         }
 
         $categories = $this->Category->find('list');
+
         $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
         $this->layout = 'order';
         $this->set(compact('categories','customers', 'users', 'promotes', 'promoteData','customersl','warehouse'));
