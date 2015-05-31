@@ -1,6 +1,8 @@
 <?php
 $this->Html->css(array('report_warehouse'), array('inline' => false));
 $this->Html->script(array('report_warehouse'), array('inline' => false));
+$isAdmin = false;
+if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -46,13 +48,17 @@ $this->Html->script(array('report_warehouse'), array('inline' => false));
                 <th rowspan="2">Tên hàng</th>
                 <th rowspan="2">Đơn giá</th>
                 <th rowspan="2">Giá sỉ</th>
+                <?php if($isAdmin) :?>
                 <th rowspan="2">Giá gốc</th>
+                <?php endif;?>
                 <th rowspan="2" class="qty">Tồn đầu kỳ</th>
                 <th colspan="2">Nhập</th>
                 <th colspan="2">Xuất</th>
                 <th colspan="3">Bán</th>
                 <th rowspan="2" class="qty">Tồn cuối kỳ</th>
+                <?php if($isAdmin) :?>
                 <th rowspan="2">Lợi nhuận</th>
+                <?php endif;?>
             </tr>
             <tr>
                 <th class="qty">SL</th>
@@ -84,7 +90,9 @@ $this->Html->script(array('report_warehouse'), array('inline' => false));
                     <td><?php echo $p['name']; ?></td>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['price']); ?></td>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['retail_price']); ?></td>
+                <?php if($isAdmin) :?>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['source_price']); ?></td>
+                <?php endif;?>
                     <td class="qty"><?php echo $p['before_total']; ?></td>
                     <td class="qty"><?php echo $p['in_qty']; ?></td>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['in_price']); ?></td>
@@ -94,7 +102,9 @@ $this->Html->script(array('report_warehouse'), array('inline' => false));
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['sale_promote']); ?></td>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['sale_price']); ?></td>
                     <td class="qty"><?php echo $p['after_total']; ?></td>
+                <?php if($isAdmin) :?>
                     <td class="price-text"><?php echo $this->Common->formatMoney($p['profit']); ?></td>
+                <?php endif;?>
                 </tr>
                 <?php
                 $i++;
