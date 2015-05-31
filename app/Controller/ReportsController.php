@@ -240,8 +240,41 @@ class ReportsController extends AppController
         $order_products = Set::combine($order_products,'{n}.OrderDetail.product_id','{n}.0');
 //        debug($order_products);die;
 
-
-
+        $this->loadModel('InoutWarehouseDetail');
+        $in = $this->InoutWarehouseDetail->find('all', array(
+            'fields'=>array(
+                'InoutWarehouseDetail.product_id',
+                'Sum(InoutWarehouseDetail.qty) as qty',
+                'Sum(InoutWarehouseDetail.qty * InoutWarehouseDetail.price) as price',
+            ),
+            'conditions' => array(
+                'InoutWarehouse.approved between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+                'InoutWarehouse.status' => 1,
+                'InoutWarehouse.type' => 0,
+                'InoutWarehouse.store_id' => $store_id,
+            ),
+            'group' => array(
+                'InoutWarehouseDetail.product_id'
+            )
+        ));
+        $in = Set::combine($in,'{n}.InoutWarehouseDetail.product_id','{n}.0');
+        $out = $this->InoutWarehouseDetail->find('all', array(
+            'fields'=>array(
+                'InoutWarehouseDetail.product_id',
+                'Sum(InoutWarehouseDetail.qty_received) as qty',
+                'Sum(InoutWarehouseDetail.qty_received * InoutWarehouseDetail.price) as price',
+            ),
+            'conditions' => array(
+                'InoutWarehouse.approved between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+                'InoutWarehouse.status' => 1,
+                'InoutWarehouse.type' => 1,
+                'InoutWarehouse.store_id' => $store_id,
+            ),
+            'group' => array(
+                'InoutWarehouseDetail.product_id'
+            )
+        ));
+        $out = Set::combine($out,'{n}.InoutWarehouseDetail.product_id','{n}.0');
         foreach($products as $k=>$p){
             $array_rebuild[$p['Warehouse']['product_id']] = array(
                 'code' => $p['Product']['sku'],
@@ -263,6 +296,14 @@ class ReportsController extends AppController
             if(isset($order_products[$p['Warehouse']['product_id']])){
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'] = $order_products[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_price'] = $order_products[$p['Warehouse']['product_id']]['price'];
+            }
+            if(isset($in[$p['Warehouse']['product_id']])){
+                $array_rebuild[$p['Warehouse']['product_id']]['in_qty'] = $in[$p['Warehouse']['product_id']]['qty'];
+                $array_rebuild[$p['Warehouse']['product_id']]['in_price'] = $in[$p['Warehouse']['product_id']]['price'];
+            }
+            if(isset($out[$p['Warehouse']['product_id']])){
+                $array_rebuild[$p['Warehouse']['product_id']]['out_qty'] = $out[$p['Warehouse']['product_id']]['qty'];
+                $array_rebuild[$p['Warehouse']['product_id']]['out_price'] = $out[$p['Warehouse']['product_id']]['price'];
             }
         }
 //        die;
