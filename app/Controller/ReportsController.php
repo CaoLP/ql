@@ -197,29 +197,77 @@ class ReportsController extends AppController
     {
         $this->set('title_for_layout','Báo cáo thống kê lợi nhuận');
         $conditions = array();
+        $store_id = 1;
         if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
-            $conditions['Warehouse.store_id'] = $this->request->data['store_id'];
+            $store_id = $this->request->data['store_id'];
+            $conditions['Warehouse.store_id'] = $store_id;
         }
         $this->loadModel('Warehouse');
         $products = $this->Warehouse->find('all', array(
-            'fields' => 'Warehouse.product_id, Sum(Warehouse.qty) as total, Product.name , Product.sku',
+            'fields' => array(
+                'Warehouse.product_id',
+                'Sum(Warehouse.qty) as total',
+                'Product.name' ,
+                'Product.sku',
+                'Product.price',
+                'Product.retail_price',
+                'Product.source_price',
+            ),
             'recursive' => 1,
             'conditions' => $conditions,
             'group' => array('Warehouse.product_id'),
             'order' => array('total' => 'desc'),
         ));
         $array_rebuild = array();
-        foreach($products as $p){
+        $this->loadModel('Store');
+        $stores = $this->Store->find('list');
+        $this->loadModel('OrderDetail');
+        $order_products = $this->OrderDetail->find('all',array(
+            'fields'=>array(
+                'OrderDetail.product_id',
+                'Sum(OrderDetail.qty) as qty',
+                'Sum(OrderDetail.qty * OrderDetail.price) as price',
+            ),
+           'conditions' => array(
+               'Order.created between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+               'Order.status' => 1,
+               'Order.store_id' => $store_id,
+           ),
+            'group' => array(
+                'OrderDetail.product_id'
+            )
+        ));
+        $order_products = Set::combine($order_products,'{n}.OrderDetail.product_id','{n}.0');
+//        debug($order_products);die;
+
+
+
+        foreach($products as $k=>$p){
             $array_rebuild[$p['Warehouse']['product_id']] = array(
                 'code' => $p['Product']['sku'],
                 'name' => $p['Product']['name'],
-                'total' => $p[0]['total']
+                'price'=> $p['Product']['price'],
+                'retail_price'=> $p['Product']['retail_price'],
+                'source_price'=> $p['Product']['source_price'],
+                'before_total'=> 0,
+                'in_qty'=> 0,
+                'in_price'=> 0,
+                'out_qty'=> 0,
+                'out_price'=> 0,
+                'sale_qty'=> 0,
+                'sale_promote'=> 0,
+                'sale_price'=> 0,
+                'after_total' => $p[0]['total'],
+                'profit'=> 0,
             );
+            if(isset($order_products[$p['Warehouse']['product_id']])){
+                $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'] = $order_products[$p['Warehouse']['product_id']]['qty'];
+                $array_rebuild[$p['Warehouse']['product_id']]['sale_price'] = $order_products[$p['Warehouse']['product_id']]['price'];
+            }
         }
+//        die;
         $products = $array_rebuild;
-        $this->loadModel('Store');
-        $stores = $this->Store->find('list');
-        $this->set(compact('products','stores'));
+        $this->set(compact('products','stores','order_products'));
     }
 
 }

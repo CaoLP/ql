@@ -35,4 +35,7 @@ class CommonHelper extends AppHelper {
         }
         return $result;
     }
+    public function  formatMoney($input){
+        return number_format($input, 0, '.', ',');
+    }
 }

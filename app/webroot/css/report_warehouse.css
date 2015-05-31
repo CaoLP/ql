@@ -6,3 +6,9 @@
 .table > thead{
     border-bottom: 2px solid #ddd;
 }
+.qty{
+    width: 40px;
+    text-align: center;
+    color: #5cb85c;
+    font-weight: bold;
+}
