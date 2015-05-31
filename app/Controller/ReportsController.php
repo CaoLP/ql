@@ -198,9 +198,33 @@ class ReportsController extends AppController
         $this->set('title_for_layout','Báo cáo thống kê lợi nhuận');
         $conditions = array();
         $store_id = 1;
+        $summary = array(
+            'in_price'=> 0,
+            'out_price'=> 0,
+            ''=> 0,
+            ''=> 0,
+            ''=> 0,
+        );
+        $date = array(date('Y-m-01 00:00'),date('Y-m-t 23:59'));
         if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
             $store_id = $this->request->data['store_id'];
             $conditions['Warehouse.store_id'] = $store_id;
+        }
+        if(isset($this->request->data['from']) && isset($this->request->data['to'])){
+            $date = array(
+                $this->request->data['from'].' 00:00:00',
+                $this->request->data['to'].' 23:59:59'
+            );
+        }else if(isset($this->request->data['from'])){
+            $date = array(
+                $this->request->data['from'].' 00:00:00',
+                $this->request->data['from'].' 23:59:59'
+            );
+        }else if(isset($this->request->data['to'])){
+            $date = array(
+                $this->request->data['to'].' 00:00:00',
+                $this->request->data['to'].' 23:59:59'
+            );
         }
         $this->loadModel('Warehouse');
         $products = $this->Warehouse->find('all', array(
@@ -229,7 +253,7 @@ class ReportsController extends AppController
                 'Sum(OrderDetail.qty * OrderDetail.price) as price',
             ),
            'conditions' => array(
-               'Order.created between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+               'Order.created between ? and ?' => $date,
                'Order.status' => 1,
                'Order.store_id' => $store_id,
            ),
@@ -248,7 +272,7 @@ class ReportsController extends AppController
                 'Sum(InoutWarehouseDetail.qty * InoutWarehouseDetail.price) as price',
             ),
             'conditions' => array(
-                'InoutWarehouse.approved between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+                'InoutWarehouse.approved between ? and ?' => $date,
                 'InoutWarehouse.status' => 1,
                 'InoutWarehouse.type' => 0,
                 'InoutWarehouse.store_id' => $store_id,
@@ -265,7 +289,7 @@ class ReportsController extends AppController
                 'Sum(InoutWarehouseDetail.qty_received * InoutWarehouseDetail.price) as price',
             ),
             'conditions' => array(
-                'InoutWarehouse.approved between ? and ?' => array('2015-05-01 00:00','2015-05-31 23:59'),
+                'InoutWarehouse.approved between ? and ?' => $date,
                 'InoutWarehouse.status' => 1,
                 'InoutWarehouse.type' => 1,
                 'InoutWarehouse.store_id' => $store_id,
