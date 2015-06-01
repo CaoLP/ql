@@ -195,7 +195,6 @@ class ReportsController extends AppController
 
     public function admin_warehouse()
     {
-        $this->set('title_for_layout','Báo cáo thống kê lợi nhuận');
         $conditions = array();
         $store_id = 1;
         $summary = array(
@@ -332,7 +331,8 @@ class ReportsController extends AppController
         }
 //        die;
         $products = $array_rebuild;
-        $this->set(compact('products','stores','order_products'));
+        $this->set('title_for_layout','Báo cáo thống kê lợi nhuận từ ' . $date[0]. ' đến ' . $date[1]);
+        $this->set(compact('products','stores','order_products','date'));
     }
 
 }
