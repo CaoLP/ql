@@ -209,17 +209,17 @@ class ReportsController extends AppController
             $store_id = $this->request->data['store_id'];
             $conditions['Warehouse.store_id'] = $store_id;
         }
-        if(isset($this->request->data['from']) && isset($this->request->data['to'])){
+        if(!empty($this->request->data['from']) && !empty($this->request->data['to'])){
             $date = array(
                 $this->request->data['from'].' 00:00:00',
                 $this->request->data['to'].' 23:59:59'
             );
-        }else if(isset($this->request->data['from'])){
+        }else if(!empty($this->request->data['from'])){
             $date = array(
                 $this->request->data['from'].' 00:00:00',
                 $this->request->data['from'].' 23:59:59'
             );
-        }else if(isset($this->request->data['to'])){
+        }else if(!empty($this->request->data['to'])){
             $date = array(
                 $this->request->data['to'].' 00:00:00',
                 $this->request->data['to'].' 23:59:59'
