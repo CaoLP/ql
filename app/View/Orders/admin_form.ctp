@@ -172,25 +172,24 @@ echo $this->Html->css(array('order'), array('inline' => false));
 
                 </div>
                 <div class="col-md-12">
+                    <div class="input-group input-group-sm input-total">
+                        <span class="input-group-addon">Thành tiền</span>
+                        <?php
+                        echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
+                            'readonly' => 'readonly',
+                            'id' => 'summary-total',
+                            'class' => 'form-control',
+                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                        ));
+                        ?>
+                    </div>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active"><a href="#info-total" role="tab" data-toggle="tab">Thông tin</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="info-total">
                             <ul class="list-group no-margin">
-                                <li class="list-group-item">
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-addon">Thành tiền</span>
-                                        <?php
-                                        echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
-                                            'readonly' => 'readonly',
-                                            'id' => 'summary-total',
-                                            'class' => 'form-control',
-                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
-                                        ));
-                                        ?>
-                                    </div>
-                                </li>
+
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Khuyến mãi</span>
@@ -240,6 +239,19 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'class' => 'form-control',
                                             'type' => 'text',
                                             'readonly' => 'readonly',
+                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                        ));
+                                        ?>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon">Phí Ship</span>
+                                        <?php
+                                        echo $this->Form->input('ship_increment_price', array('label' => false,
+                                            'div' => false,
+                                            'class' => 'form-control',
+                                            'type' => 'text',
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>

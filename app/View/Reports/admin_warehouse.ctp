@@ -110,6 +110,55 @@ if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
                 $i++;
             }
             ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="price-text"></td>
+                <td class="price-text"></td>
+                <?php if($isAdmin) :?>
+                    <td class="price-text"></td>
+                <?php endif;?>
+                <td class="qty"><?php echo $summary['before_total']; ?></td>
+                <td class="qty"><?php echo $summary['in_qty']; ?></td>
+                <td class="price-text"><?php echo $this->Common->formatMoney($summary['in_price']); ?></td>
+                <td class="qty"><?php echo $summary['out_qty']; ?></td>
+                <td class="price-text"><?php echo $this->Common->formatMoney($summary['out_price']); ?></td>
+                <td class="qty"><?php echo $summary['sale_qty']; ?></td>
+                <td class="price-text"><?php echo $this->Common->formatMoney($summary['sale_promote']); ?></td>
+                <td class="price-text"><?php echo $this->Common->formatMoney($summary['sale_price']); ?></td>
+                <td class="qty"><?php echo $summary['after_total']; ?></td>
+                <?php if($isAdmin) :?>
+                    <td class="price-text"><?php echo $this->Common->formatMoney($summary['profit']); ?></td>
+                <?php endif;?>
+            </tr>
+            <tr class="text-center text-bold footer_tb">
+                <td rowspan="2">Stt</td>
+                <td rowspan="2">Mã hàng</td>
+                <td rowspan="2">Tên hàng</td>
+                <td rowspan="2">Đơn giá</td>
+                <td rowspan="2">Giá sỉ</td>
+                <?php if($isAdmin) :?>
+                    <td rowspan="2">Giá gốc</td>
+                <?php endif;?>
+                <td rowspan="2" class="qty">Tồn đầu kỳ</td>
+                <td class="qty">SL</td>
+                <td>Thành tiền</td>
+                <td class="qty">SL</td>
+                <td>Thành tiền</td>
+                <td class="qty">SL</td>
+                <td>Khuyến mãi</td>
+                <td>Thành tiền</td>
+                <td rowspan="2" class="qty">Tồn cuối kỳ</td>
+                <?php if($isAdmin) :?>
+                    <td rowspan="2">Lợi nhuận</td>
+                <?php endif;?>
+            </tr>
+            <tr class="text-center text-bold footer_tb">
+                <td colspan="2">Nhập</td>
+                <td colspan="2">Xuất</td>
+                <td colspan="3">Bán</td>
+            </tr>
             </tbody>
         </table>
     </div>

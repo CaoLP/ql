@@ -9,7 +9,25 @@ foreach($worksessions_d as $wk){
     $total_time[$wk['WorkSession']['id']] = $total;
 }
 ?>
-
+<div class="row">
+    <div class="col-md-12">
+        <form class="inl" role="form" method="post">
+            <div class="form-group col-md-2">
+                <?php
+                echo $this->Form->input('year', array('label' => false, 'div' => false, 'empty' => 'Năm', 'class' => 'form-control'));
+                ?>
+            </div>
+            <div class="form-group col-md-2">
+                <?php
+                echo $this->Form->input('month', array('label' => false, 'div' => false, 'empty' => 'Tháng', 'class' => 'form-control'));
+                ?>
+            </div>
+            <div class="form-group col-md-1">
+                <button class="form-control btn btn-default" type="submit"><i class="icon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
 <!-- Row start -->
 <div class="row">
     <div class="col-md-12">
@@ -29,7 +47,7 @@ foreach($worksessions_d as $wk){
                                 <thead>
                                     <tr>
                                         <th>Tên Nhân viên</th>
-                                        <?php echo $this->Common->createCalendarTable(date('Y-m-d'));?>
+                                        <?php echo $this->Common->createCalendarTable($end);?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,7 +62,7 @@ foreach($worksessions_d as $wk){
                                         $salary = 0;
                                         $w_time = $total_time[$key];
                                         $per_day = round($salary / (date('t')*$w_time),0);
-                                        echo $this->Common->createCalendarTable(date('Y-m-d'),'td',$staff, $time);?>
+                                        echo $this->Common->createCalendarTable($end,'td',$staff, $time);?>
                                     </tr>
                                     <tr>
                                         <td colspan="<?php echo date('t')-5;?>" class="text-right price-text">Thời gian làm: <?php echo $time?> giờ</td>

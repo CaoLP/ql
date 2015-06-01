@@ -232,6 +232,7 @@ class OrdersController extends AppController
                         'amount' => $amount,
                         'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
                         'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
+                        'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
                     )
                 );
 
@@ -422,6 +423,7 @@ class OrdersController extends AppController
                     'amount' => $amount,
                     'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
                     'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
+                    'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
                 )
             );
             if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){

@@ -3342,3 +3342,8 @@ span.help-inline {
 .bg-red:hover,.bg-green:hover,.bg-yellow:hover{
     color: rgba(255, 0, 0, 0.90);
 }
+.input-total{
+    position: absolute;
+    width: 70% !important;
+    right: 0;
+}

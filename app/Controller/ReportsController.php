@@ -198,11 +198,16 @@ class ReportsController extends AppController
         $conditions = array();
         $store_id = 1;
         $summary = array(
+            'before_total'=> 0,
+            'in_qty'=> 0,
             'in_price'=> 0,
+            'out_qty'=> 0,
             'out_price'=> 0,
-            ''=> 0,
-            ''=> 0,
-            ''=> 0,
+            'sale_qty'=> 0,
+            'sale_promote'=> 0,
+            'sale_price'=> 0,
+            'after_total'=> 0,
+            'profit'=> 0,
         );
         $date = array(date('Y-m-01 00:00'),date('Y-m-t 23:59'));
         if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
@@ -261,7 +266,19 @@ class ReportsController extends AppController
             )
         ));
         $order_products = Set::combine($order_products,'{n}.OrderDetail.product_id','{n}.0');
-//        debug($order_products);die;
+        $orders = $this->OrderDetail->Order->find('all',array(
+            'fields' => array(
+                'Sum(Order.total_promote) as promote',
+            ),
+            'conditions' => array(
+                'Order.created between ? and ?' => $date,
+                'Order.status' => 1,
+                'Order.store_id' => $store_id,
+            )
+        ));
+        if(isset($orders[0][0]['promote']))
+            $summary['sale_promote'] = $orders[0][0]['promote'];
+//        debug($orders);die;
 
         $this->loadModel('InoutWarehouseDetail');
         $in = $this->InoutWarehouseDetail->find('all', array(
@@ -316,23 +333,30 @@ class ReportsController extends AppController
                 'after_total' => $p[0]['total'],
                 'profit'=> 0,
             );
+            $summary['after_total'] += $p[0]['total'];
             if(isset($order_products[$p['Warehouse']['product_id']])){
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'] = $order_products[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_price'] = $order_products[$p['Warehouse']['product_id']]['price'];
+                $summary['sale_qty'] +=  $order_products[$p['Warehouse']['product_id']]['qty'];
+                $summary['sale_price'] +=  $order_products[$p['Warehouse']['product_id']]['price'];
             }
             if(isset($in[$p['Warehouse']['product_id']])){
                 $array_rebuild[$p['Warehouse']['product_id']]['in_qty'] = $in[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['in_price'] = $in[$p['Warehouse']['product_id']]['price'];
+                $summary['in_qty'] +=  $in[$p['Warehouse']['product_id']]['qty'];
+                $summary['in_price'] +=  $in[$p['Warehouse']['product_id']]['price'];
             }
             if(isset($out[$p['Warehouse']['product_id']])){
                 $array_rebuild[$p['Warehouse']['product_id']]['out_qty'] = $out[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['out_price'] = $out[$p['Warehouse']['product_id']]['price'];
+                $summary['out_qty'] +=  $out[$p['Warehouse']['product_id']]['qty'];
+                $summary['out_price'] +=  $out[$p['Warehouse']['product_id']]['price'];
             }
         }
 //        die;
         $products = $array_rebuild;
         $this->set('title_for_layout','Báo cáo thống kê lợi nhuận từ ' . $date[0]. ' đến ' . $date[1]);
-        $this->set(compact('products','stores','order_products','date'));
+        $this->set(compact('products','stores','order_products','date','summary'));
     }
 
 }

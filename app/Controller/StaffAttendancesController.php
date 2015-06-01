@@ -38,8 +38,14 @@ class StaffAttendancesController extends AppController
         $this->loadModel('WorkSession');
         $worksessions_d = $this->WorkSession->find('all', array('recursive'=>-1));
         $res = array();
-        $date = date('Y-m-01');
-        $end = date('Y-m-t');
+        if(!empty($this->request->data['month']) && !empty($this->request->data['year'])){
+            $time = strtotime($this->request->data['year'].'-'.$this->request->data['month'].'-01');
+            $date = date('Y-m-01',$time);
+            $end = date('Y-m-t',$time);
+        }else{
+            $date = date('Y-m-01');
+            $end = date('Y-m-t');
+        }
         while (strtotime($date) <= strtotime($end)) {
             $staff_attendances = $this->StaffAttendance->find('all',array(
                 'conditions' => array('StaffAttendance.begin_time like' => $date .'%'),
@@ -64,7 +70,13 @@ class StaffAttendancesController extends AppController
 //            }
 //        }
         $staff_attendances = $res;
-        $this->set(compact('staff_attendances','users','worksessions_d','salaries'));
+        $years = array();
+        $months = array();
+        for($i = 1; $i <= 12; $i++){
+            $months[$i] = $i;
+            $years[(date('Y') - 4)+$i] = (date('Y') - 4)+$i;
+        }
+        $this->set(compact('staff_attendances','users','worksessions_d','salaries','years','months','end'));
 
         if(isset($this->request->query['sample'])){
             $listAt = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive'=>-1));
