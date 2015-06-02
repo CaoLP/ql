@@ -277,7 +277,7 @@ $(document).ready(function () {
                     '<td>' +
                     '</td>' +
                     '</tr>';
-                $('#product-list').append(template);
+                $('#product-list').prepend(template);
             }
             updatePrice();
             dialog.dialog("close");
