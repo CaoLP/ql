@@ -1,0 +1,2558 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: /AdminMenusController.php:40;77;106
+msgid "Invalid admin menu"
+msgstr "Admin menu không hợp lệ"
+
+#: /AdminMenusController.php:56;81
+msgid "The admin menu has been saved."
+msgstr "Admin menu đã được lưu"
+
+#: /AdminMenusController.php:59;84
+msgid "The admin menu could not be saved. Please, try again."
+msgstr "Admin menu không thể lưu. Vui lòng thử lại"
+
+#: /AdminMenusController.php:110
+msgid "The admin menu has been deleted."
+msgstr "Admin menu đã được xóa"
+
+#: /AdminMenusController.php:112
+msgid "The admin menu could not be deleted. Please, try again."
+msgstr "Admin menu không thể xóa. Vui lòng thử lại"
+
+#: /AppController.php:49
+msgid "Active"
+msgstr "Kích hoạt"
+
+#: /AppController.php:50
+msgid "Disable"
+msgstr "Vô hiệu hóa"
+
+#: /CategoriesController.php:43;93;120
+msgid "Invalid category"
+msgstr "Danh mục không hợp lệ"
+
+#: /CategoriesController.php:97
+msgid "The category has been saved."
+msgstr "Danh mục đã được lưu"
+
+#: /CategoriesController.php:100
+msgid "The category could not be saved. Please, try again."
+msgstr "không thể lưu. Vui lòng thử lại"
+
+#: /CategoriesController.php:124
+msgid "The category has been deleted."
+msgstr "Danh mục đã được xóa."
+
+#: /CategoriesController.php:126
+msgid "The category could not be deleted. Please, try again."
+msgstr "không thể xóa. Vui lòng thử lại"
+
+#: /CustomerPromotesController.php:37;73;102
+msgid "Invalid customer promote"
+msgstr "Khuyến mãi cho khách không hợp lệ"
+
+#: /CustomerPromotesController.php:52;77
+msgid "The customer promote has been saved."
+msgstr "Khuyến mãi cho khách đã được lưu"
+
+#: /CustomerPromotesController.php:55;80
+msgid "The customer promote could not be saved. Please, try again."
+msgstr "Khuyến mãi cho khách không thể lưu. Vui lòng thử lại"
+
+#: /CustomerPromotesController.php:106
+msgid "The customer promote has been deleted."
+msgstr "Khuyến mãi cho khách đã được xóa."
+
+#: /CustomerPromotesController.php:108
+msgid "The customer promote could not be deleted. Please, try again."
+msgstr "Khuyến mãi cho khách không thể xóa. Vui lòng thử lại"
+
+#: /CustomersController.php:37;69;94
+msgid "Invalid customer"
+msgstr "Khách hàng không hợp lệ"
+
+#: /CustomersController.php:52;73
+msgid "The customer has been saved."
+msgstr "Khách hàng đã được lưu."
+
+#: /CustomersController.php:55;76
+msgid "The customer could not be saved. Please, try again."
+msgstr "Khách hàng không thể lưu. Vui lòng thử lại"
+
+#: /CustomersController.php:98
+msgid "The customer has been deleted."
+msgstr "Khách hàng đã được xóa"
+
+#: /CustomersController.php:100
+msgid "The customer could not be deleted. Please, try again."
+msgstr "Khách hàng không thể xóa. Vui lòng thử lại"
+
+#: /InoutWarehouseDetailsController.php:37;72;100
+msgid "Invalid inout warehouse detail"
+msgstr "Nhập xuất kho tiết không hợp lệ"
+
+#: /InoutWarehouseDetailsController.php:52;76
+msgid "The inout warehouse detail has been saved."
+msgstr "Nhập xuất kho tiết đã được lưu."
+
+#: /InoutWarehouseDetailsController.php:55;79
+msgid "The inout warehouse detail could not be saved. Please, try again."
+msgstr "Nhập xuất kho tiết không thể lưu. Vui lòng thử lại"
+
+#: /InoutWarehouseDetailsController.php:104
+msgid "The inout warehouse detail has been deleted."
+msgstr "Nhập xuất kho chi tiết đã được xóa"
+
+#: /InoutWarehouseDetailsController.php:106
+msgid "The inout warehouse detail could not be deleted. Please, try again."
+msgstr "Nhập xuất kho chi tiết không thể xóa. Vui lòng thử lại"
+
+#: /InoutWarehousesController.php:37;71;98
+msgid "Invalid inout warehouse"
+msgstr "Nhập xuất kho không hợp lệ"
+
+#: /InoutWarehousesController.php:52;75
+msgid "The inout warehouse has been saved."
+msgstr "Nhập xuất kho đã được lưu"
+
+#: /InoutWarehousesController.php:55;78
+msgid "The inout warehouse could not be saved. Please, try again."
+msgstr "Nhập xuất kho không thể lưu. Vui lòng thử lại"
+
+#: /InoutWarehousesController.php:102
+msgid "The inout warehouse has been deleted."
+msgstr "Nhập xuất kho đã xóa"
+
+#: /InoutWarehousesController.php:104
+msgid "The inout warehouse could not be deleted. Please, try again."
+msgstr "Nhập xuất kho không thể xóa. Vui lòng thử lại"
+
+#: /OptionGroupsController.php:20
+msgid "Not for Inventory"
+msgstr "Không bắt buộc khi nhập kho"
+
+#: /OptionGroupsController.php:21
+msgid "Use for inventory"
+msgstr "Cần thiết khi nhập kho"
+
+#: /OptionGroupsController.php:43;75;100
+msgid "Invalid option group"
+msgstr "Nhóm thuộc tính không hợp lệ"
+
+#: /OptionGroupsController.php:58;79
+msgid "The option group has been saved."
+msgstr "Nhóm thuộc tính đã lưu"
+
+#: /OptionGroupsController.php:61;82
+msgid "The option group could not be saved. Please, try again."
+msgstr "Nhóm thuộc tính hông thể lưu. Vui lòng thử lại"
+
+#: /OptionGroupsController.php:104
+msgid "The option group has been deleted."
+msgstr "Nhóm thuộc tính đã xóa"
+
+#: /OptionGroupsController.php:106
+msgid "The option group could not be deleted. Please, try again."
+msgstr "Nhóm thuộc tính không thể xóa. Vui lòng thử lại"
+
+#: /OptionsController.php:37;72;100
+msgid "Invalid option"
+msgstr "Thuộc tính không hợp lệ"
+
+#: /OptionsController.php:52;76
+msgid "The option has been saved."
+msgstr "Thuộc tính đã lưu"
+
+#: /OptionsController.php:55;79
+msgid "The option could not be saved. Please, try again."
+msgstr "Thuộc tính không thể lưu. Vui lòng thử lại"
+
+#: /OptionsController.php:104
+msgid "The option has been deleted."
+msgstr "Thuộc tính đã xóa"
+
+#: /OptionsController.php:106
+msgid "The option could not be deleted. Please, try again."
+msgstr "Thuộc tính không thể xóa. Vui lòng thử lại"
+
+#: /OrderDetailsController.php:37;73;102
+msgid "Invalid order detail"
+msgstr "Đơn hàng chi tiết không hợp lệ"
+
+#: /OrderDetailsController.php:52;77
+msgid "The order detail has been saved."
+msgstr "Đơn hàng chi tiết đã lưu"
+
+#: /OrderDetailsController.php:55;80
+msgid "The order detail could not be saved. Please, try again."
+msgstr "Đơn hàng chi tiết không thể lưu. Vui lòng thử lại"
+
+#: /OrderDetailsController.php:106
+msgid "The order detail has been deleted."
+msgstr "Đơn hàng chi tiết đã xóa"
+
+#: /OrderDetailsController.php:108
+msgid "The order detail could not be deleted. Please, try again."
+msgstr "Đơn hàng chi tiết không thể xóa. Vui lòng thử lại"
+
+#: /OrdersController.php:37;74;104
+msgid "Invalid order"
+msgstr "Đơn hàng không hợp lệ"
+
+#: /OrdersController.php:52;78
+msgid "The order has been saved."
+msgstr "Đơn hàng đã lưu"
+
+#: /OrdersController.php:55;81
+msgid "The order could not be saved. Please, try again."
+msgstr "Đơn hàng không thể lưu. Vui lòng thử lại"
+
+#: /OrdersController.php:108
+msgid "The order has been deleted."
+msgstr "Đơn hàng đã xóa"
+
+#: /OrdersController.php:110
+msgid "The order could not be deleted. Please, try again."
+msgstr "Đơn hàng không thể xóa. Vui lòng thử lại"
+
+#: /ProductCategoriesController.php:37;72;100
+msgid "Invalid product category"
+msgstr "Danh mục của sản phẩm không hợp lệ"
+
+#: /ProductCategoriesController.php:52;76
+msgid "The product category has been saved."
+msgstr "Danh mục của sản phẩm đã lưu"
+
+#: /ProductCategoriesController.php:55;79
+msgid "The product category could not be saved. Please, try again."
+msgstr "Danh mục của sản phẩm không thể lưu. Vui lòng thử lại"
+
+#: /ProductCategoriesController.php:104
+msgid "The product category has been deleted."
+msgstr "Danh mục của sản phẩm đã xóa"
+
+#: /ProductCategoriesController.php:106
+msgid "The product category could not be deleted. Please, try again."
+msgstr "Danh mục của sản phẩm không thể xóa. Vui lòng thử lại"
+
+#: /ProductOptionsController.php:37;72;100
+msgid "Invalid product option"
+msgstr "Thuộc tính của sản phẩm không hợp lệ"
+
+#: /ProductOptionsController.php:52;76
+msgid "The product option has been saved."
+msgstr "Thuộc tính của sản phẩm đã được lưu."
+
+#: /ProductOptionsController.php:55;79
+msgid "The product option could not be saved. Please, try again."
+msgstr "Thuộc tính của sản phẩm không thể lưu. Vui lòng thử lại"
+
+#: /ProductOptionsController.php:104
+msgid "The product option has been deleted."
+msgstr "Thuộc tính của sản phẩm đã xóa"
+
+#: /ProductOptionsController.php:106
+msgid "The product option could not be deleted. Please, try again."
+msgstr "Thuộc tính của sản phẩm không thể xóa. Vui lòng thử lại"
+
+#: /ProductPromotesController.php:38;73;101
+msgid "Invalid product promote"
+msgstr "Khuyến mãi của sản phẩm không hợp lệ"
+
+#: /ProductPromotesController.php:53;77
+msgid "The product promote has been saved."
+msgstr "Khuyến mãi của sản phẩm đã được lưu."
+
+#: /ProductPromotesController.php:56;80
+msgid "The product promote could not be saved. Please, try again."
+msgstr "Khuyến mãi của sản phẩm không thể lưu. Vui lòng thử lại"
+
+#: /ProductPromotesController.php:105
+msgid "The product promote has been deleted."
+msgstr "Khuyến mãi của sản phẩm đã xóa"
+
+#: /ProductPromotesController.php:107
+msgid "The product promote could not be deleted. Please, try again."
+msgstr "không thể xóa. Vui lòng thử lại"
+
+#: /ProductsController.php:47;107;154
+msgid "Invalid product"
+msgstr "Sản phẩm không hợp lệ"
+
+#: /ProductsController.php:122
+msgid "The product has been saved."
+msgstr "Sản phẩm đã được lưu."
+
+#: /ProductsController.php:129
+msgid "The product could not be saved. Please, try again."
+msgstr "Sản phẩm không thể lưu. Vui lòng thử lại"
+
+#: /ProductsController.php:158
+msgid "The product has been deleted."
+msgstr "Sản phẩm đã xóa"
+
+#: /ProductsController.php:160
+msgid "The product could not be deleted. Please, try again."
+msgstr "Sản phẩm không thể xóa. Vui lòng thử lại"
+
+#: /PromotesController.php:37;71;98
+msgid "Invalid promote"
+msgstr "Khuyến mãi không hợp lệ"
+
+#: /PromotesController.php:52;75
+msgid "The promote has been saved."
+msgstr "Khuyến mãi đã được lưu."
+
+#: /PromotesController.php:55;78
+msgid "The promote could not be saved. Please, try again."
+msgstr "Khuyến mãi không thể lưu. Vui lòng thử lại"
+
+#: /PromotesController.php:102
+msgid "The promote has been deleted."
+msgstr "Khuyến mãi đã xóa."
+
+#: /PromotesController.php:104
+msgid "The promote could not be deleted. Please, try again."
+msgstr "Khuyến mãi không thể xóa. Vui lòng thử lại"
+
+#: /ProvidersController.php:37;69;94
+msgid "Invalid provider"
+msgstr "Nhà cung cấp không hợp lệ"
+
+#: /ProvidersController.php:52;73
+msgid "The provider has been saved."
+msgstr "Nhà cung cấp đã được lưu."
+
+#: /ProvidersController.php:55;76
+msgid "The provider could not be saved. Please, try again."
+msgstr "Nhà cung cấp không thể lưu. Vui lòng thử lại"
+
+#: /ProvidersController.php:98
+msgid "The provider has been deleted."
+msgstr "Nhà cung cấp đã xóa."
+
+#: /ProvidersController.php:100
+msgid "The provider could not be deleted. Please, try again."
+msgstr "Nhà cung cấp không thể xóa. Vui lòng thử lại"
+
+#: /ReexesController.php:37;71;98
+msgid "Invalid reex"
+msgstr "Thu chi không hợp lệ"
+
+#: /ReexesController.php:52;75
+msgid "The reex has been saved."
+msgstr "Thu chi đã được lưu."
+
+#: /ReexesController.php:55;78
+msgid "The reex could not be saved. Please, try again."
+msgstr "Thu chi không thể lưu. Vui lòng thử lại"
+
+#: /ReexesController.php:102
+msgid "The reex has been deleted."
+msgstr "Thu chi đã xóa."
+
+#: /ReexesController.php:104
+msgid "The reex could not be deleted. Please, try again."
+msgstr "Thu chi không thể xóa. Vui lòng thử lại"
+
+#: /StoresController.php:37;71;98
+msgid "Invalid store"
+msgstr "Cửa hàng không hợp lệ"
+
+#: /StoresController.php:52;75
+msgid "The store has been saved."
+msgstr "Cửa hàng đã được lưu."
+
+#: /StoresController.php:55;78
+msgid "The store could not be saved. Please, try again."
+msgstr "Cửa hàng không thể lưu. Vui lòng thử lại"
+
+#: /StoresController.php:102
+msgid "The store has been deleted."
+msgstr "Cửa hàng đã xóa."
+
+#: /StoresController.php:104
+msgid "The store could not be deleted. Please, try again."
+msgstr "Cửa hàng không thể xóa. Vui lòng thử lại"
+
+#: /UsersController.php:51;88;116
+msgid "Invalid user"
+msgstr "Người dùng không hợp lệ"
+
+#: /UsersController.php:67
+msgid "The user has been saved"
+msgstr "Người dùng đã lưu"
+
+#: /UsersController.php:71;95
+msgid "The user could not be saved. Please, try again."
+msgstr "Người dùng không thể lưu. Vui lòng thử lại"
+
+#: /UsersController.php:92
+msgid "The user has been saved."
+msgstr "Người dùng đã được lưu."
+
+#: /UsersController.php:120
+msgid "The user has been deleted."
+msgstr "Người dùng đã xóa."
+
+#: /UsersController.php:122
+msgid "The user could not be deleted. Please, try again."
+msgstr "Người dùng không thể xóa. Vui lòng thử lại"
+
+#: /UsersController.php:139
+msgid "Welcome, "
+msgstr "Xin chào, "
+
+#: /UsersController.php:142
+msgid "Invalid username or password"
+msgstr "Tên đăng nhập hoặc mật khẩu không hợp lệ"
+
+#: /UsersController.php:148
+msgid "Good-Bye"
+msgstr "Tạm biệt"
+
+#: /WarehousesController.php:66;134;193
+msgid "Invalid warehouse"
+msgstr "Kho không hợp lệ"
+
+#: /WarehousesController.php:104;156
+msgid "The warehouse has been saved."
+msgstr "Kho đã được lưu."
+
+#: /WarehousesController.php:107;159
+msgid "The warehouse could not be saved. Please, try again."
+msgstr "Kho không thể lưu. Vui lòng thử lại"
+
+#: /WarehousesController.php:197
+msgid "The warehouse has been deleted."
+msgstr "Kho đã xóa."
+
+#: /WarehousesController.php:199
+msgid "The warehouse could not be deleted. Please, try again."
+msgstr "Kho không thể xóa. Vui lòng thử lại"
+
+#: /AdminMenus/add.ctp:5
+msgid "Add Admin Menu"
+msgstr "Thêm mới Admin menu"
+
+#: /AdminMenus/add.ctp:10;11
+#: /AdminMenus/edit.ctp:11;12
+#: /AdminMenus/index.ctp:11
+#: /AdminMenus/view.ctp:12;14
+msgid "List Admin Menus"
+msgstr "Danh sách Admin menu"
+
+#: /AdminMenus/add.ctp:12
+#: /AdminMenus/edit.ctp:13
+#: /AdminMenus/index.ctp:12
+#: /AdminMenus/view.ctp:15
+msgid "New Parent Admin Menu"
+msgstr "Thêm mới menu cha"
+
+#: /AdminMenus/add.ctp:30
+#: /AdminMenus/edit.ctp:35
+#: /Categories/add.ctp:41
+#: /Categories/edit.ctp:45
+#: /CustomerPromotes/add.ctp:40
+#: /CustomerPromotes/edit.ctp:44
+#: /Customers/add.ctp:44
+#: /Customers/edit.ctp:48
+#: /InoutWarehouseDetails/add.ctp:51
+#: /InoutWarehouseDetails/edit.ctp:55
+#: /InoutWarehouses/add.ctp:38
+#: /InoutWarehouses/edit.ctp:42
+#: /OptionGroups/add.ctp:25
+#: /OptionGroups/edit.ctp:29
+#: /Options/add.ctp:31
+#: /Options/edit.ctp:35
+#: /OrderDetails/add.ctp:59
+#: /OrderDetails/edit.ctp:63
+#: /Orders/add.ctp:93
+#: /Orders/edit.ctp:97
+#: /ProductCategories/add.ctp:27
+#: /ProductCategories/edit.ctp:31
+#: /ProductOptions/add.ctp:30
+#: /ProductOptions/edit.ctp:34
+#: /ProductPromotes/add.ctp:27
+#: /ProductPromotes/edit.ctp:31
+#: /Products/add.ctp:63
+#: /Promotes/add.ctp:52
+#: /Promotes/edit.ctp:56
+#: /Providers/add.ctp:25
+#: /Providers/edit.ctp:29
+#: /Reexes/add.ctp:51
+#: /Reexes/edit.ctp:55
+#: /Stores/add.ctp:52
+#: /Stores/edit.ctp:56
+#: /Users/add.ctp:48
+#: /Users/edit.ctp:52
+#: /Warehouses/add.ctp:40
+#: /Warehouses/edit.ctp:76
+msgid "Submit"
+msgstr "Lưu lại"
+
+#: /AdminMenus/edit.ctp:5
+#: /AdminMenus/view.ctp:10
+msgid "Edit Admin Menu"
+msgstr "Cập nhật Admin menu"
+
+#: /AdminMenus/edit.ctp:10
+#: /Categories/edit.ctp:10
+#: /CustomerPromotes/edit.ctp:10
+#: /Customers/edit.ctp:10
+#: /InoutWarehouseDetails/edit.ctp:10
+#: /InoutWarehouses/edit.ctp:10
+#: /OptionGroups/edit.ctp:10
+#: /Options/edit.ctp:10
+#: /OrderDetails/edit.ctp:10
+#: /Orders/edit.ctp:10
+#: /ProductCategories/edit.ctp:10
+#: /ProductOptions/edit.ctp:10
+#: /ProductPromotes/edit.ctp:10
+#: /Promotes/edit.ctp:10
+#: /Providers/edit.ctp:10
+#: /Reexes/edit.ctp:10
+#: /Stores/edit.ctp:10
+#: /Users/edit.ctp:10
+#: /Warehouses/edit.ctp:10
+msgid "Delete"
+msgstr "Xóa"
+
+#: /AdminMenus/edit.ctp:10
+#: /AdminMenus/index.ctp:43
+#: /AdminMenus/view.ctp:11;108
+#: /Categories/edit.ctp:10
+#: /Categories/index.ctp:52
+#: /Categories/view.ctp:11;164;226
+#: /CustomerPromotes/edit.ctp:10
+#: /CustomerPromotes/index.ctp:66
+#: /CustomerPromotes/view.ctp:11
+#: /Customers/edit.ctp:10
+#: /Customers/index.ctp:62
+#: /Customers/view.ctp:11;151;233
+#: /Helper/MenuHelper.php:27
+#: /InoutWarehouseDetails/edit.ctp:10
+#: /InoutWarehouseDetails/index.ctp:58
+#: /InoutWarehouseDetails/view.ctp:11
+#: /InoutWarehouses/edit.ctp:10
+#: /InoutWarehouses/index.ctp:60
+#: /InoutWarehouses/view.ctp:11;139
+#: /OptionGroups/edit.ctp:10
+#: /OptionGroups/index.ctp:35
+#: /OptionGroups/view.ctp:11;65
+#: /Options/edit.ctp:10
+#: /Options/index.ctp:43
+#: /Options/view.ctp:11
+#: /OrderDetails/edit.ctp:10
+#: /OrderDetails/index.ctp:66
+#: /OrderDetails/view.ctp:11
+#: /Orders/edit.ctp:10
+#: /Orders/index.ctp:69
+#: /Orders/view.ctp:11;266
+#: /ProductCategories/edit.ctp:10
+#: /ProductCategories/index.ctp:42
+#: /ProductCategories/view.ctp:11
+#: /ProductOptions/edit.ctp:10
+#: /ProductOptions/index.ctp:44
+#: /ProductOptions/view.ctp:11
+#: /ProductPromotes/edit.ctp:10
+#: /ProductPromotes/index.ctp:42
+#: /ProductPromotes/view.ctp:11
+#: /Products/index.ctp:52
+#: /Products/view.ctp:11;184;238;272;308;360
+#: /Promotes/edit.ctp:10
+#: /Promotes/index.ctp:70
+#: /Promotes/view.ctp:11;173;255
+#: /Providers/edit.ctp:10
+#: /Providers/index.ctp:36
+#: /Providers/view.ctp:11;98
+#: /Reexes/edit.ctp:10
+#: /Reexes/index.ctp:68
+#: /Reexes/view.ctp:11
+#: /Stores/edit.ctp:10
+#: /Stores/index.ctp:72
+#: /Stores/view.ctp:11;159;207;289;345;403;455;507
+#: /Users/edit.ctp:10
+#: /Users/index.ctp:58
+#: /Users/view.ctp:11;183
+#: /Warehouses/edit.ctp:10
+#: /Warehouses/index.ctp:61
+#: /Warehouses/view.ctp:11
+msgid "Are you sure you want to delete # %s?"
+msgstr "Bạn có chắc muốn xóa # %s không?"
+
+#: /AdminMenus/index.ctp:5
+msgid "Admin Menus"
+msgstr ""
+
+#: /AdminMenus/index.ctp:10
+#: /AdminMenus/view.ctp:13
+msgid "New Admin Menu"
+msgstr "Thêm mới Admin menu"
+
+#: /AdminMenus/view.ctp:5
+msgid "Admin Menu"
+msgstr ""
+
+#: /AdminMenus/view.ctp:11
+msgid "Delete Admin Menu"
+msgstr "Xóa Admin menu"
+
+#: /AdminMenus/view.ctp:23;83
+#: /Categories/view.ctp:27;129;183
+#: /CustomerPromotes/view.ctp:29
+#: /Customers/view.ctp:27;122;170
+#: /InoutWarehouseDetails/view.ctp:25
+#: /InoutWarehouses/view.ctp:27;108
+#: /OptionGroups/view.ctp:23;48
+#: /Options/view.ctp:23
+#: /OrderDetails/view.ctp:27
+#: /Orders/view.ctp:31;231
+#: /ProductCategories/view.ctp:25
+#: /ProductOptions/view.ctp:25
+#: /ProductPromotes/view.ctp:25
+#: /Products/view.ctp:37;153;203;257;291;327
+#: /Promotes/view.ctp:29;138;192
+#: /Providers/view.ctp:23;55
+#: /Reexes/view.ctp:25
+#: /Stores/view.ctp:35;130;178;226;308;364;422;474
+#: /Users/view.ctp:25;120
+#: /Warehouses/view.ctp:27
+msgid "Id"
+msgstr "Mã số"
+
+#: /AdminMenus/view.ctp:30;84
+#: /Categories/view.ctp:55;133;186
+#: /Customers/view.ctp:34
+#: /InoutWarehouseDetails/view.ctp:95
+#: /InoutWarehouses/view.ctp:118
+#: /OptionGroups/view.ctp:30;49
+#: /Options/view.ctp:30
+#: /OrderDetails/view.ctp:48
+#: /Orders/view.ctp:234
+#: /Products/view.ctp:58;163;206
+#: /Promotes/view.ctp:36;141
+#: /Providers/view.ctp:30;58
+#: /Stores/view.ctp:42;309;427
+#: /Users/view.ctp:60
+msgid "Name"
+msgstr "Tên"
+
+#: /AdminMenus/view.ctp:37;85
+msgid "Icon"
+msgstr "Icon"
+
+#: /AdminMenus/view.ctp:44;86
+msgid "Url"
+msgstr "Đường dẫn"
+
+#: /AdminMenus/view.ctp:51
+msgid "Parent Admin Menu"
+msgstr "Admin menu cha"
+
+#: /AdminMenus/view.ctp:58;89
+#: /Categories/view.ctp:41;131
+msgid "Lft"
+msgstr "Trái"
+
+#: /AdminMenus/view.ctp:65;90
+#: /Categories/view.ctp:48;132
+msgid "Rght"
+msgstr "Phải"
+
+#: /AdminMenus/view.ctp:78
+msgid "Related Admin Menus"
+msgstr "Menu tương tự"
+
+#: /AdminMenus/view.ctp:87
+msgid "Group Ids"
+msgstr "Nhóm Mã số"
+
+#: /AdminMenus/view.ctp:88
+#: /Categories/view.ctp:130
+msgid "Parent Id"
+msgstr "Mã số cha"
+
+#: /AdminMenus/view.ctp:117
+msgid "New Child Admin Menu"
+msgstr "Thêm mới Menu con"
+
+#: /Categories/add.ctp:5
+msgid "Add Category"
+msgstr "Thêm mới Danh mục"
+
+#: /Categories/add.ctp:10;11
+#: /Categories/edit.ctp:11;12
+#: /Categories/index.ctp:11
+#: /Categories/view.ctp:12;14
+#: /ProductCategories/add.ctp:13
+#: /ProductCategories/edit.ctp:14
+#: /ProductCategories/index.ctp:14
+#: /ProductCategories/view.ctp:16
+#: /Products/add.ctp:13
+#: /Products/view.ctp:16
+msgid "List Categories"
+msgstr "Danh sách Danh mục"
+
+#: /Categories/add.ctp:12
+#: /Categories/edit.ctp:13
+#: /Categories/index.ctp:12
+#: /Categories/view.ctp:15
+msgid "New Parent Category"
+msgstr "Thêm mới Danh mục cha"
+
+#: /Categories/add.ctp:13
+#: /Categories/edit.ctp:14
+#: /Categories/index.ctp:13
+#: /Categories/view.ctp:16
+#: /CustomerPromotes/add.ctp:17
+#: /CustomerPromotes/edit.ctp:18
+#: /CustomerPromotes/index.ctp:18
+#: /CustomerPromotes/view.ctp:20
+#: /Customers/add.ctp:11
+#: /Customers/edit.ctp:12
+#: /Customers/index.ctp:12
+#: /Customers/view.ctp:14
+#: /InoutWarehouses/add.ctp:13
+#: /InoutWarehouses/edit.ctp:14
+#: /InoutWarehouses/index.ctp:14
+#: /InoutWarehouses/view.ctp:16
+#: /Orders/add.ctp:13
+#: /Orders/edit.ctp:14
+#: /Orders/view.ctp:16
+#: /Products/add.ctp:15
+#: /Products/view.ctp:18
+#: /Promotes/add.ctp:13
+#: /Promotes/edit.ctp:14
+#: /Promotes/index.ctp:14
+#: /Promotes/view.ctp:16
+#: /Reexes/add.ctp:13
+#: /Reexes/edit.ctp:14
+#: /Reexes/index.ctp:14
+#: /Reexes/view.ctp:16
+#: /Stores/add.ctp:11
+#: /Stores/edit.ctp:12
+#: /Stores/index.ctp:12
+#: /Stores/view.ctp:14
+#: /Users/add.ctp:10
+#: /Users/edit.ctp:11
+#: /Users/view.ctp:12
+#: /Warehouses/edit.ctp:16
+#: /Warehouses/view.ctp:18
+msgid "List Users"
+msgstr "Danh sách Người dùng"
+
+#: /Categories/add.ctp:14
+#: /Categories/edit.ctp:15
+#: /Categories/index.ctp:14
+#: /Categories/view.ctp:17
+#: /CustomerPromotes/add.ctp:18
+#: /CustomerPromotes/edit.ctp:19
+#: /CustomerPromotes/index.ctp:19
+#: /CustomerPromotes/view.ctp:21
+#: /Customers/add.ctp:12
+#: /Customers/edit.ctp:13
+#: /Customers/index.ctp:13
+#: /Customers/view.ctp:15
+#: /InoutWarehouses/add.ctp:14
+#: /InoutWarehouses/edit.ctp:15
+#: /InoutWarehouses/index.ctp:15
+#: /InoutWarehouses/view.ctp:17
+#: /Products/add.ctp:16
+#: /Products/view.ctp:19
+#: /Promotes/add.ctp:14
+#: /Promotes/edit.ctp:15
+#: /Promotes/index.ctp:15
+#: /Promotes/view.ctp:17
+#: /Reexes/add.ctp:14
+#: /Reexes/edit.ctp:15
+#: /Reexes/index.ctp:15
+#: /Reexes/view.ctp:17
+#: /Warehouses/edit.ctp:17
+#: /Warehouses/view.ctp:19
+msgid "New Trackable Creator"
+msgstr ""
+
+#: /Categories/add.ctp:15
+#: /Categories/edit.ctp:16
+#: /Categories/index.ctp:15
+#: /Categories/view.ctp:18
+#: /InoutWarehouseDetails/add.ctp:13
+#: /InoutWarehouseDetails/edit.ctp:14
+#: /InoutWarehouseDetails/index.ctp:14
+#: /InoutWarehouseDetails/view.ctp:16
+#: /OrderDetails/add.ctp:13
+#: /OrderDetails/edit.ctp:14
+#: /OrderDetails/index.ctp:14
+#: /OrderDetails/view.ctp:16
+#: /ProductCategories/add.ctp:11
+#: /ProductCategories/edit.ctp:12
+#: /ProductCategories/index.ctp:12
+#: /ProductCategories/view.ctp:14
+#: /ProductOptions/add.ctp:13
+#: /ProductOptions/edit.ctp:14
+#: /ProductOptions/index.ctp:14
+#: /ProductOptions/view.ctp:16
+#: /ProductPromotes/add.ctp:11
+#: /ProductPromotes/edit.ctp:12
+#: /ProductPromotes/index.ctp:12
+#: /ProductPromotes/view.ctp:14
+#: /Products/add.ctp:10
+#: /Products/view.ctp:12
+#: /Providers/add.ctp:11
+#: /Providers/edit.ctp:12
+#: /Providers/index.ctp:12
+#: /Providers/view.ctp:14
+#: /Warehouses/edit.ctp:14
+#: /Warehouses/view.ctp:16
+msgid "List Products"
+msgstr "Danh sách Sản phẩm"
+
+#: /Categories/add.ctp:16
+#: /Categories/edit.ctp:17
+#: /Categories/index.ctp:16
+#: /Categories/view.ctp:19;235
+#: /InoutWarehouseDetails/add.ctp:14
+#: /InoutWarehouseDetails/edit.ctp:15
+#: /InoutWarehouseDetails/index.ctp:15
+#: /InoutWarehouseDetails/view.ctp:17
+#: /OrderDetails/add.ctp:14
+#: /OrderDetails/edit.ctp:15
+#: /OrderDetails/index.ctp:15
+#: /OrderDetails/view.ctp:17
+#: /ProductCategories/add.ctp:12
+#: /ProductCategories/edit.ctp:13
+#: /ProductCategories/index.ctp:13
+#: /ProductCategories/view.ctp:15
+#: /ProductOptions/add.ctp:14
+#: /ProductOptions/edit.ctp:15
+#: /ProductOptions/index.ctp:15
+#: /ProductOptions/view.ctp:17
+#: /ProductPromotes/add.ctp:12
+#: /ProductPromotes/edit.ctp:13
+#: /ProductPromotes/index.ctp:13
+#: /ProductPromotes/view.ctp:15
+#: /Products/index.ctp:10
+#: /Products/view.ctp:13
+#: /Providers/add.ctp:12
+#: /Providers/edit.ctp:13
+#: /Providers/index.ctp:13
+#: /Providers/view.ctp:15;107
+#: /Warehouses/add.ctp:12
+#: /Warehouses/edit.ctp:15
+#: /Warehouses/view.ctp:17
+msgid "New Product"
+msgstr "Sản phẩm mới"
+
+#: /Categories/edit.ctp:5
+#: /Categories/view.ctp:10
+msgid "Edit Category"
+msgstr "Cập nhật danh mục"
+
+#: /Categories/edit.ctp:27
+#: /Options/add.ctp:25
+#: /Options/edit.ctp:29
+msgid "__Select parent__"
+msgstr "__Chọn cha__"
+
+#: /Categories/index.ctp:5
+msgid "Categories"
+msgstr "Danh mục"
+
+#: /Categories/index.ctp:10
+#: /Categories/view.ctp:13
+#: /ProductCategories/add.ctp:14
+#: /ProductCategories/edit.ctp:15
+#: /ProductCategories/index.ctp:15
+#: /ProductCategories/view.ctp:17
+#: /Products/add.ctp:14
+#: /Products/view.ctp:17
+msgid "New Category"
+msgstr "Danh mục mới"
+
+#: /Categories/index.ctp:60
+#: /CustomerPromotes/index.ctp:74
+#: /Customers/index.ctp:70
+#: /InoutWarehouseDetails/index.ctp:66
+#: /InoutWarehouses/index.ctp:68
+#: /OptionGroups/index.ctp:43
+#: /Options/index.ctp:51
+#: /OrderDetails/index.ctp:74
+#: /Orders/index.ctp:77
+#: /ProductCategories/index.ctp:50
+#: /ProductOptions/index.ctp:52
+#: /ProductPromotes/index.ctp:50
+#: /Products/index.ctp:60
+#: /Promotes/index.ctp:78
+#: /Providers/index.ctp:44
+#: /Reexes/index.ctp:76
+#: /Stores/index.ctp:80
+#: /Users/index.ctp:66
+#: /Warehouses/index.ctp:69
+msgid "Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}"
+msgstr "Trang {:page} trên {:pages}, hiển thị {:current} records trên {:count} tổng số, bắt đầu từ {:start} đến {:end}"
+
+#: /Categories/view.ctp:5
+#: /ProductCategories/view.ctp:39
+#: /Products/view.ctp:135
+msgid "Category"
+msgstr "Danh mục"
+
+#: /Categories/view.ctp:11
+msgid "Delete Category"
+msgstr "Xóa Danh mục"
+
+#: /Categories/view.ctp:34
+msgid "Parent Category"
+msgstr "Danh mục cha"
+
+#: /Categories/view.ctp:62;134;191
+#: /Products/edit.ctp:63
+#: /Products/view.ctp:93
+#: /Providers/view.ctp:63
+msgid "Descriptions"
+msgstr "Nội dung mô tả"
+
+#: /Categories/view.ctp:69;135
+msgid "Excerpt"
+msgstr "Mô tả ngắn"
+
+#: /Categories/view.ctp:76;136;193
+#: /Products/edit.ctp:19
+#: /Providers/view.ctp:65
+msgid "Images"
+msgstr "Hình ảnh"
+
+#: /Categories/view.ctp:83;137;194
+#: /CustomerPromotes/view.ctp:71
+#: /Customers/view.ctp:83;128;193
+#: /InoutWarehouses/view.ctp:62
+#: /Orders/view.ctp:192
+#: /Products/view.ctp:100;335
+#: /Promotes/view.ctp:78;215
+#: /Providers/view.ctp:66
+#: /Reexes/view.ctp:88
+#: /Stores/view.ctp:84;136;183;249;315;373;425;482
+#: /Users/view.ctp:46;143
+#: /Warehouses/view.ctp:83
+msgid "Created"
+msgstr "Ngày tạo"
+
+#: /Categories/view.ctp:90
+#: /CustomerPromotes/view.ctp:78
+#: /Customers/view.ctp:90
+#: /InoutWarehouses/view.ctp:69
+#: /Orders/view.ctp:199
+#: /Products/view.ctp:107
+#: /Promotes/view.ctp:85
+#: /Reexes/view.ctp:95
+#: /Stores/view.ctp:91
+#: /Warehouses/view.ctp:90
+msgid "Trackable Creator"
+msgstr "Người tạo"
+
+#: /Categories/view.ctp:97;139;196
+#: /CustomerPromotes/view.ctp:85
+#: /Customers/view.ctp:97;130;195
+#: /InoutWarehouses/view.ctp:76
+#: /Orders/view.ctp:206
+#: /Products/view.ctp:114;337
+#: /Promotes/view.ctp:92;217
+#: /Providers/view.ctp:68
+#: /Reexes/view.ctp:102
+#: /Stores/view.ctp:98;138;185;251;317;375;484
+#: /Users/view.ctp:145
+#: /Warehouses/view.ctp:97
+msgid "Updated"
+msgstr "Cập nhật"
+
+#: /Categories/view.ctp:104
+#: /CustomerPromotes/view.ctp:92
+#: /Customers/view.ctp:104
+#: /InoutWarehouses/view.ctp:83
+#: /Orders/view.ctp:213
+#: /Products/view.ctp:121
+#: /Promotes/view.ctp:99
+#: /Reexes/view.ctp:109
+#: /Stores/view.ctp:105
+#: /Warehouses/view.ctp:104
+msgid "Trackable Updater"
+msgstr "Người cập nhật"
+
+#: /Categories/view.ctp:111;141;198
+#: /Customers/view.ctp:192
+#: /InoutWarehouses/view.ctp:90
+#: /Orders/view.ctp:185
+#: /Products/view.ctp:128
+#: /Promotes/view.ctp:106;214
+#: /Providers/view.ctp:70
+#: /Stores/view.ctp:112;187;248;319;433
+#: /Users/view.ctp:102;142
+msgid "Status"
+msgstr "Trạng thái"
+
+#: /Categories/view.ctp:124
+msgid "Related Categories"
+msgstr "Danh mục cùng loại"
+
+#: /Categories/view.ctp:138;195
+#: /Customers/view.ctp:129;194
+#: /Products/view.ctp:336
+#: /Promotes/view.ctp:216
+#: /Providers/view.ctp:67
+#: /Stores/view.ctp:137;184;250;316;374;483
+#: /Users/view.ctp:144
+msgid "Created By"
+msgstr "Người tạo"
+
+#: /Categories/view.ctp:140;197
+#: /Customers/view.ctp:131;196
+#: /Products/view.ctp:338
+#: /Promotes/view.ctp:218
+#: /Providers/view.ctp:69
+#: /Stores/view.ctp:139;186;252;318;376;485
+#: /Users/view.ctp:146
+msgid "Updated By"
+msgstr "Người cập nhật"
+
+#: /Categories/view.ctp:173
+msgid "New Child Category"
+msgstr "Thêm mới Danh mục con"
+
+#: /Categories/view.ctp:178
+#: /Providers/view.ctp:50
+msgid "Related Products"
+msgstr "Sản phẩm cùng loại"
+
+#: /Categories/view.ctp:184
+#: /InoutWarehouseDetails/view.ctp:46
+#: /InoutWarehouses/view.ctp:111
+#: /OrderDetails/view.ctp:62
+#: /Orders/view.ctp:236
+#: /Products/view.ctp:44;156;208
+#: /Promotes/view.ctp:143
+#: /Providers/view.ctp:56
+msgid "Sku"
+msgstr "Mã hàng"
+
+#: /Categories/view.ctp:185
+#: /Providers/view.ctp:57
+msgid "Provider Id"
+msgstr "Nhà cung cấp"
+
+#: /Categories/view.ctp:187
+#: /InoutWarehouseDetails/view.ctp:60
+#: /InoutWarehouses/view.ctp:113
+#: /OrderDetails/view.ctp:55
+#: /Orders/view.ctp:235
+#: /Products/view.ctp:65;158;207;331
+#: /Promotes/view.ctp:142
+#: /Providers/view.ctp:59
+#: /Stores/view.ctp:478
+#: /Warehouses/edit.ctp:33
+#: /Warehouses/view.ctp:55
+msgid "Price"
+msgstr "Giá"
+
+#: /Categories/view.ctp:188
+#: /Products/view.ctp:72;332
+#: /Providers/view.ctp:60
+#: /Stores/view.ctp:479
+#: /Warehouses/edit.ctp:36
+#: /Warehouses/view.ctp:62
+msgid "Retail Price"
+msgstr "Giá bán sỉ"
+
+#: /Categories/view.ctp:189
+#: /Products/view.ctp:79
+#: /Providers/view.ctp:61
+msgid "Source Price"
+msgstr "Giá gốc"
+
+#: /Categories/view.ctp:190
+#: /Products/view.ctp:86
+#: /Providers/view.ctp:62
+msgid "Excert"
+msgstr "Mô tả ngắn"
+
+#: /Categories/view.ctp:192
+#: /Providers/view.ctp:64
+msgid "Thumbnail"
+msgstr "Hình đại diện"
+
+#: /Categories/view.ctp:199
+#: /Products/view.ctp:259
+#: /Providers/view.ctp:71
+msgid "Category Id"
+msgstr "Mã Danh mục"
+
+#: /CustomerPromotes/add.ctp:5
+msgid "Add Customer Promote"
+msgstr "Thêm mới Khuyến mãi cho người dùng"
+
+#: /CustomerPromotes/add.ctp:10
+#: /CustomerPromotes/edit.ctp:11
+#: /CustomerPromotes/view.ctp:12
+#: /Customers/add.ctp:13
+#: /Customers/edit.ctp:14
+#: /Customers/index.ctp:14
+#: /Customers/view.ctp:16
+#: /Stores/add.ctp:13
+#: /Stores/edit.ctp:14
+#: /Stores/index.ctp:14
+#: /Stores/view.ctp:16
+msgid "List Customer Promotes"
+msgstr "Danh sách Khuyến mãi cho người dùng"
+
+#: /CustomerPromotes/add.ctp:11
+#: /CustomerPromotes/edit.ctp:12
+#: /CustomerPromotes/index.ctp:12
+#: /CustomerPromotes/view.ctp:14
+#: /Customers/add.ctp:10
+#: /Customers/edit.ctp:11
+#: /Customers/view.ctp:12
+#: /Orders/add.ctp:11
+#: /Orders/edit.ctp:12
+#: /Orders/view.ctp:14
+msgid "List Customers"
+msgstr "Danh sách "
+
+#: /CustomerPromotes/add.ctp:12
+#: /CustomerPromotes/edit.ctp:13
+#: /CustomerPromotes/index.ctp:13
+#: /CustomerPromotes/view.ctp:15
+#: /Customers/index.ctp:11
+#: /Customers/view.ctp:13
+#: /Orders/add.ctp:12
+#: /Orders/edit.ctp:13
+#: /Orders/index.ctp:11
+#: /Orders/view.ctp:15
+msgid "New Customer"
+msgstr "Khách mới"
+
+#: /CustomerPromotes/add.ctp:13
+#: /CustomerPromotes/edit.ctp:14
+#: /CustomerPromotes/index.ctp:14
+#: /CustomerPromotes/view.ctp:16
+#: /OrderDetails/add.ctp:15
+#: /OrderDetails/edit.ctp:16
+#: /OrderDetails/index.ctp:16
+#: /OrderDetails/view.ctp:18
+#: /Orders/add.ctp:17
+#: /Orders/edit.ctp:18
+#: /Orders/view.ctp:20
+#: /ProductPromotes/add.ctp:13
+#: /ProductPromotes/edit.ctp:14
+#: /ProductPromotes/index.ctp:14
+#: /ProductPromotes/view.ctp:16
+#: /Promotes/add.ctp:10
+#: /Promotes/edit.ctp:11
+#: /Promotes/view.ctp:12
+#: /Stores/add.ctp:19
+#: /Stores/edit.ctp:20
+#: /Stores/index.ctp:20
+#: /Stores/view.ctp:22
+msgid "List Promotes"
+msgstr "Danh sách khuyến mãi"
+
+#: /CustomerPromotes/add.ctp:14
+#: /CustomerPromotes/edit.ctp:15
+#: /CustomerPromotes/index.ctp:15
+#: /CustomerPromotes/view.ctp:17
+#: /OrderDetails/add.ctp:16
+#: /OrderDetails/edit.ctp:17
+#: /OrderDetails/index.ctp:17
+#: /OrderDetails/view.ctp:19
+#: /Orders/add.ctp:18
+#: /Orders/edit.ctp:19
+#: /Orders/index.ctp:12
+#: /Orders/view.ctp:21
+#: /ProductPromotes/add.ctp:14
+#: /ProductPromotes/edit.ctp:15
+#: /ProductPromotes/index.ctp:15
+#: /ProductPromotes/view.ctp:17
+#: /Promotes/index.ctp:11
+#: /Promotes/view.ctp:13
+#: /Stores/add.ctp:20
+#: /Stores/edit.ctp:21
+#: /Stores/index.ctp:21
+#: /Stores/view.ctp:23;354
+msgid "New Promote"
+msgstr "Khuyến mãi mới"
+
+#: /CustomerPromotes/add.ctp:15
+#: /CustomerPromotes/edit.ctp:16
+#: /CustomerPromotes/index.ctp:16
+#: /CustomerPromotes/view.ctp:18
+#: /InoutWarehouses/add.ctp:11
+#: /InoutWarehouses/edit.ctp:12
+#: /InoutWarehouses/index.ctp:12
+#: /InoutWarehouses/view.ctp:14
+#: /Orders/add.ctp:15
+#: /Orders/edit.ctp:16
+#: /Orders/view.ctp:18
+#: /Promotes/add.ctp:11
+#: /Promotes/edit.ctp:12
+#: /Promotes/index.ctp:12
+#: /Promotes/view.ctp:14
+#: /Reexes/add.ctp:11
+#: /Reexes/edit.ctp:12
+#: /Reexes/index.ctp:12
+#: /Reexes/view.ctp:14
+#: /Stores/add.ctp:10
+#: /Stores/edit.ctp:11
+#: /Stores/view.ctp:12
+#: /Users/add.ctp:11
+#: /Users/edit.ctp:12
+#: /Users/index.ctp:12
+#: /Users/view.ctp:14
+#: /Warehouses/edit.ctp:12
+#: /Warehouses/view.ctp:14
+msgid "List Stores"
+msgstr "Danh sách cửa hàng"
+
+#: /CustomerPromotes/add.ctp:16
+#: /CustomerPromotes/edit.ctp:17
+#: /CustomerPromotes/index.ctp:17
+#: /CustomerPromotes/view.ctp:19
+#: /InoutWarehouses/add.ctp:12
+#: /InoutWarehouses/edit.ctp:13
+#: /InoutWarehouses/index.ctp:13
+#: /InoutWarehouses/view.ctp:15
+#: /Orders/add.ctp:16
+#: /Orders/edit.ctp:17
+#: /Orders/view.ctp:19
+#: /Promotes/add.ctp:12
+#: /Promotes/edit.ctp:13
+#: /Promotes/index.ctp:13
+#: /Promotes/view.ctp:15
+#: /Reexes/add.ctp:12
+#: /Reexes/edit.ctp:13
+#: /Reexes/index.ctp:13
+#: /Reexes/view.ctp:15
+#: /Stores/index.ctp:11
+#: /Stores/view.ctp:13
+#: /Users/add.ctp:12
+#: /Users/edit.ctp:13
+#: /Users/index.ctp:13
+#: /Users/view.ctp:15
+#: /Warehouses/add.ctp:11
+#: /Warehouses/edit.ctp:13
+#: /Warehouses/view.ctp:15
+msgid "New Store"
+msgstr "Cửa hàng mới"
+
+#: /CustomerPromotes/edit.ctp:5
+#: /CustomerPromotes/view.ctp:10
+msgid "Edit Customer Promote"
+msgstr "Cập nhật khuyến mãi cho khách"
+
+#: /CustomerPromotes/index.ctp:6
+msgid "Customer Promotes"
+msgstr "Khuyến mãi cho khách"
+
+#: /CustomerPromotes/index.ctp:11
+#: /CustomerPromotes/view.ctp:13
+#: /Customers/add.ctp:14
+#: /Customers/edit.ctp:15
+#: /Customers/index.ctp:15
+#: /Customers/view.ctp:17;160
+#: /Stores/add.ctp:14
+#: /Stores/edit.ctp:15
+#: /Stores/index.ctp:15
+#: /Stores/view.ctp:17;168
+msgid "New Customer Promote"
+msgstr "thêm khuyến mãi cho khách"
+
+#: /CustomerPromotes/view.ctp:5
+msgid "Customer Promote"
+msgstr "Khuyến mãi cho khách"
+
+#: /CustomerPromotes/view.ctp:11
+msgid "Delete Customer Promote"
+msgstr "Xóa khuyến mãi cho khách"
+
+#: /CustomerPromotes/view.ctp:36
+#: /Customers/view.ctp:5
+#: /Orders/view.ctp:45
+msgid "Customer"
+msgstr "Khách hàng"
+
+#: /CustomerPromotes/view.ctp:43
+#: /OrderDetails/view.ctp:76
+#: /Orders/view.ctp:66
+#: /ProductPromotes/view.ctp:39
+#: /Promotes/view.ctp:5
+msgid "Promote"
+msgstr "Khuyến mãi"
+
+#: /CustomerPromotes/view.ctp:50
+#: /Customers/view.ctp:125
+#: /Stores/view.ctp:133
+msgid "Promote Code"
+msgstr "Mã khuyến mãi"
+
+#: /CustomerPromotes/view.ctp:57
+#: /Customers/view.ctp:126
+#: /Stores/view.ctp:134
+msgid "Used"
+msgstr "Đã sử dụng"
+
+#: /CustomerPromotes/view.ctp:64
+#: /InoutWarehouses/view.ctp:48
+#: /Orders/view.ctp:59
+#: /Promotes/view.ctp:113
+#: /Reexes/view.ctp:46
+#: /Stores/view.ctp:5
+#: /Users/view.ctp:95
+#: /Warehouses/view.ctp:34
+msgid "Store"
+msgstr "Cửa hàng"
+
+#: /Customers/add.ctp:5
+msgid "Add Customer"
+msgstr "Thêm mới Khách"
+
+#: /Customers/add.ctp:15
+#: /Customers/edit.ctp:16
+#: /Customers/index.ctp:16
+#: /Customers/view.ctp:18
+#: /OrderDetails/add.ctp:11
+#: /OrderDetails/edit.ctp:12
+#: /OrderDetails/index.ctp:12
+#: /OrderDetails/view.ctp:14
+#: /Orders/add.ctp:10
+#: /Orders/edit.ctp:11
+#: /Orders/view.ctp:12
+#: /Promotes/add.ctp:17
+#: /Promotes/edit.ctp:18
+#: /Promotes/index.ctp:18
+#: /Promotes/view.ctp:20
+#: /Stores/add.ctp:17
+#: /Stores/edit.ctp:18
+#: /Stores/index.ctp:18
+#: /Stores/view.ctp:20
+#: /Users/add.ctp:13
+#: /Users/edit.ctp:14
+#: /Users/index.ctp:14
+#: /Users/view.ctp:16
+msgid "List Orders"
+msgstr "Danh sách đơn hàng"
+
+#: /Customers/add.ctp:16
+#: /Customers/edit.ctp:17
+#: /Customers/index.ctp:17
+#: /Customers/view.ctp:19;242
+#: /OrderDetails/add.ctp:12
+#: /OrderDetails/edit.ctp:13
+#: /OrderDetails/index.ctp:13
+#: /OrderDetails/view.ctp:15
+#: /Orders/index.ctp:10
+#: /Orders/view.ctp:13
+#: /Promotes/add.ctp:18
+#: /Promotes/edit.ctp:19
+#: /Promotes/index.ctp:19
+#: /Promotes/view.ctp:21;264
+#: /Stores/add.ctp:18
+#: /Stores/edit.ctp:19
+#: /Stores/index.ctp:19
+#: /Stores/view.ctp:21;298
+#: /Users/add.ctp:14
+#: /Users/edit.ctp:15
+#: /Users/index.ctp:15
+#: /Users/view.ctp:17;192
+msgid "New Order"
+msgstr "Đơn hàng mới"
+
+#: /Customers/edit.ctp:5
+#: /Customers/view.ctp:10
+msgid "Edit Customer"
+msgstr "Cập nhật khách hàng"
+
+#: /Customers/index.ctp:6
+msgid "Customers"
+msgstr "Khách hàng"
+
+#: /Customers/view.ctp:11
+msgid "Delete Customer"
+msgstr "Xóa khách hàng"
+
+#: /Customers/view.ctp:41
+#: /Stores/view.ctp:49;428
+#: /Users/view.ctp:67
+msgid "Phone"
+msgstr "Số điện thoại"
+
+#: /Customers/view.ctp:48
+msgid "Email"
+msgstr ""
+
+#: /Customers/view.ctp:55
+msgid "Facebook"
+msgstr ""
+
+#: /Customers/view.ctp:62
+#: /Stores/view.ctp:56;429
+#: /Users/view.ctp:74
+msgid "Address"
+msgstr "Địa chỉ"
+
+#: /Customers/view.ctp:69
+#: /Stores/view.ctp:63;430
+#: /Users/view.ctp:81
+msgid "District"
+msgstr "Quận"
+
+#: /Customers/view.ctp:76
+#: /Stores/view.ctp:70;431
+#: /Users/view.ctp:88
+msgid "City"
+msgstr "Thành phố"
+
+#: /Customers/view.ctp:117
+#: /Stores/view.ctp:125
+msgid "Related Customer Promotes"
+msgstr "Khuyến mãi khách hàng cùng loại"
+
+#: /Customers/view.ctp:123;172
+#: /Promotes/view.ctp:194
+#: /Stores/view.ctp:131;228
+#: /Users/view.ctp:122
+msgid "Customer Id"
+msgstr "Mã Khách hàng"
+
+#: /Customers/view.ctp:124;175
+#: /Orders/view.ctp:238
+#: /Products/view.ctp:210
+#: /Promotes/view.ctp:145;197
+#: /Stores/view.ctp:132;231
+#: /Users/view.ctp:125
+msgid "Promote Id"
+msgstr "Mã nhà cung cấp"
+
+#: /Customers/view.ctp:127;174
+#: /Products/view.ctp:328
+#: /Promotes/view.ctp:196
+#: /Stores/view.ctp:135;181;230;320;367;432;475
+#: /Users/view.ctp:124
+msgid "Store Id"
+msgstr "Mã cửa hàng"
+
+#: /Customers/view.ctp:165
+#: /Promotes/view.ctp:187
+#: /Stores/view.ctp:221
+#: /Users/view.ctp:115
+msgid "Related Orders"
+msgstr "Đơn hàng cũng loại"
+
+#: /Customers/view.ctp:171
+#: /OrderDetails/view.ctp:104
+#: /Orders/view.ctp:38;242
+#: /ProductOptions/view.ctp:46
+#: /Products/view.ctp:214;294;334
+#: /Promotes/view.ctp:43;149;193
+#: /Providers/view.ctp:37
+#: /Stores/view.ctp:227;310;481
+#: /Users/view.ctp:121
+#: /Warehouses/view.ctp:76
+msgid "Code"
+msgstr "Mã"
+
+#: /Customers/view.ctp:173
+#: /Promotes/view.ctp:195
+#: /Stores/view.ctp:229
+#: /Users/view.ctp:123
+msgid "User Id"
+msgstr "Mã người dùng"
+
+#: /Customers/view.ctp:176
+#: /OrderDetails/view.ctp:90
+#: /Orders/view.ctp:73;240
+#: /Products/view.ctp:212
+#: /Promotes/view.ctp:147;198
+#: /Stores/view.ctp:232
+#: /Users/view.ctp:126
+msgid "Promote Type"
+msgstr "Loại khuyến mãi"
+
+#: /Customers/view.ctp:177
+#: /OrderDetails/view.ctp:83
+#: /Orders/view.ctp:80;239
+#: /Products/view.ctp:211
+#: /Promotes/view.ctp:146;199
+#: /Stores/view.ctp:233
+#: /Users/view.ctp:127
+msgid "Promote Value"
+msgstr "Giá trị khuyến mãi"
+
+#: /Customers/view.ctp:178
+#: /Orders/view.ctp:87
+#: /Promotes/view.ctp:200
+#: /Stores/view.ctp:234
+#: /Users/view.ctp:128
+msgid "Basic Total"
+msgstr "Tổng cơ bản"
+
+#: /Customers/view.ctp:179
+#: /InoutWarehouseDetails/view.ctp:74
+#: /InoutWarehouses/view.ctp:55;115
+#: /Orders/view.ctp:94
+#: /Products/view.ctp:160
+#: /Promotes/view.ctp:201
+#: /Reexes/view.ctp:53
+#: /Stores/view.ctp:182;235;368
+#: /Users/view.ctp:129
+msgid "Total"
+msgstr "Tổng cộng"
+
+#: /Customers/view.ctp:180
+#: /Orders/view.ctp:101
+#: /Promotes/view.ctp:202
+#: /Stores/view.ctp:236
+#: /Users/view.ctp:130
+msgid "Total Promote"
+msgstr "Tổng cộng khuyến mãi"
+
+#: /Customers/view.ctp:181
+#: /Orders/view.ctp:108
+#: /Promotes/view.ctp:203
+#: /Stores/view.ctp:237
+#: /Users/view.ctp:131
+msgid "Amount"
+msgstr "Thành tiền"
+
+#: /Customers/view.ctp:182
+#: /Orders/view.ctp:115
+#: /Promotes/view.ctp:204
+#: /Stores/view.ctp:238
+#: /Users/view.ctp:132
+msgid "Receive"
+msgstr "Nhận"
+
+#: /Customers/view.ctp:183
+#: /Orders/view.ctp:122
+#: /Promotes/view.ctp:205
+#: /Stores/view.ctp:239
+#: /Users/view.ctp:133
+msgid "Refund"
+msgstr "Trả lại"
+
+#: /Customers/view.ctp:184
+#: /Orders/view.ctp:129
+#: /Promotes/view.ctp:206
+#: /Stores/view.ctp:240
+#: /Users/view.ctp:134
+msgid "Ship"
+msgstr ""
+
+#: /Customers/view.ctp:185
+#: /Orders/view.ctp:136
+#: /Promotes/view.ctp:207
+#: /Stores/view.ctp:241
+#: /Users/view.ctp:135
+msgid "Ship Increment Price"
+msgstr "Phí Ship"
+
+#: /Customers/view.ctp:186
+#: /Orders/view.ctp:143
+#: /Promotes/view.ctp:208
+#: /Stores/view.ctp:242
+#: /Users/view.ctp:136
+msgid "Ship Name"
+msgstr "Tên người nhận"
+
+#: /Customers/view.ctp:187
+#: /Orders/view.ctp:150
+#: /Promotes/view.ctp:209
+#: /Stores/view.ctp:243
+#: /Users/view.ctp:137
+msgid "Ship Address"
+msgstr "Địa chỉ nhận"
+
+#: /Customers/view.ctp:188
+#: /Orders/view.ctp:157
+#: /Promotes/view.ctp:210
+#: /Stores/view.ctp:244
+#: /Users/view.ctp:138
+msgid "Ship Address Alt"
+msgstr "Địa chỉ nhận thay thế"
+
+#: /Customers/view.ctp:189
+#: /Orders/view.ctp:164
+#: /Promotes/view.ctp:211
+#: /Stores/view.ctp:245
+#: /Users/view.ctp:139
+msgid "Ship District"
+msgstr "Quận"
+
+#: /Customers/view.ctp:190
+#: /Orders/view.ctp:171
+#: /Promotes/view.ctp:212
+#: /Stores/view.ctp:246
+#: /Users/view.ctp:140
+msgid "Ship City"
+msgstr "Thành phố"
+
+#: /Customers/view.ctp:191
+#: /Orders/view.ctp:178
+#: /Promotes/view.ctp:213
+#: /Stores/view.ctp:247
+#: /Users/view.ctp:141
+msgid "Ship Phone"
+msgstr "Điện thoại nhận"
+
+#: /Elements/navigation.ctp:21
+msgid "Edit account"
+msgstr "Cập nhật tài khoản"
+
+#: /Elements/navigation.ctp:23
+msgid "Sign out"
+msgstr "Đăng xuất"
+
+#: /Elements/sidebar.ctp:2
+msgid "Action"
+msgstr "Hành động"
+
+#: /InoutWarehouseDetails/add.ctp:5
+msgid "Add Inout Warehouse Detail"
+msgstr "Thêm mới nhập xuất chi tiết"
+
+#: /InoutWarehouseDetails/add.ctp:10
+#: /InoutWarehouseDetails/edit.ctp:11
+#: /InoutWarehouseDetails/view.ctp:12
+#: /InoutWarehouses/add.ctp:15
+#: /InoutWarehouses/edit.ctp:16
+#: /InoutWarehouses/index.ctp:16
+#: /InoutWarehouses/view.ctp:18
+#: /Products/add.ctp:17
+#: /Products/view.ctp:20
+msgid "List Inout Warehouse Details"
+msgstr "Danh sách nhập xuất chi tiết"
+
+#: /InoutWarehouseDetails/add.ctp:11
+#: /InoutWarehouseDetails/edit.ctp:12
+#: /InoutWarehouseDetails/index.ctp:12
+#: /InoutWarehouseDetails/view.ctp:14
+#: /InoutWarehouses/add.ctp:10
+#: /InoutWarehouses/edit.ctp:11
+#: /InoutWarehouses/view.ctp:12
+#: /Stores/add.ctp:15
+#: /Stores/edit.ctp:16
+#: /Stores/index.ctp:16
+#: /Stores/view.ctp:18
+msgid "List Inout Warehouses"
+msgstr "Danh sách nhập xuất chi tiết"
+
+#: /InoutWarehouseDetails/add.ctp:12
+#: /InoutWarehouseDetails/edit.ctp:13
+#: /InoutWarehouseDetails/index.ctp:13
+#: /InoutWarehouseDetails/view.ctp:15
+#: /InoutWarehouses/index.ctp:11
+#: /InoutWarehouses/view.ctp:13
+#: /Stores/add.ctp:16
+#: /Stores/edit.ctp:17
+#: /Stores/index.ctp:17
+#: /Stores/view.ctp:19;216
+msgid "New Inout Warehouse"
+msgstr "Nhập xuất chi tiết mới"
+
+#: /InoutWarehouseDetails/edit.ctp:5
+#: /InoutWarehouseDetails/view.ctp:10
+msgid "Edit Inout Warehouse Detail"
+msgstr "Cập nhật nhập xuất chi tiết"
+
+#: /InoutWarehouseDetails/index.ctp:6
+msgid "Inout Warehouse Details"
+msgstr "Chi tiết nhập xuất"
+
+#: /InoutWarehouseDetails/index.ctp:11
+#: /InoutWarehouseDetails/view.ctp:13
+#: /InoutWarehouses/add.ctp:16
+#: /InoutWarehouses/edit.ctp:17
+#: /InoutWarehouses/index.ctp:17
+#: /InoutWarehouses/view.ctp:19;148
+#: /Products/add.ctp:18
+#: /Products/view.ctp:21;193
+msgid "New Inout Warehouse Detail"
+msgstr "Thêm mới nhận xuất chi tiết"
+
+#: /InoutWarehouseDetails/view.ctp:5
+msgid "Inout Warehouse Detail"
+msgstr "Chi tiết nhập xuất"
+
+#: /InoutWarehouseDetails/view.ctp:11
+msgid "Delete Inout Warehouse Detail"
+msgstr "Xóa nhận xuất chi tiết"
+
+#: /InoutWarehouseDetails/view.ctp:32
+#: /InoutWarehouses/view.ctp:5
+msgid "Inout Warehouse"
+msgstr "Nhập xuất"
+
+#: /InoutWarehouseDetails/view.ctp:39
+#: /OrderDetails/view.ctp:41
+#: /ProductCategories/view.ctp:32
+#: /ProductOptions/view.ctp:39
+#: /ProductPromotes/view.ctp:32
+#: /Products/view.ctp:5
+#: /Warehouses/view.ctp:41
+msgid "Product"
+msgstr "Sản phẩm"
+
+#: /InoutWarehouseDetails/view.ctp:53
+#: /InoutWarehouses/view.ctp:112
+#: /OrderDetails/view.ctp:69
+#: /Orders/view.ctp:237
+#: /Products/view.ctp:157;209;333
+#: /Promotes/view.ctp:144
+#: /Stores/view.ctp:480
+#: /Warehouses/view.ctp:69
+msgid "Qty"
+msgstr "Số lượng"
+
+#: /InoutWarehouseDetails/view.ctp:67
+#: /InoutWarehouses/view.ctp:114
+#: /Products/view.ctp:159
+msgid "Tax"
+msgstr "Thuế"
+
+#: /InoutWarehouseDetails/view.ctp:81
+#: /InoutWarehouses/view.ctp:116
+#: /Options/index.ctp:5
+#: /ProductOptions/load_options.ctp:2
+#: /Products/edit.ctp:68
+#: /Products/view.ctp:161;330
+#: /Stores/view.ctp:477
+#: /Warehouses/edit.ctp:43
+#: /Warehouses/index.ctp:25
+#: /Warehouses/view.ctp:48
+msgid "Options"
+msgstr "Thuộc tính"
+
+#: /InoutWarehouseDetails/view.ctp:88
+#: /InoutWarehouses/view.ctp:117
+#: /Products/view.ctp:162
+msgid "Option Names"
+msgstr "Tên thuộc tính"
+
+#: /InoutWarehouses/add.ctp:5
+msgid "Add Inout Warehouse"
+msgstr "Thêm mới"
+
+#: /InoutWarehouses/edit.ctp:5
+#: /InoutWarehouses/view.ctp:10
+msgid "Edit Inout Warehouse"
+msgstr "Cập nhật nhận xuất"
+
+#: /InoutWarehouses/index.ctp:6
+msgid "Inout Warehouses"
+msgstr "Nhận xuất"
+
+#: /InoutWarehouses/view.ctp:11
+msgid "Delete Inout Warehouse"
+msgstr "Xóa nhập xuất"
+
+#: /InoutWarehouses/view.ctp:34
+#: /Reexes/view.ctp:81
+#: /Stores/view.ctp:179;372
+msgid "Note"
+msgstr "Ghi chú"
+
+#: /InoutWarehouses/view.ctp:41
+#: /Stores/view.ctp:180
+msgid "Receive Note"
+msgstr "Ghi chú nhận"
+
+#: /InoutWarehouses/view.ctp:103
+#: /Products/view.ctp:148
+msgid "Related Inout Warehouse Details"
+msgstr "Nhận xuất chi tiết cùng loại"
+
+#: /InoutWarehouses/view.ctp:109
+#: /Products/view.ctp:154
+msgid "Inout Warehouse Id"
+msgstr "Mã nhập xuất"
+
+#: /InoutWarehouses/view.ctp:110
+#: /Orders/view.ctp:233
+#: /Products/view.ctp:155;205;258;293;329
+#: /Promotes/view.ctp:140
+#: /Stores/view.ctp:476
+msgid "Product Id"
+msgstr "Mã sản phẩm"
+
+#: /OptionGroups/add.ctp:5
+msgid "Add Option Group"
+msgstr "Thêm mới nhóm thuộc tính"
+
+#: /OptionGroups/add.ctp:10
+#: /OptionGroups/edit.ctp:11
+#: /OptionGroups/view.ctp:12
+#: /Options/add.ctp:11
+#: /Options/edit.ctp:12
+#: /Options/index.ctp:11
+#: /Options/view.ctp:14
+msgid "List Option Groups"
+msgstr "Danh sách nhóm thuộc tính"
+
+#: /OptionGroups/add.ctp:11
+#: /OptionGroups/edit.ctp:12
+#: /OptionGroups/index.ctp:11
+#: /OptionGroups/view.ctp:14
+#: /Options/add.ctp:10
+#: /Options/edit.ctp:11
+#: /Options/view.ctp:12
+#: /ProductOptions/add.ctp:11
+#: /ProductOptions/edit.ctp:12
+#: /ProductOptions/index.ctp:12
+#: /ProductOptions/view.ctp:14
+msgid "List Options"
+msgstr "Danh sách thuộc tính"
+
+#: /OptionGroups/add.ctp:12
+#: /OptionGroups/edit.ctp:13
+#: /OptionGroups/index.ctp:12
+#: /OptionGroups/view.ctp:15;74
+#: /Options/index.ctp:10
+#: /Options/view.ctp:13
+#: /ProductOptions/add.ctp:12
+#: /ProductOptions/edit.ctp:13
+#: /ProductOptions/index.ctp:13
+#: /ProductOptions/view.ctp:15
+msgid "New Option"
+msgstr "Thêm mới thuộc tính"
+
+#: /OptionGroups/edit.ctp:5
+#: /OptionGroups/view.ctp:10
+msgid "Edit Option Group"
+msgstr "Cập nhật nhóm thuộc tính"
+
+#: /OptionGroups/index.ctp:5
+msgid "Option Groups"
+msgstr "Nhóm thuộc tính"
+
+#: /OptionGroups/index.ctp:10
+#: /OptionGroups/view.ctp:13
+#: /Options/add.ctp:12
+#: /Options/edit.ctp:13
+#: /Options/index.ctp:12
+#: /Options/view.ctp:15
+msgid "New Option Group"
+msgstr "Thêm mới nhóm thuộc tính"
+
+#: /OptionGroups/view.ctp:5
+#: /Options/view.ctp:37
+msgid "Option Group"
+msgstr "Nhóm thuộc tính"
+
+#: /OptionGroups/view.ctp:11
+msgid "Delete Option Group"
+msgstr "Xóa nhóm thuộc tính"
+
+#: /OptionGroups/view.ctp:43
+msgid "Related Options"
+msgstr "Thuộc tính"
+
+#: /OptionGroups/view.ctp:50
+msgid "Option Group Id"
+msgstr "Mã nhóm thuộc tính"
+
+#: /OptionGroups/view.ctp:51
+#: /Options/view.ctp:44
+msgid "Other"
+msgstr "Mở rộng"
+
+#: /Options/add.ctp:5
+msgid "Add Option"
+msgstr "Thêm mới thuộc tính"
+
+#: /Options/edit.ctp:5
+#: /Options/view.ctp:10
+msgid "Edit Option"
+msgstr "Cập nhật thuộc tính"
+
+#: /Options/view.ctp:5
+#: /ProductOptions/view.ctp:32
+msgid "Option"
+msgstr "Thuộc tính"
+
+#: /Options/view.ctp:11
+msgid "Delete Option"
+msgstr "Xóa thuộc tính"
+
+#: /OrderDetails/add.ctp:5
+msgid "Add Order Detail"
+msgstr "Thêm mới chi tiết đơn hàng"
+
+#: /OrderDetails/add.ctp:10
+#: /OrderDetails/edit.ctp:11
+#: /OrderDetails/view.ctp:12
+#: /Orders/add.ctp:19
+#: /Orders/edit.ctp:20
+#: /Orders/view.ctp:22
+#: /Products/add.ctp:19
+#: /Products/view.ctp:22
+#: /Promotes/add.ctp:15
+#: /Promotes/edit.ctp:16
+#: /Promotes/index.ctp:16
+#: /Promotes/view.ctp:18
+msgid "List Order Details"
+msgstr "Danh sách chi tiết đơn hàng"
+
+#: /OrderDetails/edit.ctp:5
+#: /OrderDetails/view.ctp:10
+msgid "Edit Order Detail"
+msgstr "Cập nhật chi tiết đơn hàng"
+
+#: /OrderDetails/index.ctp:6
+msgid "Order Details"
+msgstr "Chi tiết đơn hàng"
+
+#: /OrderDetails/index.ctp:11
+#: /OrderDetails/view.ctp:13
+#: /Orders/add.ctp:20
+#: /Orders/edit.ctp:21
+#: /Orders/view.ctp:23;275
+#: /Products/add.ctp:20
+#: /Products/view.ctp:23;247
+#: /Promotes/add.ctp:16
+#: /Promotes/edit.ctp:17
+#: /Promotes/index.ctp:17
+#: /Promotes/view.ctp:19;182
+msgid "New Order Detail"
+msgstr "Thêm mới chi tiết đơn hàng"
+
+#: /OrderDetails/view.ctp:5
+msgid "Order Detail"
+msgstr "Chi tiết đơn hàng"
+
+#: /OrderDetails/view.ctp:11
+msgid "Delete Order Detail"
+msgstr "Xóa chi tiết đơn hàng"
+
+#: /OrderDetails/view.ctp:34
+#: /Orders/view.ctp:5
+msgid "Order"
+msgstr "Đơn hàng"
+
+#: /OrderDetails/view.ctp:97
+#: /Orders/view.ctp:241
+#: /ProductOptions/index.ctp:6
+#: /Products/view.ctp:213
+#: /Promotes/view.ctp:148
+msgid "Product Options"
+msgstr "Thuộc tính sản phẩm"
+
+#: /OrderDetails/view.ctp:111
+#: /Orders/view.ctp:243
+#: /Products/view.ctp:215
+#: /Promotes/view.ctp:150
+msgid "Data"
+msgstr "Dữ liệu"
+
+#: /Orders/add.ctp:5
+msgid "Add Order"
+msgstr "Thêm mới đơn hàng"
+
+#: /Orders/add.ctp:14
+#: /Orders/edit.ctp:15
+#: /Orders/view.ctp:17
+#: /Stores/view.ctp:464
+#: /Users/index.ctp:11
+#: /Users/view.ctp:13
+msgid "New User"
+msgstr "Thêm mới người dùng"
+
+#: /Orders/edit.ctp:5
+#: /Orders/view.ctp:10
+msgid "Edit Order"
+msgstr "Cập nhật đơn hàng"
+
+#: /Orders/index.ctp:5
+msgid "Orders"
+msgstr "Đơn hàng"
+
+#: /Orders/view.ctp:11
+msgid "Delete Order"
+msgstr "Xóa đơn hàng"
+
+#: /Orders/view.ctp:52
+#: /Users/view.ctp:5
+msgid "User"
+msgstr "Người dùng"
+
+#: /Orders/view.ctp:226
+#: /Products/view.ctp:198
+#: /Promotes/view.ctp:133
+msgid "Related Order Details"
+msgstr "Đơn hàng chi tiết cùng loại"
+
+#: /Orders/view.ctp:232
+#: /Products/view.ctp:204
+#: /Promotes/view.ctp:139
+msgid "Order Id"
+msgstr "Mã đơn hàng"
+
+#: /ProductCategories/add.ctp:5
+msgid "Add Product Category"
+msgstr "Thêm mới danh mục của sp"
+
+#: /ProductCategories/add.ctp:10
+#: /ProductCategories/edit.ctp:11
+#: /ProductCategories/view.ctp:12
+#: /Products/add.ctp:21
+#: /Products/view.ctp:24
+msgid "List Product Categories"
+msgstr "Danh sách danh mục sp"
+
+#: /ProductCategories/edit.ctp:5
+#: /ProductCategories/view.ctp:10
+msgid "Edit Product Category"
+msgstr "Cập nhật danh mục sp"
+
+#: /ProductCategories/index.ctp:6
+msgid "Product Categories"
+msgstr "Danh mục sản phẩm"
+
+#: /ProductCategories/index.ctp:11
+#: /ProductCategories/view.ctp:13
+#: /Products/add.ctp:22
+#: /Products/view.ctp:25;281
+msgid "New Product Category"
+msgstr "Thêm mới danh mục SP"
+
+#: /ProductCategories/view.ctp:5
+msgid "Product Category"
+msgstr "Danh mục sản phẩm"
+
+#: /ProductCategories/view.ctp:11
+msgid "Delete Product Category"
+msgstr "Xóa danh mục sản phẩm"
+
+#: /ProductOptions/add.ctp:5
+msgid "Add Product Option"
+msgstr "Thêm mới thuộc tính sp"
+
+#: /ProductOptions/add.ctp:10
+#: /ProductOptions/edit.ctp:11
+#: /ProductOptions/view.ctp:12
+#: /Products/add.ctp:23
+#: /Products/view.ctp:26
+msgid "List Product Options"
+msgstr "Danh sách thuộc tính sp"
+
+#: /ProductOptions/edit.ctp:5
+#: /ProductOptions/view.ctp:10
+msgid "Edit Product Option"
+msgstr "Cập nhật thuộc tính sp"
+
+#: /ProductOptions/index.ctp:11
+#: /ProductOptions/view.ctp:13
+#: /Products/add.ctp:24
+#: /Products/view.ctp:27;317
+msgid "New Product Option"
+msgstr "thêm mới thuộc tính sp"
+
+#: /ProductOptions/view.ctp:5
+msgid "Product Option"
+msgstr "Thuộc tính Sản phẩm"
+
+#: /ProductOptions/view.ctp:11
+msgid "Delete Product Option"
+msgstr "Xóa thuộc tính sp"
+
+#: /ProductPromotes/add.ctp:5
+msgid "Add Product Promote"
+msgstr "Thêm mới khuyến mãi sp"
+
+#: /ProductPromotes/add.ctp:10
+#: /ProductPromotes/edit.ctp:11
+#: /ProductPromotes/view.ctp:12
+msgid "List Product Promotes"
+msgstr "Danh sách khuyến mãi sp"
+
+#: /ProductPromotes/edit.ctp:5
+#: /ProductPromotes/view.ctp:10
+msgid "Edit Product Promote"
+msgstr "Cập nhật khuyến mãi sp"
+
+#: /ProductPromotes/index.ctp:6
+msgid "Product Promotes"
+msgstr "Khuyến mãi sp"
+
+#: /ProductPromotes/index.ctp:11
+#: /ProductPromotes/view.ctp:13
+msgid "New Product Promote"
+msgstr "thêm mới khuyến mãi sp"
+
+#: /ProductPromotes/view.ctp:5
+msgid "Product Promote"
+msgstr "Khuyến mãi sp"
+
+#: /ProductPromotes/view.ctp:11
+msgid "Delete Product Promote"
+msgstr "Xóa khuyến mãi sp"
+
+#: /Products/add.ctp:5
+msgid "Add Product"
+msgstr "Thêm mới sản phẩm"
+
+#: /Products/add.ctp:11
+#: /Products/view.ctp:14
+#: /Providers/add.ctp:10
+#: /Providers/edit.ctp:11
+#: /Providers/view.ctp:12
+msgid "List Providers"
+msgstr "Danh sách nhà cung cấp"
+
+#: /Products/add.ctp:12
+#: /Products/view.ctp:15
+#: /Providers/index.ctp:11
+#: /Providers/view.ctp:13
+msgid "New Provider"
+msgstr "Thêm mới nhà cung cấp"
+
+#: /Products/add.ctp:25
+#: /Products/view.ctp:28
+#: /Stores/add.ctp:23
+#: /Stores/edit.ctp:24
+#: /Stores/index.ctp:24
+#: /Stores/view.ctp:26
+#: /Warehouses/add.ctp:10
+#: /Warehouses/edit.ctp:11
+#: /Warehouses/view.ctp:12
+msgid "List Warehouses"
+msgstr "Danh sách kho"
+
+#: /Products/add.ctp:26
+#: /Products/view.ctp:29;369
+#: /Stores/add.ctp:24
+#: /Stores/edit.ctp:25
+#: /Stores/index.ctp:25
+#: /Stores/view.ctp:27;516
+#: /Warehouses/index.ctp:12;93
+#: /Warehouses/view.ctp:13
+msgid "New Warehouse"
+msgstr "Thêm mới kho"
+
+#: /Products/edit.ctp:5
+#: /Products/view.ctp:10
+msgid "Edit Product"
+msgstr "Cập nhật sản phẩm"
+
+#: /Products/edit.ctp:11;102
+msgid "Save product"
+msgstr "Lưu sản phẩm"
+
+#: /Products/edit.ctp:12;103
+msgid "Save product and Add new"
+msgstr "Lưu và thêm mới"
+
+#: /Products/index.ctp:5
+msgid "Products"
+msgstr "Sản phẩm"
+
+#: /Products/view.ctp:11
+msgid "Delete Product"
+msgstr "Xóa sản phẩm"
+
+#: /Products/view.ctp:51
+#: /Providers/view.ctp:5
+msgid "Provider"
+msgstr "Nhà cung cấp"
+
+#: /Products/view.ctp:252
+msgid "Related Product Categories"
+msgstr ""
+
+#: /Products/view.ctp:286
+msgid "Related Product Options"
+msgstr ""
+
+#: /Products/view.ctp:292
+msgid "Option Id"
+msgstr "Mã Thuộc tính"
+
+#: /Products/view.ctp:322
+#: /Stores/view.ctp:469
+msgid "Related Warehouses"
+msgstr ""
+
+#: /Promotes/add.ctp:5
+msgid "Add Promote"
+msgstr "Thêm mới khuyên mãi"
+
+#: /Promotes/edit.ctp:5
+#: /Promotes/view.ctp:10
+msgid "Edit Promote"
+msgstr "Cập nhật khuyến mãi"
+
+#: /Promotes/index.ctp:6
+msgid "Promotes"
+msgstr "Khuyên mãi"
+
+#: /Promotes/view.ctp:11
+msgid "Delete Promote"
+msgstr "Xóa khuyến mãi"
+
+#: /Promotes/view.ctp:50
+#: /Stores/view.ctp:311
+msgid "Value"
+msgstr "Giá trị"
+
+#: /Promotes/view.ctp:57
+#: /Reexes/view.ctp:39
+#: /Stores/view.ctp:312;366
+msgid "Type"
+msgstr "Loại"
+
+#: /Promotes/view.ctp:64
+#: /Stores/view.ctp:313
+msgid "Begin"
+msgstr "Bắt đầu"
+
+#: /Promotes/view.ctp:71
+#: /Stores/view.ctp:314
+msgid "End"
+msgstr "Kết thúc"
+
+#: /Promotes/view.ctp:120
+#: /Stores/view.ctp:321
+msgid "Global"
+msgstr "Toàn cục"
+
+#: /Providers/add.ctp:5
+msgid "Add Provider"
+msgstr "Thêm mới nhà cung cấp"
+
+#: /Providers/edit.ctp:5
+#: /Providers/view.ctp:10
+msgid "Edit Provider"
+msgstr "Cập nhật nhà cung cấp"
+
+#: /Providers/index.ctp:6
+msgid "Providers"
+msgstr "Nhà cung cấp"
+
+#: /Providers/view.ctp:11
+msgid "Delete Provider"
+msgstr "Xóa nhà cung cấp"
+
+#: /Reexes/add.ctp:5
+msgid "Add Reex"
+msgstr "Thêm mới Thu chi"
+
+#: /Reexes/add.ctp:10
+#: /Reexes/edit.ctp:11
+#: /Reexes/view.ctp:12
+#: /Stores/add.ctp:21
+#: /Stores/edit.ctp:22
+#: /Stores/index.ctp:22
+#: /Stores/view.ctp:24
+msgid "List Reexes"
+msgstr "Danh sách Thu chi"
+
+#: /Reexes/edit.ctp:5
+#: /Reexes/view.ctp:10
+msgid "Edit Reex"
+msgstr "Cập nhật Thu chi"
+
+#: /Reexes/index.ctp:6
+msgid "Reexes"
+msgstr "Thu chi"
+
+#: /Reexes/index.ctp:11
+#: /Reexes/view.ctp:13
+#: /Stores/add.ctp:22
+#: /Stores/edit.ctp:23
+#: /Stores/index.ctp:23
+#: /Stores/view.ctp:25;412
+msgid "New Reex"
+msgstr "Thêm mới Thu chi"
+
+#: /Reexes/view.ctp:5
+msgid "Reex"
+msgstr "Thu chi"
+
+#: /Reexes/view.ctp:11
+msgid "Delete Reex"
+msgstr "Xóa Thu chi"
+
+#: /Reexes/view.ctp:32
+#: /Stores/view.ctp:365
+msgid "Number"
+msgstr "Số"
+
+#: /Reexes/view.ctp:60
+#: /Stores/view.ctp:369
+msgid "Person One"
+msgstr "Người thứ nhất"
+
+#: /Reexes/view.ctp:67
+#: /Stores/view.ctp:370
+msgid "Person Two"
+msgstr "Người thứ 2"
+
+#: /Reexes/view.ctp:74
+#: /Stores/view.ctp:371
+msgid "Company"
+msgstr "Công ty"
+
+#: /Reexes/view.ctp:116
+#: /Stores/view.ctp:377
+msgid "Created Date"
+msgstr "Ngày tạo"
+
+#: /Reexes/view.ctp:123
+#: /Stores/view.ctp:378
+msgid "Cause"
+msgstr "Lý do"
+
+#: /Stores/add.ctp:5
+msgid "Add Store"
+msgstr "Thêm mới cửa hàng"
+
+#: /Stores/add.ctp:12
+#: /Stores/edit.ctp:13
+#: /Stores/index.ctp:13
+#: /Stores/view.ctp:15
+msgid "New Manager"
+msgstr "Người quản lý mới"
+
+#: /Stores/edit.ctp:5
+#: /Stores/view.ctp:10
+msgid "Edit Store"
+msgstr "Cập nhật cửa hàng"
+
+#: /Stores/index.ctp:6
+msgid "Stores"
+msgstr "Cửa hàng"
+
+#: /Stores/view.ctp:11
+msgid "Delete Store"
+msgstr "Xóa cửa hàng"
+
+#: /Stores/view.ctp:77
+msgid "Manager"
+msgstr "Người quản lý"
+
+#: /Stores/view.ctp:173
+msgid "Related Inout Warehouses"
+msgstr ""
+
+#: /Stores/view.ctp:303
+msgid "Related Promotes"
+msgstr ""
+
+#: /Stores/view.ctp:359
+msgid "Related Reexes"
+msgstr ""
+
+#: /Stores/view.ctp:417
+msgid "Related Users"
+msgstr ""
+
+#: /Stores/view.ctp:423
+#: /Users/view.ctp:32
+msgid "Username"
+msgstr "Tài khoản"
+
+#: /Stores/view.ctp:424
+#: /Users/view.ctp:39
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: /Stores/view.ctp:426
+#: /Users/view.ctp:53
+msgid "Modified"
+msgstr "Thay đổi"
+
+#: /Users/add.ctp:5
+msgid "Add User"
+msgstr "Thêm người dùng"
+
+#: /Users/edit.ctp:5
+#: /Users/view.ctp:10
+msgid "Edit User"
+msgstr "Cập nhật người dùng"
+
+#: /Users/index.ctp:6
+msgid "Users"
+msgstr "Người dùng"
+
+#: /Users/view.ctp:11
+msgid "Delete User"
+msgstr "Xóa người dùng"
+
+#: /Warehouses/add.ctp:5
+msgid "Add Warehouse"
+msgstr "Thêm mới kho"
+
+#: /Warehouses/add.ctp:21
+msgid "__Select Product__"
+msgstr "__Chọn sản phẩm__"
+
+#: /Warehouses/add.ctp:24;27
+msgid "Leave empty if use basic price"
+msgstr "Bỏ trống nếu muốn dùng giá mặc định"
+
+#: /Warehouses/edit.ctp:5
+#: /Warehouses/view.ctp:10
+msgid "Edit Warehouse"
+msgstr "Cập nhật kho"
+
+#: /Warehouses/index.ctp:5
+msgid "Warehouses"
+msgstr "Kho"
+
+#: /Warehouses/view.ctp:5
+msgid "Warehouse"
+msgstr "Kho"
+
+#: /Warehouses/view.ctp:11
+msgid "Delete Warehouse"
+msgstr "Xóa Kho"
+
+#: Model/Media.php:46
+msgid "Le model '%s' n'a pas le comportement 'Media'"
+msgstr "%s Model does not have Media behavior attached"
+
+#: Model/Media.php:56
+msgid "Vous ne pouvez pas uploader ce type de fichier (%s seulement)"
+msgstr "Bạn không có quyền tải loại file (%s) này"
+
+#: View/Medias/index.ctp:9 View/Medias/media.ctp:28
+msgid "Nom du fichier"
+msgstr "Tên file"
+
+#: View/Medias/index.ctp:15 View/Medias/media.ctp:35
+msgid "Titre"
+msgstr "Tựa"
+
+#: View/Medias/index.ctp:19 View/Medias/media.ctp:39
+msgid "Texte alternatif"
+msgstr "Alt"
+
+#: View/Medias/index.ctp:23 View/Medias/media.ctp:43
+msgid "Cible du lien"
+msgstr "Link"
+
+#: View/Medias/index.ctp:27 View/Medias/media.ctp:47
+msgid "Alignement"
+msgstr "Canh chỉnh"
+
+#: View/Medias/index.ctp:30
+msgid "Aucun"
+msgstr "None"
+
+#: View/Medias/index.ctp:33
+msgid "Gauche"
+msgstr "Trái"
+
+#: View/Medias/index.ctp:36
+msgid "Centre"
+msgstr "Giữa"
+
+#: View/Medias/index.ctp:39
+msgid "Droite"
+msgstr "Phải"
+
+#: View/Medias/index.ctp:45 View/Medias/media.ctp:65
+msgid "Insérer dans l'article"
+msgstr "Insert"
+
+#: View/Medias/index.ctp:54
+msgid "Déplacer les fichiers ici"
+msgstr "Kéo thả file vào đây"
+
+#: View/Medias/index.ctp:55
+msgid "ou"
+msgstr "hoặc"
+
+#: View/Medias/index.ctp:56
+msgid "Parcourir"
+msgstr "Tải lên"
+
+#: View/Medias/index.ctp:57
+msgid "%s seulement"
+msgstr "%s only"
+
+#: View/Medias/index.ctp:63
+msgid "Médias"
+msgstr "Medias"
+
+#: View/Medias/index.ctp:65
+msgid "Actions"
+msgstr "Actions"
+
+#: View/Medias/index.ctp:157
+msgid "Voulez vous vraiment supprimer ce média ?"
+msgstr "Bạn có muốn xóa file này không ?"
+
+#: View/Medias/index.ctp:169;178 View/Medias/media.ctp:19
+msgid "Afficher"
+msgstr "Hiện"
+
+#: View/Medias/index.ctp:170
+msgid "Cacher"
+msgstr "Ẩn"
+
+#: View/Medias/media.ctp:12
+msgid "Mettre en image à la une"
+msgstr "Hình đại diện"
+
+#: View/Medias/media.ctp:14;65
+msgid "Supprimer"
+msgstr "Xóa"
+
+#: View/Medias/media.ctp:17
+msgid "Insérer le lien l'article"
+msgstr "Thêm"
+
+#: View/Medias/media.ctp:29
+msgid "Taille de l'image"
+msgstr "Kích thức"
+
+#: /Errors/error400.ctp:10
+#: /Errors/error500.ctp:10
+msgid "Error"
+msgstr "Lỗi"
+
+#: /Errors/error400.ctp:12
+msgid "The requested address %s was not found on this server."
+msgstr "Không tìm thấy đường dẫn này"
+
+#: /Errors/error500.ctp:11
+msgid "An Internal Error Has Occurred."
+msgstr "Xuất hiện lỗi"
+
+#: /Layouts/default_.ctp:8
+#: /Layouts/error.ctp:8
+msgid "CakePHP: the rapid development php framework"
+msgstr ""
+
+msgid "__Common__"
+msgstr "__Dùng chung__"
+
+msgid "Parent"
+msgstr "Mục cha"
+
+msgid "Parent name"
+msgstr "Tên mục cha"
+
+msgid "Option Cat"
+msgstr "Danh mục thuộc tính"
