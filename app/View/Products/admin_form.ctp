@@ -22,87 +22,6 @@ echo $this->Html->script(
     )
 );
 ?>
-<script>
-    $(document).ready(function () {
-        $('#select-button').live('click', function () {
-            var elfinderDialog = $("#elfinder-dialog").modal('show');
-            var f = $('#elfinder-container').elfinder({
-                url: '<?php echo base_URL.$this->Html->url(array(
-				'plugin'=>'el_finder',
-				'controller'=>'el_finder',
-				'action' =>'connector'
-			));?>',
-                handlers: {
-                    select: function (event, elfinderInstance) {
-                        var html = '';
-                        for (x in event.data.selected) {
-                            var file = event.data.selected[x];
-                            var fileInfo = elfinderInstance.file(file);
-                            if (fileInfo.mime != 'directory') {
-                                var url = elfinderInstance.url(file);
-                                html += '<img src="' + url + '" width="50px" height="50px"/>';
-                            }
-                        }
-
-                        $('#images-list').html(html);
-                    }
-//				dblclick: function(event, elfinderInstance) {
-//					fileInfo = elfinderInstance.file(event.data.file);
-//
-//					if(fileInfo.mime != 'directory') {
-////						callback( elfinderInstance.url(event.data.file) ); // get file path..
-//						$('#ProductThumbnail').val( elfinderInstance.url(event.data.file));
-//						elfinderInstance.destroy();
-//						return false; // stop elfinder
-//					}
-//				},
-//				destroy: function(event, elfinderInstance) {
-//					elfinderDialog.dialog('close');
-//				}
-                }
-//			height: 490,
-//			docked: false,
-//			closeOnEditorCallback: true,
-//			editorCallback: function(url) {
-//				$('#ProductThumbnail').val(url);
-//			}
-            }).elfinder('instance');
-
-        });
-        $("#accept-selected").live('click', function () {
-            var image_template =
-                    '<div class="alert alert-block col-md-2 img-box">' +
-                        '<input  class="close select-thumb" type="radio" name="proimg" style="float: left;opacity: 1;" data-original-title=""/>' +
-                        '<button data-dismiss="alert" class="close" type="button" data-original-title="">×</button>' +
-                        '<img class="thumbnail detail-imgs" width="100%" src="{img}"/>' +
-                        '</div>',
-                output = '';
-            $('#images-list img').each(function () {
-                var src = $(this).attr('src');
-                var build = true;
-                $('.detail-imgs').each(function () {
-                    if ($(this).attr('src') == src) build = false;
-                });
-                if (build)
-                    output += image_template.replace('{img}', src);
-            });
-            $(output).appendTo($('#pro-img'));
-        });
-        $('form').on('submit', function (e) {
-            var images = new Array();
-            $('.detail-imgs').each(function () {
-                var img = $(this).attr('src');
-                images.push(img);
-            });
-            $('#ProductImages').val(images);
-        });
-        $(document).on('click', '.select-thumb', function () {
-            if ($(this).is(':checked')) {
-                $('#ProductThumbnail').val($(this).parent().find('.detail-imgs').attr('src'));
-            }
-        });
-    });
-</script>
 <?php echo $this->Form->create('Product', array(
     'class' => 'form-horizontal',
 ));?>
@@ -157,7 +76,12 @@ echo $this->Html->script(
                     echo $this->Form->input('retail_price', array('label' => array('text' => 'Giá bán sỉ', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('source_price', array('label' => array('text' => 'Giá tiền gốc', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('excert', array('label' => array('text' => 'Tóm tắt', 'class' => 'col-lg-2 control-label')));
-                    echo $this->Form->input('descriptions', array('label' => array('text' => 'Nội dung', 'class' => 'col-lg-2 control-label')));
+                    ?>
+                    <div class="form-group">
+                        <?php echo $this->Media->ckeditor('descriptions', array('label' => array('text' => 'Nội dung', 'class' => 'col-lg-2 control-label')));?>
+                    </div>
+                    <?php
+//                    echo $this->Form->input('descriptions', array('label' => array('text' => 'Nội dung', 'class' => 'col-lg-2 control-label')));
                     //					echo $this->Form->input ('status', array ('label' => array ('text' => 'status', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('thumbnail', array('type' => 'hidden'));
                     echo $this->Form->input('images', array('type' => 'hidden'));
@@ -213,24 +137,9 @@ echo $this->Html->script(
                     <div class="title ">
                         <span class="fs1" aria-hidden="true" data-icon="&#xe039;"></span> <?php echo __('Hình ảnh'); ?>
                     </div>
-                    <a class="pull-right btn btn-xs btn-success" id="select-button">Thêm ảnh</a>
                 </div>
                 <div class="widget-body">
-                    <div class="row" id="pro-img">
-                        <?php if (isset($this->request->data['Product']['images'])):
-                            $images = explode(',', $this->request->data['Product']['images']);
-                            foreach ($images as $img) {
-                                ?>
-                                <div class="alert alert-block col-md-2 img-box">
-                                    <input class="close select-thumb" type="radio" name="proimg"<?php
-                                    if ($this->request->data['Product']['thumbnail'] == $img) echo ' checked="checked" ';
-                                    ?> style="float: left;opacity: 1;" data-original-title=""/>
-                                    <button data-dismiss="alert" class="close" type="button" data-original-title="">×
-                                    </button>
-                                    <img class="thumbnail detail-imgs" width="100%" src="<?php echo $img; ?>"/>
-                                </div>
-                            <?php } endif; ?>
-                    </div>
+                    <?php echo $this->Media->iframe('Product', $this->request->data['Product']['id']); ?>
                 </div>
             </div>
 
