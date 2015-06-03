@@ -217,7 +217,7 @@ $(document).ready(function () {
             optionIds  = pOptions.val();
             optionNames = pOptionsName.val();
             var duplicated = false;
-
+            var rowClass = '';
             $('#product-list tr').each(function () {
                 var listId = $(this).data('id'),
                     listOptions = $(this).data('options');
@@ -236,9 +236,16 @@ $(document).ready(function () {
                     var newPrice = hiddenQty.val();
                     newPrice = newPrice * pPrice.val();
                     $(this).find('.new-total-price').text(digits(newPrice));
+                    rowClass = $(this).attr('class').split(/\s+/)[1];
                     return false;
                 }
             });
+            if(duplicated){
+                var item1 = $($('.'+rowClass)[1]);
+                var item2 = $($('.'+rowClass)[0]);
+                item1.insertBefore('#product-list tr:first');
+                item2.insertBefore('#product-list tr:first');
+            }
             if (!duplicated) {
                 var limit = pLimit.val();
                 if(qtyVal > parseInt(limit)){

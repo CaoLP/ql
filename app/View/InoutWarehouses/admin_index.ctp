@@ -1,5 +1,6 @@
 <?php
 setlocale(LC_MONETARY, "vi_VN");
+$this->Html->script('inout_warehouse',array('inline'=>false));
 ?>
 <!-- Row start -->
 <div class="row">
@@ -347,15 +348,6 @@ setlocale(LC_MONETARY, "vi_VN");
                                 echo $this->Html->link('<i class="icon-zoom-in"></i> Mở phiếu', array('action' => 'view', $inoutWarehouse['InoutWarehouse']['id']), array('class' => 'btn btn-success', 'escape' => false, 'div' => false));
 
                         ?>
-                        <script>
-                            $(document).ready(function () {
-                                $(document).on('click', '#clickInoutWarehouse<?php echo $key;?>', function (e) {
-                                    e.preventDefault();
-                                    $(this).closest('form').submit();
-                                });
-                            });
-
-                        </script>
                         </div>
                     </div>
                 </div>
@@ -391,32 +383,3 @@ setlocale(LC_MONETARY, "vi_VN");
 </div>
 </div>
 </div>
-<script>
-    $(".info").popover();
-
-    $('body').on('click', function (e) {
-        $('.info').each(function () {
-            //the 'is' for buttons that trigger popups
-            //the 'has' for icons within a button that triggers a popup
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-    });
-    Date.prototype.toDateInputValue = (function () {
-        var local = new Date(this);
-        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-        return local.toJSON().slice(0, 10);
-    });
-    $(function () {
-        $(".datepicker").datepicker({
-            showOn: "button",
-            buttonImage: "/img/dateIcon.png",
-            buttonImageOnly: true,
-            buttonText: 'Chọn ngày',
-            dateFormat: 'yy-mm-dd',
-            minDate: 0,
-            maxDate: "+1M +10D"
-        });
-    });
-</script>
