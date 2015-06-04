@@ -6,13 +6,6 @@ if ($this->request->params['action'] == 'admin_add') {
     $this->Html->addCrumb('<li>' . $this->request->data['Product']['name'] . '</li>', '/' . $this->request->url, array('escape' => false));
 }
 
-echo $this->Html->css(
-    array(
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css',
-        '/ElFinder/elfinder/css/elfinder.min',
-        '/ElFinder/elfinder/css/theme'
-    ), array('inline' => false)
-);
 echo $this->Html->script(
     array(
         'product'

@@ -19,7 +19,7 @@ class MediaHelper extends AppHelper
         $models = $this->Form->_models;
         $model = key($models);
         if (isset($this->request->data[$model]['id']) && !$this->explorer) {
-            $html .= '<input type="hidden" id="explorer" value="' . $this->Html->url(array('admin'=>false,'controller'=>'medias','action'=>'index',$model,$this->request->data[$model]['id'])) . '">';
+            $html .= '<input type="hidden" id="explorer" value="' . $this->Html->url(array('admin'=>true,'controller'=>'medias','action'=>'index',$model,$this->request->data[$model]['id'])) . '">';
             $this->explorer = true;
         }
         return $html;
@@ -44,7 +44,7 @@ class MediaHelper extends AppHelper
 
     public function iframe($ref, $ref_id)
     {
-        return '<iframe src="' . $this->Html->url("/medias/index/$ref/$ref_id") . '" style="width:100%;border:1px solid;padding-right:10px;" id="medias-' . $ref . '-' . $ref_id . '"></iframe>';
+        return '<iframe src="' . $this->Html->url("/admin/medias/index/$ref/$ref_id") . '" style="width:100%;border:1px solid;padding-right:10px;" id="medias-' . $ref . '-' . $ref_id . '"></iframe>';
     }
     /**
      * Generate an image with a specific size

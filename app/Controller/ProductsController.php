@@ -75,7 +75,33 @@ class ProductsController extends AppController {
             $this->set(compact('options','providers','categories'));
 		}
 	}
-
+    public function admin_ajax_index()
+    {
+        if(isset($this->request->query['q'])){
+            $settings = array(
+                'fields'=>array(
+                    'Product.id','Product.name','Product.sku'
+                ),
+                'conditions'=>array(
+                    'Product.name <>' => '0',
+                    'Product.name like' => '%'.$this->request->query['q'].'%'
+                ),
+                'recursive' => -1,
+                'limit'=>10
+            );
+            $products=$this->Product->find('all',$settings);
+            $res = array();
+            foreach($products as $p){
+                $res[] = array(
+                    'value' => $p['Product']['id'],
+                    'label' => $p['Product']['name'] . '( Mã '. $p['Product']['sku'] .' )' ,
+                    'sku' =>$p['Product']['sku']
+                );
+            }
+            echo json_encode($res);
+        }
+        die;
+    }
 /**
  * view method
  *
@@ -118,6 +144,38 @@ class ProductsController extends AppController {
  * @return void
  */
 	public function admin_add() {
+        if(isset($this->request->query['media_id'])){
+            $temp = array(
+                'Product' => array(
+                    'sku' => '00000',
+                    'provider_id' => '0',
+                    'name' => 'lưu nháp',
+                    'price' => '0',
+                    'excert' => '',
+                    'descriptions' => '',
+                    'status' => '0',
+                    'category_id' => '0',
+                    'media_id' => $this->request->query['media_id'],
+                )
+            );
+            $data = $this->Product->find('first',array('conditions'=>array('Product.sku'=>'00000')));
+            if($data){
+                $id = $data['Product']['id'];
+            }else{
+                $this->Product->save($temp);
+                $id = $this->Product->id;
+                $this->loadModel('Media');
+                $this->Media->save(array(
+                        'Media' => array(
+                            'id' =>  $this->request->query['media_id'],
+                            'ref_id' => $id
+                        )
+                    )
+                );
+            }
+
+            $this->redirect(Router::url(array('action'=>'edit',$id,'?'=>array('media_id'=>$this->request->query['media_id']))));
+        }
         $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
         $categories = $this->Product->Category->find('all',array('recursive'=>-1));
         $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
@@ -199,13 +257,23 @@ class ProductsController extends AppController {
 				$this->Product->ProductOption->saveMany($options['ProductOption']);
                 }
 				$this->Session->setFlash(__('The product has been saved.'));
+                if(isset($this->request->query['media_id'])){
+                    return $this->redirect(array('admin'=>true,'controller'=>'medias','action' => 'fast_import', 'Product'));
+                }
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The product could not be saved. Please, try again.'));
 			}
 		} else {
 			$options = array('conditions' => array('Product.' . $this->Product->primaryKey => $id));
-			$this->request->data = $this->Product->find('first', $options);
+            $d = $this->Product->find('first', $options);
+            if($d['Product']['sku'] == '00000'){
+                $d['Product']['provider_id'] = '';
+                $d['Product']['name'] = '';
+                $d['Product']['price'] = '';
+                $d['Product']['category_id'] = '';
+            }
+			$this->request->data =$d;
 			$selected= Set::classicExtract($this->request->data,'ProductOption.{n}.option_id');
 			$this->set(compact( 'selected'));
 		}

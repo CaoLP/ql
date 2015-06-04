@@ -27,7 +27,7 @@ class MediasController extends AppController{
     /**
     * Liste les médias
     **/
-    public function index($ref,$ref_id){
+    public function admin_index($ref,$ref_id){
 
         if(!$this->canUploadMedias($ref, $ref_id)){
             throw new ForbiddenException();
@@ -35,7 +35,7 @@ class MediasController extends AppController{
         $this->loadModel($ref);
         $this->set(compact('ref', 'ref_id'));
         if(!in_array('Media', $this->$ref->Behaviors->loaded())){
-            return $this->render('nobehavior');
+            return $this->render('admin_nobehavior');
         }
         $id = isset($this->request->query['id']) ? $this->request->query['id'] : false;
         $medias = $this->Media->find('all',array(
@@ -50,7 +50,7 @@ class MediasController extends AppController{
         $editor = isset($this->request->params['named']['editor']) ? $this->request->params['named']['editor'] : false;
         $this->set(compact('id', 'medias', 'thumbID', 'editor', 'extensions'));
     }
-    public function fast_import($ref = 'Product'){
+    public function admin_fast_import($ref = 'Product'){
         $this->layout = 'media';
 //        if(!$this->canUploadMedias($ref, $ref_id)){
 //            throw new ForbiddenException();
@@ -59,7 +59,7 @@ class MediasController extends AppController{
         $ref_id = -1;
         $this->set(compact('ref', 'ref_id'));
         if(!in_array('Media', $this->$ref->Behaviors->loaded())){
-            return $this->render('nobehavior');
+            return $this->render('admin_nobehavior');
         }
         $id = isset($this->request->query['id']) ? $this->request->query['id'] : false;
         $medias = $this->Media->find('all',array(
@@ -74,7 +74,7 @@ class MediasController extends AppController{
         $editor = isset($this->request->params['named']['editor']) ? $this->request->params['named']['editor'] : false;
         $this->set(compact('id', 'medias', 'thumbID', 'editor', 'extensions'));
     }
-    public function update_media($ref = 'Product'){
+    public function admin_update_media($ref = 'Product'){
        if(!empty($this->request->data['product_id']) && !empty($this->request->data['media_id'])){
            $this->Media->save(array(
                'id' => $this->request->data['media_id'],
@@ -93,7 +93,7 @@ class MediasController extends AppController{
     /**
     * Upload (Ajax)
     **/
-    public function upload($ref,$ref_id,$mo = false){
+    public function admin_upload($ref,$ref_id,$mo = false){
         $this->autoRender = false;
         if(!$this->canUploadMedias($ref, $ref_id)){
             throw new ForbiddenException();
@@ -116,16 +116,16 @@ class MediasController extends AppController{
         $this->set(compact('media', 'thumbID', 'editor', 'id'));
         $this->layout = 'json';
         if($mo)
-        $this->render('media2');
+        $this->render('admin_media2');
         else
-        $this->render('media');
+        $this->render('admin_media');
         return true;
     }
 
     /**
     * Suppression (Ajax)
     **/
-    public function delete($id){
+    public function admin_delete($id){
         $this->autoRender = false;
         $media = $this->Media->findById($id, array('ref','ref_id'));
         if(empty($media)){
@@ -141,7 +141,7 @@ class MediasController extends AppController{
     /**
     * Met l'image à la une
     **/
-    public function thumb($id){
+    public function admin_thumb($id){
         $this->Media->id = $id;
         $media = $this->Media->findById($id, array('ref','ref_id'));
         if(empty($media)){
@@ -158,7 +158,7 @@ class MediasController extends AppController{
         $this->redirect(array('action' => 'index', $ref, $ref_id));
     }
 
-    public function order(){
+    public function admin_order(){
         if(!empty($this->request->data['Media'])){
             $id = key($this->request->data['Media']);
             $media = $this->Media->findById($id, array('ref','ref_id'));

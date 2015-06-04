@@ -182,7 +182,7 @@ jQuery(function(){
                         <input type="hidden" class="form-control" name="product_id" id="product_id">
                         <input type="hidden" class="form-control" name="media_id" id="media_id">
                     </div>
-                    <div class="checkbox">
+                    <div class="form-group">
                         <label>
                             <input type="checkbox" name="use_as_thumb" id="use_as_thumb" value="true"> Làm ảnh đại diện
                         </label>
