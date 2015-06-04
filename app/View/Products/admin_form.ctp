@@ -174,37 +174,6 @@ echo $this->Html->script(
 <!-- Row end -->
 
 <!-- Add this html to your page -->
-<div class="modal fade" id="elfinder-dialog" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-original-title="">×
-                </button>
-                <h4 class="modal-title">Quản lý file</h4>
-            </div>
-            <div class="modal-body">
-                <div class="well-sm">
-                    <div class="row">
-                        <div id="elfinder-container"></div>
-                    </div>
-                    <div class="row thumbnail"></div>
-                    <div class="row">
-                        <div id="images-list">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="accept-selected" data-dismiss="modal"
-                        data-original-title="">Chấp nhận
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-original-title="">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add this html to your page -->
 <div class="modal fade" id="provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -3,7 +3,7 @@
     <head>
         <title>Uploader</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <?php echo $this->Html->css('style.css'); ?>
+        <?php echo $this->Html->css('upload_style.css'); ?>
         <?php echo $this->fetch('css'); ?>
     </head>
     <body>

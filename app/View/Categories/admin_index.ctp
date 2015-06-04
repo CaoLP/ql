@@ -27,7 +27,10 @@
 	<tbody>
 	<?php foreach ($categories as $category): ?>
 	<tr>
-		<td><img class="thumbnail grid-thumb" src="<?php echo !empty($category['Category']['images'])?$category['Category']['images']:'/img/logo.png'; ?>"></td>
+        <td><?php
+            if ($category['Thumb']['file'])
+                echo $this->Media->image($category['Thumb']['file'], 50, 50, array('class' => 'thumbnail'));
+            ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link($category['ParentCategory']['name'], array('controller' => 'categories', 'action' => 'view', $category['ParentCategory']['id'])); ?>
 		</td>

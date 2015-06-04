@@ -60,14 +60,10 @@ echo $this->Html->script('product',array('inline'=>false));
                            <tbody>
                            <?php foreach ($products as $product): ?>
                                <tr>
-                                   <td>
-                                       <a href="javascript:;" class="view-img" data-imagelist='<?php
-                                       $img = explode(',',$product['Product']['images']);
-                                       echo json_encode($img);
-                                       ?>'><img class="thumbnail grid-thumb"
-                                            src="<?php echo !empty($product['Product']['thumbnail']) ? $product['Product']['thumbnail'] : '/img/logo.png'; ?>">
-                                       </a>
-                                   </td>
+                                   <td><?php
+                                       if ($product['Thumb']['file'])
+                                           echo $this->Media->image($product['Thumb']['file'], 50, 50, array('class' => 'thumbnail'));
+                                       ?>&nbsp;</td>
                                    <td><?php echo h($product['Product']['sku']); ?></td>
                                    <td><?php echo h($product['Product']['name']); ?></td>
                                    <td><span
