@@ -382,8 +382,8 @@ class ReportsController extends AppController
             }else{
                 $array_rebuild[$p['Warehouse']['product_id']]['before_total'] =
                     $array_rebuild[$p['Warehouse']['product_id']]['after_total']
-                    - $array_rebuild[$p['Warehouse']['product_id']]['out_qty']
-                    + $array_rebuild[$p['Warehouse']['product_id']]['in_qty']
+                    - $array_rebuild[$p['Warehouse']['product_id']]['in_qty']
+                    + $array_rebuild[$p['Warehouse']['product_id']]['out_qty']
                     + $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'];
                 $summary['before_total'] += $array_rebuild[$p['Warehouse']['product_id']]['before_total'];
             }
