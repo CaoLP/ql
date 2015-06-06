@@ -61,8 +61,8 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-right">
                                     <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
                                     <span class="price-text" id="<?php echo $key?>-price-text">
-                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
-                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
+                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span> <i class="icon icon-pen"></i>
+                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo number_format($data['mod_price'], 0, '.', ',');?>">
 
                                     </a>
                                 </td>
@@ -278,7 +278,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                 ?>
                 <div class="text-center bt-done">
                     <div class="btn-group">
-                        <a class="btn btn-danger" onclick="history.back()">Trở về</a>
+                        <a class="btn btn-info" id="refresh">Làm mới</a>
                         <?php
                         echo '<button type="submit" class="btn btn-success" id="save">Thanh toán</button>';
                         ?>

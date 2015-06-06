@@ -132,6 +132,7 @@ if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
                     <td class="price-text"><?php echo $this->Common->formatMoney($summary['profit']); ?></td>
                 <?php endif;?>
             </tr>
+
             <tr class="text-center text-bold footer_tb">
                 <td rowspan="2">Stt</td>
                 <td rowspan="2">Mã hàng</td>
@@ -159,6 +160,108 @@ if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
                 <td colspan="2">Xuất</td>
                 <td colspan="3">Bán</td>
             </tr>
+            <tr>
+                <td colspan="11">
+
+                </td>
+                <td>
+                </td>
+                <td colspan="2" class="text-center text-bold">
+                    Số lượng
+                </td>
+                <td colspan="2" class="text-center text-bold">
+                    Thành tiên
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Tiền hàng đầu kỳ
+                </td>
+                <td colspan="2" class="qty">
+                    <?php echo $this->Common->formatMoney($summary['before_total']); ?>
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['before_price']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Tiền nhập
+                </td>
+                <td colspan="2" class="qty">
+                    <?php echo $this->Common->formatMoney($summary['in_qty']); ?>
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['in_price']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Tiền xuất
+                </td>
+                <td colspan="2" class="qty">
+                    <?php echo $this->Common->formatMoney($summary['out_qty']); ?>
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['out_price']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Tiền bán
+                </td>
+                <td colspan="2" class="qty">
+                    <?php echo $this->Common->formatMoney($summary['sale_qty']); ?>
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['sale_price']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Khuyến mãi
+                </td>
+                <td colspan="2" class="qty">
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['sale_promote']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Cuối kỳ
+                </td>
+                <td colspan="2" class="qty">
+                    <?php echo $this->Common->formatMoney($summary['after_total']); ?>
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['after_price']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                    Phí ship
+                </td>
+                <td colspan="2" class="qty">
+
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['ship']); ?>
+                </td>
+            </tr>
+            <?php if($isAdmin) :?>
+            <tr>
+                <td colspan="12" class="text-right text-bold">
+                   Lợi nhuận
+                </td>
+                <td colspan="2" class="qty">
+
+                </td>
+                <td colspan="2" class="price-text">
+                    <?php echo $this->Common->formatMoney($summary['profit']); ?>
+                </td>
+            </tr>
+            <?php endif;?>
             </tbody>
         </table>
     </div>

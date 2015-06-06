@@ -186,10 +186,13 @@ class OrdersController extends AppController
                 $amount = 0;
                 $order_detail = $this->request->data['OrderDetail'];
                 $basic_total = 0;
-                foreach ($order_detail as $detail) {
+                foreach ($order_detail as $k=>$detail) {
                     $data = json_decode($detail['data'], true);
                     $basic_total += $detail['qty'] * $data['price'];
+                    $detail['mod_price'] = str_replace(',', '', $detail['mod_price']);
                     $total += $detail['qty'] * $detail['mod_price'];
+                    $order_detail[$k]['mod_price'] = $detail['mod_price'];
+                    $order_detail[$k]['promote_value'] = $data['price'] - $detail['mod_price'];
                 }
                 if(empty($this->request->data['Order']['promote_value'])){
                     $this->request->data['Order']['promote_value'] = 0;
@@ -235,7 +238,6 @@ class OrdersController extends AppController
                         'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
                     )
                 );
-
                 if ($this->Order->save($saveData)) {
                     $storeDetail = array();
 
@@ -250,6 +252,8 @@ class OrdersController extends AppController
                             'product_id' => $data['id'],
                             'name' => $data['name'],
                             'price' => $detail['mod_price'],
+                            'promote_value' => $detail['promote_value'],
+                            'promote_type' => 0,
                             'sku' => $data['sku'],
                             'qty' => $detail['qty'],
                             'code' => $data['code'],
@@ -357,8 +361,8 @@ class OrdersController extends AppController
             $temp = array();
             foreach($this->request->data['OrderDetail'] as $key=>$detail){
                 $data = json_decode($detail['data'],true);
-                $data['mod_price'] = $detail['mod_price'];
-                $temp[$key]['mod_price'] = $detail['mod_price'];
+                $data['mod_price'] = str_replace(',', '', $detail['mod_price']);
+                $temp[$key]['mod_price'] = str_replace(',', '', $detail['mod_price']);
                 $temp[$key]['qty'] = $detail['qty'];
                 $temp[$key]['data'] = json_encode($data);
             }
