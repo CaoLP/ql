@@ -55,7 +55,12 @@ foreach($worksessions_d as $wk){
                                 </tbody>
                                 <?php foreach ($staffs as $k => $staff){ ?>
                                     <tr>
-                                        <td><?php echo $users[$k]?></td>
+                                        <td>
+                                            <?php echo $this->Html->link(
+                                                $users[$k],
+                                                array('action' => 'view',$k));
+                                            ?>
+                                        </td>
                                         <?php
                                         $time = 0;
 //                                        $salary = $salaries[$k.'-'.$key];

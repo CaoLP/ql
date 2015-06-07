@@ -57,8 +57,10 @@ class StaffWorkSessionsController extends AppController {
             }
         }else{
             $staffs = $this->StaffWorkSession->User->find('list');
+            $this->loadModel('Group');
+            $groups = $this->Group->find('list');
             $workSessions = $this->StaffWorkSession->WorkSession->find('list');
-            $this->set(compact('staffs','workSessions'));
+            $this->set(compact('staffs','workSessions','groups'));
         }
     }
 
@@ -85,7 +87,9 @@ class StaffWorkSessionsController extends AppController {
             $this->request->data = $this->StaffWorkSession->find('first', $options);
             $staffs = $this->StaffWorkSession->User->find('list');
             $workSessions = $this->StaffWorkSession->WorkSession->find('list');
-            $this->set(compact('staffs','workSessions'));
+            $this->loadModel('Group');
+            $groups = $this->Group->find('list');
+            $this->set(compact('staffs','workSessions','groups'));
         }
     }
 

@@ -8,7 +8,7 @@
 
 class CommonHelper extends AppHelper {
 
-    public function createCalendarTable($date, $type = 'th', $data='', &$time = 0){
+    public function createCalendarTable($date, $type = 'th', $data='', &$time = 0 , $link=false){
         $begin = date('Y-m-01',strtotime($date));
         $end = date('Y-m-t',strtotime($date));
         $result = '';
@@ -29,7 +29,12 @@ class CommonHelper extends AppHelper {
                     }
                     $time+=$data[$t]['total'];
                 }
-                $result.='<'.$type.' class="'.$class.'">'.$total.'</'.$type.'>';
+                if($link){
+                    $result.='<'.$type.' class="'.$class.'">'.
+                        $total .'</'.$type.'>';
+                }else{
+                    $result.='<'.$type.' class="'.$class.'">'.$total.'</'.$type.'>';
+                }
                 $begin = date ("Y-m-d", strtotime("+1 day", strtotime($begin)));
             }
         }

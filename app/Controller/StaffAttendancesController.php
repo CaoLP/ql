@@ -43,6 +43,8 @@ class StaffAttendancesController extends AppController
             $date = date('Y-m-01',$time);
             $end = date('Y-m-t',$time);
         }else{
+            $this->request->data['year'] = date('Y');
+            $this->request->data['month'] = date('m');
             $date = date('Y-m-01');
             $end = date('Y-m-t');
         }
@@ -122,11 +124,38 @@ class StaffAttendancesController extends AppController
      */
     public function admin_view($id = null)
     {
-        if (!$this->StaffAttendance->exists($id)) {
-            throw new NotFoundException(__('Invalid staff_attendance'));
+        $years = array();
+        $months = array();
+        for($i = 1; $i <= 12; $i++){
+            $months[$i] = $i;
+            $years[(date('Y') - 4)+$i] = (date('Y') - 4)+$i;
         }
-        $options = array('conditions' => array('StaffAttendance.' . $this->StaffAttendance->primaryKey => $id));
-        $this->set('staff_attendance', $this->StaffAttendance->find('first', $options));
+        $conditions = array(
+            array(
+                'StaffAttendance.staff_id' => $id
+            )
+        );
+        if(isset($this->request->data['year']) && isset($this->request->data['month'])){
+            $d = date('Y-m', strtotime($this->request->data['year'].'-'.$this->request->data['month'].'-'. 1));
+            $conditions['StaffAttendance.begin_time like'] = '%'.$d.'%';
+        }else{
+            $this->request->data['year'] = date('Y');
+            $this->request->data['month'] = date('m');
+            $conditions['StaffAttendance.begin_time like'] = '%'.date('Y-m').'%';
+        }
+        $result = $this->StaffAttendance->find('all',array(
+               'conditions'=> $conditions
+        ));
+        $this->loadModel('User');
+       $user = $this->User->find('first',array(
+           'conditions' => array(
+               'User.id' => $id
+           )
+       ));
+        $salary = $this->StaffAttendance->StaffWorkSession->find('all');
+        $salary = Set::combine($salary,'{n}.StaffWorkSession.group_id','{n}.StaffWorkSession.basic_salary');
+        $this->set('attendances', $result);
+        $this->set(compact('years','months','user','salary'));
     }
 
     /**

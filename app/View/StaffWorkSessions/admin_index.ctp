@@ -14,8 +14,7 @@
                 <table class="table table-condensedtable-hover no-margin">
                     <thead>
                     <tr>
-                        <th><?php echo $this->Paginator->sort('staff_id','Nhân viên'); ?></th>
-                        <th><?php echo $this->Paginator->sort('work_session_id','Ca làm'); ?></th>
+                        <th><?php echo $this->Paginator->sort('group_id','Nhóm nhân viên'); ?></th>
                         <th><?php echo $this->Paginator->sort('basic_salary','Lương cơ bản'); ?></th>
                         <th class="actions"><?php echo __('Actions'); ?></th>
                     </tr>
@@ -25,8 +24,7 @@
                     foreach ($staff_work_sessions as $staff_work_session):
                         ?>
                         <tr class="table-toggle-expand">
-                            <td><?php echo h($staff_work_session['User']['name']); ?></td>
-                            <td><?php echo h($staff_work_session['WorkSession']['name']); ?></td>
+                            <td><?php echo h($staff_work_session['Group']['name']); ?></td>
                             <td><?php echo h($staff_work_session['StaffWorkSession']['basic_salary']); ?></td>
                             <td class="actions">
                                 <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $staff_work_session['StaffWorkSession']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>

@@ -27,6 +27,13 @@ class StaffWorkSession extends AppModel
             'conditions' => '',
             'fields' => '',
             'order' => ''
+        ),
+        'User' => array(
+            'className' => 'Group',
+            'foreignKey' => 'group_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
         )
     );
 }
