@@ -25,6 +25,12 @@
 .att-staff-name a{
     color: #ffffff;
 }
+.attendance-ok a, .attendance-late a ,.not-attendance a{
+    color: rgb(0, 0, 0);
+}
+ .error-end a, .error-begin a{
+    color: rgb(254, 254, 254);
+}
 .attendance-late{
     background-color: #f2dede;
 }
@@ -60,9 +66,12 @@
 .btn-a{
     width: 25px;
     padding: 0;
+    font-size: 12px;
 }
 .attendance-calendar td{
     padding: 2px !important;
+    border-right: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
 }
 .input.datetime .form-control {
     width: auto;

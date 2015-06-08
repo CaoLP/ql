@@ -81,7 +81,8 @@ $salary;
                                     && $date1<$date2
                                 ){
                                     $dateDiff = $date2->diff($date1);
-                                    $total = $dateDiff->h + round($dateDiff->m/60,0);
+                                    $total = $dateDiff->h * 60 + $dateDiff->i;
+                                    $total = $this->Common->convertToHoursMins($total);
                                 }else{
                                     $style = 'style="background-color:red;color:#fff"';
                                 }

@@ -32,6 +32,7 @@ class CommonHelper extends AppHelper {
                     $t_end =  $data[$t]['end_time'];
                     $t_late_e =  $data[$t]['delay_time_end'];
                     $total = $data[$t]['total'];
+                    $total = $this->convertToHoursMins($total);
                     if($total > 0 && $data[$t]['delay_time_begin'] == 0 && $data[$t]['delay_time_end'] == 0){
                         $class = 'attendance-ok';
                     }
@@ -71,5 +72,14 @@ class CommonHelper extends AppHelper {
     }
     public function  formatMoney($input){
         return number_format($input, 0, '.', ',');
+    }
+    public function convertToHoursMins($time, $format = '%d:%d') {
+        settype($time, 'integer');
+        if ($time < 1) {
+            return;
+        }
+        $hours = floor($time / 60);
+        $minutes = ($time % 60);
+        return sprintf($format, $hours, $minutes);
     }
 }

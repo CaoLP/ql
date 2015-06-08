@@ -72,7 +72,7 @@ class StaffAttendancesController extends AppController
                     $temp['StaffAttendance']['type'] = 0;
                     if($date1 < $date2){
                         $dateDiff = $date2->diff($date1);
-                        $total = $dateDiff->h + round($dateDiff->m/60,0);
+                        $total = $dateDiff->h * 60 + $dateDiff->i;
                         $temp['StaffAttendance']['date'] = strtotime($date2->format('Y-m-d'));
                     }else{
                         $temp['StaffAttendance']['date'] = strtotime($date1->format('Y-m-d'));
