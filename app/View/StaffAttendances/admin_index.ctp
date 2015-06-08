@@ -23,6 +23,11 @@ foreach($worksessions_d as $wk){
                 echo $this->Form->input('month', array('label' => false, 'div' => false, 'empty' => 'Tháng', 'class' => 'form-control'));
                 ?>
             </div>
+            <div class="form-group col-md-2">
+                <?php
+                echo $this->Form->input('user_id', array('label' => false, 'div' => false, 'empty' => 'Nhân viên', 'class' => 'form-control'));
+                ?>
+            </div>
             <div class="form-group col-md-1">
                 <button class="form-control btn btn-default" type="submit"><i class="icon-search"></i></button>
             </div>

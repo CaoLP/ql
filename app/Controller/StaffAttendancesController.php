@@ -48,14 +48,20 @@ class StaffAttendancesController extends AppController
             $date = date('Y-m-01');
             $end = date('Y-m-t');
         }
+        $conditions = array();
+        if(!empty($this->request->data['user_id'])){
+            $conditions['StaffAttendance.staff_id'] = $this->request->data['user_id'];
+        }
+        if(isset($this->Auth->User()->group_id) && $this->Auth->User()->group_id > 2){
+            $conditions['StaffAttendance.staff_id'] = $this->Auth->User()->id;
+        }
         while (strtotime($date) <= strtotime($end)) {
+            $conditions['OR'] = array(
+                    'StaffAttendance.begin_time like' => $date .'%',
+                    'StaffAttendance.end_time like' => $date .'%',
+            );
             $staff_attendances = $this->StaffAttendance->find('all',array(
-                'conditions' => array(
-                    'OR' => array(
-                        'StaffAttendance.begin_time like' => $date .'%',
-                        'StaffAttendance.end_time like' => $date .'%',
-                    )
-                ),
+                'conditions' => $conditions
             ));
             foreach($staff_attendances as $s){
                 $date2 =  new DateTime($s['StaffAttendance']['end_time']);
@@ -148,6 +154,9 @@ class StaffAttendancesController extends AppController
      */
     public function admin_view($id = null)
     {
+        if(isset($this->Auth->User()->group_id) && $this->Auth->User()->group_id > 2){
+            $id = $this->Auth->User()->id;
+        }
         $years = array();
         $months = array();
         for($i = 1; $i <= 12; $i++){

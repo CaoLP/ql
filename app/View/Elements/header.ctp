@@ -88,6 +88,14 @@
                     ));
                     ?>">Đơn hàng của bạn</a>
                 </li>
+                <li class="text-right">
+                    <a href="<?php
+                    echo $this->Html->url(array(
+                        'controller'=>'staff_attendances',
+                        'action'=>'index'
+                    ));
+                    ?>">Thông tin điểm danh</a>
+                </li>
                 <li>
                     <button class="btn btn-xs btn-danger pull-right" onclick="location.href='<?php echo $this->Html->url(array('admin'=>true,'controller'=>'users','action'=>'logout'))?>'">Logout
                     </button>

@@ -58,9 +58,9 @@ class CommonHelper extends AppHelper {
                             title="Thông tin điểm danh"
                             data-content="
                             <strong>Bắt đầu : </strong> <span>'.$t_begin.'</span> <br>
-                            <strong>Trể : </strong> <span>'.$t_late_b.'</span> <br>
+                            <strong>Đi trể : </strong> <span>'.$t_late_b.'</span> <br>
                             <strong>Kết thúc : </strong> <span>'.$t_end.'</span> <br>
-                            <strong>Trể : </strong> <span>'.$t_late_e.'</span> <br>
+                            <strong>Về sớm : </strong> <span>'.$t_late_e.'</span> <br>
                             ">';
                 $result.= $total;
                 $result.= '</a>';
