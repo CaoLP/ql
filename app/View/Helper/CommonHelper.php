@@ -21,20 +21,49 @@ class CommonHelper extends AppHelper {
             while (strtotime($begin) <= strtotime($end)) {
                 $t = strtotime($begin);
                 $total = 0;
-                $class = 'danger';
+                $class = 'attendance-late';
+                $t_begin = '';
+                $t_late_b = 0;
+                $t_end = '';
+                $t_late_e = 0;
                 if(isset($data[$t]['total'])){
+                    $t_begin =  $data[$t]['begin_time'];
+                    $t_late_b =  $data[$t]['delay_time_begin'];
+                    $t_end =  $data[$t]['end_time'];
+                    $t_late_e =  $data[$t]['delay_time_end'];
                     $total = $data[$t]['total'];
-                    if($data[$t]['delay_time_begin'] == 0 && $data[$t]['delay_time_end'] == 0){
-                        $class = '';
+                    if($total > 0 && $data[$t]['delay_time_begin'] == 0 && $data[$t]['delay_time_end'] == 0){
+                        $class = 'attendance-ok';
                     }
                     $time+=$data[$t]['total'];
-                }
-                if($link){
-                    $result.='<'.$type.' class="'.$class.'">'.
-                        $total .'</'.$type.'>';
+                    if($data[$t]['type'] == 1) {
+                        $class = 'error-begin';
+                        $total = 'B';
+                    }
+                    if($data[$t]['type'] == 2) {
+                        $class = 'error-end';
+                        $total = 'E';
+                    }
                 }else{
-                    $result.='<'.$type.' class="'.$class.'">'.$total.'</'.$type.'>';
+                    $class="not-attendance";
                 }
+                $result.='<'.$type.' class="'.$class.'">';
+                $result.= '<a class="btn btn-a"
+                            href="#"
+                            role="button"
+                            data-placement="top"
+                            data-toggle="popover"
+                            data-html="true"
+                            title="Thông tin điểm danh"
+                            data-content="
+                            <strong>Bắt đầu : </strong> <span>'.$t_begin.'</span> <br>
+                            <strong>Trể : </strong> <span>'.$t_late_b.'</span> <br>
+                            <strong>Kết thúc : </strong> <span>'.$t_end.'</span> <br>
+                            <strong>Trể : </strong> <span>'.$t_late_e.'</span> <br>
+                            ">';
+                $result.= $total;
+                $result.= '</a>';
+                $result.='</'.$type.'>';
                 $begin = date ("Y-m-d", strtotime("+1 day", strtotime($begin)));
             }
         }

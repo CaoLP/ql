@@ -75,7 +75,11 @@ $salary;
                                 $date1 =  new DateTime($attendance['StaffAttendance']['begin_time']);
                                 $total = 0;
                                 $style = '';
-                                if($date1<$date2){
+                                if(
+                                    $attendance['StaffAttendance']['begin_time']!= '0000-00-00 00:00:00'
+                                    && $attendance['StaffAttendance']['end_time']!= '0000-00-00 00:00:00'
+                                    && $date1<$date2
+                                ){
                                     $dateDiff = $date2->diff($date1);
                                     $total = $dateDiff->h + round($dateDiff->m/60,0);
                                 }else{

@@ -50,21 +50,44 @@ class StaffAttendancesController extends AppController
         }
         while (strtotime($date) <= strtotime($end)) {
             $staff_attendances = $this->StaffAttendance->find('all',array(
-                'conditions' => array('StaffAttendance.begin_time like' => $date .'%'),
+                'conditions' => array(
+                    'OR' => array(
+                        'StaffAttendance.begin_time like' => $date .'%',
+                        'StaffAttendance.end_time like' => $date .'%',
+                    )
+                ),
             ));
             foreach($staff_attendances as $s){
                 $date2 =  new DateTime($s['StaffAttendance']['end_time']);
                 $date1 =  new DateTime($s['StaffAttendance']['begin_time']);
                 $temp = $s;
-                $dateDiff = $date2->diff($date1);
-                $total = $dateDiff->h + round($dateDiff->m/60,0);
+                $total = 0;
+                if($s['StaffAttendance']['end_time'] == '0000-00-00 00:00:00'){
+                    $temp['StaffAttendance']['date'] = strtotime($date1->format('Y-m-d'));
+                    $temp['StaffAttendance']['type'] = 2;
+                }else if($s['StaffAttendance']['begin_time'] == '0000-00-00 00:00:00'){
+                    $temp['StaffAttendance']['date'] = strtotime($date2->format('Y-m-d'));
+                    $temp['StaffAttendance']['type'] = 1;
+                }else{
+                    $temp['StaffAttendance']['type'] = 0;
+                    if($date1 < $date2){
+                        $dateDiff = $date2->diff($date1);
+                        $total = $dateDiff->h + round($dateDiff->m/60,0);
+                        $temp['StaffAttendance']['date'] = strtotime($date2->format('Y-m-d'));
+                    }else{
+                        $temp['StaffAttendance']['date'] = strtotime($date1->format('Y-m-d'));
+                    }
+                }
                 $temp['StaffAttendance']['total'] = $total;
-                $temp['StaffAttendance']['date'] = strtotime($date2->format('Y-m-d'));
-                array_push($res,$temp);
+                $res[$temp['StaffAttendance']['staff_id']][$temp['StaffAttendance']['staff_work_session_id']][] = $temp;
+//                array_push($res,$temp);
             }
             $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
         }
-        $res = Set::combine($res,'{n}.StaffAttendance.id','{n}','{n}.StaffAttendance.staff_work_session_id');
+//        $res = Set::combine($res,'{n}.StaffAttendance.id','{n}','{n}.StaffAttendance.staff_work_session_id');
+//        debug($res);
+
+//        die;
 
 //        foreach($staff_attendances as $ws){
 //            foreach($ws as $staff_at){
@@ -79,40 +102,41 @@ class StaffAttendancesController extends AppController
             $years[(date('Y') - 4)+$i] = (date('Y') - 4)+$i;
         }
         $this->set(compact('staff_attendances','users','worksessions_d','salaries','years','months','end'));
-
-        if(isset($this->request->query['sample'])){
-            $listAt = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive'=>-1));
-            foreach($listAt as $at){
-                if($at['StaffWorkSession']['work_session_id'] == 1){
-                    $date = new DateTime('2015-03-20 07:00:00');
+        /*
+                if(isset($this->request->query['sample'])){
+                    $listAt = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive'=>-1));
+                    foreach($listAt as $at){
+                        if($at['StaffWorkSession']['work_session_id'] == 1){
+                            $date = new DateTime('2015-03-20 07:00:00');
+                        }
+                        if($at['StaffWorkSession']['work_session_id'] == 2){
+                            $date = new DateTime('2015-03-20 12:00:00');
+                        }
+                        if($at['StaffWorkSession']['work_session_id'] == 3){
+                            $date = new DateTime('2015-03-20 17:00:00');
+                        }
+                        $staff_id = $at['StaffWorkSession']['staff_id'];
+                        $saveData=array();
+                        for($i=0;$i<60;$i++){
+                            $date->modify( '+1 day' );
+                            $clone = clone $date;
+                            $clone->modify( '+5 hours' );
+                            $saveData[] = array(
+                                'staff_id' => $staff_id,
+                                'staff_work_session_id' => $at['StaffWorkSession']['work_session_id'],
+                                'begin_time' => $date->format('Y-m-d H:i:s'),
+                                'end_time' => $clone->format('Y-m-d H:i:s'),
+                                'delay_time_begin' => '0',
+                                'delay_time_end' => '0',
+                                'note_begin' => '0',
+                                'note_end' => '0',
+                            );
+                        }
+                        $this->StaffAttendance->saveMany($saveData);
+                    }
+                    die;
                 }
-                if($at['StaffWorkSession']['work_session_id'] == 2){
-                    $date = new DateTime('2015-03-20 12:00:00');
-                }
-                if($at['StaffWorkSession']['work_session_id'] == 3){
-                    $date = new DateTime('2015-03-20 17:00:00');
-                }
-                $staff_id = $at['StaffWorkSession']['staff_id'];
-                $saveData=array();
-                for($i=0;$i<60;$i++){
-                    $date->modify( '+1 day' );
-                    $clone = clone $date;
-                    $clone->modify( '+5 hours' );
-                    $saveData[] = array(
-                        'staff_id' => $staff_id,
-                        'staff_work_session_id' => $at['StaffWorkSession']['work_session_id'],
-                        'begin_time' => $date->format('Y-m-d H:i:s'),
-                        'end_time' => $clone->format('Y-m-d H:i:s'),
-                        'delay_time_begin' => '0',
-                        'delay_time_end' => '0',
-                        'note_begin' => '0',
-                        'note_end' => '0',
-                    );
-                }
-                $this->StaffAttendance->saveMany($saveData);
-            }
-            die;
-        }
+                */
     }
 
     /**

@@ -22,3 +22,45 @@
 .text-bold{
     font-weight: bold;
 }
+.att-staff-name a{
+    color: #ffffff;
+}
+.attendance-late{
+    background-color: #f2dede;
+}
+.error-end{
+    background-color: #ADAFF1;
+    color: rgb(254, 254, 254);
+}
+.error-begin{
+    background-color: #B116F5;
+    color: rgb(254, 254, 254);
+}
+.not-attendance{
+    background-color: rgba(0, 0, 0, 0.29);
+    color: rgb(254, 254, 254);
+}
+.attendance-ok{
+    background-color: rgba(82, 189, 255, 0.29);
+    color: rgb(0, 0, 0);
+}
+.label-attendance {
+    position: relative;
+    margin-right: 5px;
+    display: inline-block;
+    border: 1px solid #fff;
+    padding: 5px;
+}
+.attendance-calendar .popover-content{
+    line-height: normal !important;
+}
+.attendance-calendar .popover-inner{
+    color: #000 !important;
+}
+.btn-a{
+    width: 25px;
+    padding: 0;
+}
+.attendance-calendar td{
+    padding: 2px !important;
+}
