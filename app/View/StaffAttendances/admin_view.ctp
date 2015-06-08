@@ -1,7 +1,7 @@
 <!-- Row start -->
 <?php
 $isAdmin = true;
-//if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
+if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
 $salary;
 ?>
 <div class="row">
@@ -41,8 +41,9 @@ $salary;
                         <th>Kết thúc</th>
                         <th>Trể</th>
                         <th>Ghi chú kết thúc</th>
-                        <?php if($isAdmin){?>
                         <th>Tổng thời gian</th>
+                        <?php if($isAdmin){?>
+                            <th>Actions</th>
                         <?php }?>
                     </tr>
                     </thead>
@@ -69,7 +70,6 @@ $salary;
                                 ?>
                             </td>
                             <td><?php echo h ($attendance['StaffAttendance']['note_end']); ?></td>
-                            <?php if($isAdmin){?>
                            <?php
                                 $date2 =  new DateTime($attendance['StaffAttendance']['end_time']);
                                 $date1 =  new DateTime($attendance['StaffAttendance']['begin_time']);
@@ -88,6 +88,12 @@ $salary;
                                 $sum+=$total;
                                 echo '<td '.$style.'>'.$total;
                                 ?>
+                            </td>
+                            <?php if($isAdmin){?>
+                            <td>
+                                <?php echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>',
+                                    array('action' => 'edit', $attendance['StaffAttendance']['id']),
+                                    array('escape' => false, 'title' => 'Thay đổi thông tin')); ?>
                             </td>
                             <?php }?>
                         </tr>

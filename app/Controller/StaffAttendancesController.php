@@ -287,13 +287,20 @@ class StaffAttendancesController extends AppController
      */
     public function admin_edit($id = null)
     {
+        $this->StaffAttendance->belongsTo['Staff'] = array(
+                                                                    'className' => 'User',
+                                                                    'foreignKey' => 'staff_id',
+                                                                    'conditions' => '',
+                                                                    'fields' => '',
+                                                                    'order' => ''
+                                                                );
         if (!$this->StaffAttendance->exists($id)) {
             throw new NotFoundException(__('Invalid staff_attendance'));
         }
         if ($this->request->is(array('post', 'put'))) {
             if ($this->StaffAttendance->save($this->request->data)) {
                 $this->Session->setFlash(__('The staff_attendance has been saved.'));
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(array('action' => 'view',$this->request->data['StaffAttendance']['staff_id']));
             } else {
                 $this->Session->setFlash(__('The staff_attendance could not be saved. Please, try again.'));
             }
@@ -301,6 +308,8 @@ class StaffAttendancesController extends AppController
             $options = array('conditions' => array('StaffAttendance.' . $this->StaffAttendance->primaryKey => $id));
             $this->request->data = $this->StaffAttendance->find('first', $options);
         }
+        $staffs = $this->StaffAttendance->Staff->find('list');
+        $this->set(compact('staffs'));
     }
 
     /**

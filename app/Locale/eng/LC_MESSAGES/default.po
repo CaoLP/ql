@@ -2556,3 +2556,66 @@ msgstr "Tên mục cha"
 
 msgid "Option Cat"
 msgstr "Danh mục thuộc tính"
+
+msgid "Staff"
+msgstr "Nhân viên"
+
+msgid "Begin Time"
+msgstr "Thời gian bắt đầu"
+
+msgid "Delay Time Begin"
+msgstr "Đi trể"
+
+msgid "Note Begin"
+msgstr "Ghi chú bắt đầu"
+
+msgid "End Time"
+msgstr "Thời gian kết thúc"
+
+msgid "Delay Time End"
+msgstr "Về sớm"
+
+msgid "Note End"
+msgstr "Ghi chú kết thúc"
+
+msgid "am"
+msgstr "sáng"
+
+msgid "pm"
+msgstr "chiều"
+
+msgid "January"
+msgstr "Tháng 1"
+
+msgid "February"
+msgstr "Tháng 2"
+
+msgid "March"
+msgstr "Tháng 3"
+
+msgid "April"
+msgstr "Tháng 4"
+
+msgid "May"
+msgstr "Tháng 5"
+
+msgid "June"
+msgstr "Tháng 6"
+
+msgid "July"
+msgstr "Tháng 7"
+
+msgid "August"
+msgstr "Tháng 8"
+
+msgid "September"
+msgstr "Tháng 9"
+
+msgid "October"
+msgstr "Tháng 10"
+
+msgid "November"
+msgstr "Tháng 11"
+
+msgid "December"
+msgstr "Tháng 12"
