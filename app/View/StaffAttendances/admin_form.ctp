@@ -15,8 +15,7 @@
                             <?php echo $this->Form->input('id', array('class' => 'form-control', 'placeholder' => 'Id')); ?>
                         </div>
                         <div class="form-group">
-                            <?php echo $this->Form->input('staff_id', array('disabled' => 'disabled','class' => 'form-control', 'placeholder' => 'Option Id')); ?>
-                            <?php echo $this->Form->hidden('staff_id'); ?>
+                            <?php echo $this->Form->input('staff_id', array('class' => 'form-control', 'placeholder' => 'Option Id')); ?>
                         </div>
 
                         <div class="form-group">
