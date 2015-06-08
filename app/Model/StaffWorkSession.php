@@ -28,7 +28,7 @@ class StaffWorkSession extends AppModel
             'fields' => '',
             'order' => ''
         ),
-        'User' => array(
+        'Group' => array(
             'className' => 'Group',
             'foreignKey' => 'group_id',
             'conditions' => '',
