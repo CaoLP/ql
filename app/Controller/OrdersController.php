@@ -437,65 +437,27 @@ class OrdersController extends AppController
             if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
                 $saveData['Order']['created'] = $this->request->data['Order']['created'];
             }
-            $storeDetail = array();
-            $this->loadModel('Warehouse');
-            $warehouse = array();
-            foreach ($order_detail as $detail) {
-                $data = json_decode($detail['data'], true);
-                $storeDetail[] = array(
-                    'order_id' => $id,
-                    'product_id' => $data['id'],
-                    'name' => $data['name'],
-                    'price' => $detail['mod_price'],
-                    'sku' => $data['sku'],
-                    'qty' => $detail['qty'],
-                    'code' => $data['code'],
-                    'product_options' => $data['options'],
-                    'data' => $detail['data'],
-                );
-                $newData = $this->Warehouse->find('first', array(
-                    'conditions' => array(
-                        'Warehouse.store_id' => $this->request->data['Order']['store_id'],
-                        'Warehouse.product_id' => $data['id'],
-                        'Warehouse.options' => $data['options']
-                    ),
-                    'recursive' => -1
-                ));
-                debug($newData);
-                $t = array();
-                if (isset($oldData['Warehouse'])) {
-                    $t['id'] = $oldData['Warehouse']['id'];
-                    if(isset($oldDetail[$data['id']])){
-                        $t['qty'] = $newData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
-                        unset($oldDetail[$data['id']]);
-                    }else{
-                        $t['qty'] = $newData['Warehouse']['qty'] - $detail['qty'];
-                    }
-                }
-                $warehouse[] = $t;
-            }
-            foreach($oldDetail as $old_k=>$old_d){
-                $data = json_decode($old_d['data'], true);
 
-                $oldData = $this->Warehouse->find('first', array(
-                    'conditions' => array(
-                        'Warehouse.id' => $data['warehouse'],
-                    ),
-                    'recursive' => -1
-                ));
-                debug($oldData);
-            }
-            debug($warehouse);
-            debug($storeDetail);
-            die;
             if ($this->Order->save($saveData)) {
                 $this->Order->OrderDetail->deleteAll(array('OrderDetail.order_id' => $id), false);
                 $storeDetail = array();
-
-                //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
                 $this->loadModel('Warehouse');
                 $warehouse = array();
-
+                foreach($oldDetail as $old_k=>$old_d){
+                    $data = json_decode($old_d['data'], true);
+                    $curData = $this->Warehouse->find('first', array(
+                        'conditions' => array(
+                            'Warehouse.id' => $data['warehouse'],
+                        ),
+                        'recursive' => -1
+                    ));
+                    $t= array();
+                    if(isset($curData['Warehouse']['id']) && isset($oldDetail[$curData['Warehouse']['product_id']])){
+                        $t['id'] = $curData['Warehouse']['id'];
+                        $t['qty'] = $curData['Warehouse']['qty'] + $oldDetail[$curData['Warehouse']['product_id']]['qty'];
+                        $warehouse[$curData['Warehouse']['id']] = $t;
+                    }
+                }
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
                     $storeDetail[] = array(
@@ -509,33 +471,26 @@ class OrdersController extends AppController
                         'product_options' => $data['options'],
                         'data' => $detail['data'],
                     );
-                    $oldData = $this->Warehouse->find('first', array(
+                    $newData = $this->Warehouse->find('first', array(
                         'conditions' => array(
-                            'Warehouse.store_id' => $this->request->data['Order']['store_id'],
-                            'Warehouse.product_id' => $data['id'],
-                            'Warehouse.options' => $data['options']
+                            'Warehouse.id' => $data['warehouse'],
                         ),
                         'recursive' => -1
                     ));
-
-                    $t = array();
-                    if (isset($oldData['Warehouse'])) {
-                        $t['id'] = $oldData['Warehouse']['id'];
-                        if(isset($oldDetail[$data['id']])){
-                            $t['qty'] = $oldData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
+                    $t= array();
+                    if(isset($newData['Warehouse']['id'])){
+                        if(isset($warehouse[$newData['Warehouse']['id']])){
+                            $warehouse[$newData['Warehouse']['id']]['qty'] = $warehouse[$newData['Warehouse']['id']]['qty'] - $detail['qty'];
                         }else{
-                            $t['qty'] = $oldData['Warehouse']['qty'] - $detail['qty'];
+                            $t['id'] = $newData['Warehouse']['id'];
+                            $t['qty'] = $newData['Warehouse']['qty'] - $detail['qty'];
+                            $warehouse[$newData['Warehouse']['id']] = $t;
                         }
                     }
-                    $warehouse[] = $t;
                 }
-                $this->Order->OrderDetail->saveMany($storeDetail);
-
-//                $refill  = $saveData;
-//                $refill['OrderDetail'] = $storeDetail;
-//                debug($refill);die;
-
                 $this->Warehouse->saveMany($warehouse);
+
+                $this->Order->OrderDetail->saveMany($storeDetail);
 
                 $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                 $this->Session->delete('Cart');
