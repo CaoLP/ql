@@ -342,9 +342,18 @@ class ReportsController extends AppController
                 'after_total' => $p[0]['total'],
                 'profit' => 0,
                 'category_id' => $p['Product']['category_id'],
+                'product_id' => $p['Warehouse']['product_id'],
             );
             $summary['after_total'] += $p[0]['total'];
             $summary['after_price'] += $p[0]['total'] * $p['Product']['price'] ;
+//            if($p['Warehouse']['product_id'] == 161) {
+//                debug($order_products[$p['Warehouse']['product_id']]['qty']);
+//                debug($in[$p['Warehouse']['product_id']]['qty']);
+//                debug($out[$p['Warehouse']['product_id']]['qty']);
+//                debug($warehouse_logs[$p['Warehouse']['product_id']]['qty']);
+////                debug($array_rebuild);
+//                die;
+//            }
             if (isset($order_products[$p['Warehouse']['product_id']])) {
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'] = $order_products[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_promote'] = $order_products[$p['Warehouse']['product_id']]['promote'];
@@ -377,6 +386,7 @@ class ReportsController extends AppController
                 $summary['before_total'] += $array_rebuild[$p['Warehouse']['product_id']]['before_total'];
                 $summary['before_price'] +=  $array_rebuild[$p['Warehouse']['product_id']]['before_total'] * $p['Product']['price'];
             }
+
         }
 //        die;
         $categories = Set::combine($array_rebuild,'{n}.code','{n}','{n}.category_id');

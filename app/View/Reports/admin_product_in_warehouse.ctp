@@ -47,20 +47,20 @@ if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
     <th rowspan="2">Mã hàng</th>
     <th rowspan="2">Tên hàng</th>
     <th rowspan="2">Đơn giá</th>
-    <th rowspan="2" class="qty">Tồn đầu kỳ</th>
-    <th colspan="2">Nhập</th>
-    <th colspan="2">Xuất</th>
-    <th colspan="3">Bán</th>
-    <th rowspan="2" class="qty">Tồn cuối kỳ</th>
+    <th rowspan="2" class="qty bg4">Tồn đầu kỳ</th>
+    <th colspan="2" class="bg1">Nhập</th>
+    <th colspan="2" class="bg2">Xuất</th>
+    <th colspan="3" class="bg3">Bán</th>
+    <th rowspan="2" class="qty bg4">Tồn cuối kỳ</th>
 </tr>
 <tr>
-    <th class="qty">SL</th>
-    <th>Thành tiền</th>
-    <th class="qty">SL</th>
-    <th>Thành tiền</th>
-    <th class="qty">SL</th>
-    <th>Khuyến mãi</th>
-    <th>Thành tiền</th>
+    <th class="qty bg1">SL</th>
+    <th class="bg1">Thành tiền</th>
+    <th class="qty bg2">SL</th>
+    <th class="bg2">Thành tiền</th>
+    <th class="qty bg3">SL</th>
+    <th class="bg3">Khuyến mãi</th>
+    <th class="bg3">Thành tiền</th>
 </tr>
 </thead>
 <tbody>
@@ -103,7 +103,7 @@ foreach ($categories as $key => $products) {
                         array(
                             'controller' => 'products',
                             'action' => 'edit',
-                            $key
+                            $p['product_id']
                         ),
                         array(
                             'escape' => false,
@@ -113,15 +113,15 @@ foreach ($categories as $key => $products) {
                 <td><?php echo $p['code']; ?></td>
                 <td><?php echo $p['name']; ?></td>
                 <td class="price-text"><?php echo $this->Common->formatMoney($p['price']); ?></td>
-                <td class="qty"><?php echo $p['before_total']; ?></td>
-                <td class="qty"><?php echo $p['in_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($p['in_price']); ?></td>
-                <td class="qty"><?php echo $p['out_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($p['out_price']); ?></td>
-                <td class="qty"><?php echo $p['sale_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($p['sale_promote']); ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($p['sale_price']); ?></td>
-                <td class="qty"><?php echo $p['after_total']; ?></td>
+                <td class="qty bg4"><?php echo $p['before_total']; ?></td>
+                <td class="qty bg1"><?php echo $p['in_qty']; ?></td>
+                <td class="price-text bg1"><?php echo $this->Common->formatMoney($p['in_price']); ?></td>
+                <td class="qty bg2"><?php echo $p['out_qty']; ?></td>
+                <td class="price-text bg2"><?php echo $this->Common->formatMoney($p['out_price']); ?></td>
+                <td class="qty bg3"><?php echo $p['sale_qty']; ?></td>
+                <td class="price-text bg3"><?php echo $this->Common->formatMoney($p['sale_promote']); ?></td>
+                <td class="price-text bg3"><?php echo $this->Common->formatMoney($p['sale_price']); ?></td>
+                <td class="qty bg4"><?php echo $p['after_total']; ?></td>
             </tr>
             <?php
            $sub_summary['before_total'] += $p['before_total'];
@@ -141,15 +141,15 @@ foreach ($categories as $key => $products) {
             ?>
             <tr>
                 <td class="text-right" colspan="4"><strong>Tổng cộng</strong></td>
-                <td class="qty"><?php echo $sub_summary['before_total']; ?></td>
-                <td class="qty"><?php echo $sub_summary['in_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($sub_summary['in_price']); ?></td>
-                <td class="qty"><?php echo $sub_summary['out_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($sub_summary['out_price']); ?></td>
-                <td class="qty"><?php echo $sub_summary['sale_qty']; ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($sub_summary['sale_promote']); ?></td>
-                <td class="price-text"><?php echo $this->Common->formatMoney($sub_summary['sale_price']); ?></td>
-                <td class="qty"><?php echo $sub_summary['after_total']; ?></td>
+                <td class="qty bg4"><?php echo $sub_summary['before_total']; ?></td>
+                <td class="qty bg1"><?php echo $sub_summary['in_qty']; ?></td>
+                <td class="price-text bg1"><?php echo $this->Common->formatMoney($sub_summary['in_price']); ?></td>
+                <td class="qty bg2"><?php echo $sub_summary['out_qty']; ?></td>
+                <td class="price-text bg2"><?php echo $this->Common->formatMoney($sub_summary['out_price']); ?></td>
+                <td class="qty bg3"><?php echo $sub_summary['sale_qty']; ?></td>
+                <td class="price-text bg3"><?php echo $this->Common->formatMoney($sub_summary['sale_promote']); ?></td>
+                <td class="price-text bg3"><?php echo $this->Common->formatMoney($sub_summary['sale_price']); ?></td>
+                <td class="qty bg4"><?php echo $sub_summary['after_total']; ?></td>
             </tr>
         <?php
         }
@@ -162,20 +162,20 @@ foreach ($categories as $key => $products) {
     <td rowspan="2">Mã hàng</td>
     <td rowspan="2">Tên hàng</td>
     <td rowspan="2">Đơn giá</td>
-    <td rowspan="2" class="qty">Tồn đầu kỳ</td>
-    <td class="qty">SL</td>
-    <td>Thành tiền</td>
-    <td class="qty">SL</td>
-    <td>Thành tiền</td>
-    <td class="qty">SL</td>
-    <td>Khuyến mãi</td>
-    <td>Thành tiền</td>
-    <td rowspan="2" class="qty">Tồn cuối kỳ</td>
+    <td rowspan="2" class="qty bg4">Tồn đầu kỳ</td>
+    <td class="qty bg1">SL</td>
+    <td class="bg1">Thành tiền</td>
+    <td class="qty bg2">SL</td>
+    <td class="bg2">Thành tiền</td>
+    <td class="qty bg3">SL</td>
+    <td class="bg3">Khuyến mãi</td>
+    <td class="bg3">Thành tiền</td>
+    <td rowspan="2" class="qty bg4">Tồn cuối kỳ</td>
 </tr>
 <tr class="text-center text-bold footer_tb">
-    <td colspan="2">Nhập</td>
-    <td colspan="2">Xuất</td>
-    <td colspan="3">Bán</td>
+    <td colspan="2" class="bg1">Nhập</td>
+    <td colspan="2" class="bg2">Xuất</td>
+    <td colspan="3" class="bg3">Bán</td>
 </tr>
 <tr>
     <td class="text-right" colspan="4"><strong>Tổng cộng</strong></td>
