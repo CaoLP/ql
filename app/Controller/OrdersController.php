@@ -389,13 +389,17 @@ class OrdersController extends AppController
             $total = 0;
             $amount = 0;
             $order_detail = $this->request->data['OrderDetail'];
-            $oldDetail = json_decode($this->request->data['oldData'],true);
-            $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
+            $old_order = json_decode($this->request->data['oldData'],true);
+            $oldDetail = $old_order['OrderDetail'];
+            $oldDetail = Set::combine($oldDetail,'{n}.product_id','{n}');
             $basic_total = 0;
-            foreach ($order_detail as $detail) {
+            foreach ($order_detail as $k=>$detail) {
                 $data = json_decode($detail['data'], true);
                 $basic_total += $detail['qty'] * $data['price'];
+                $detail['mod_price'] = str_replace(',', '', $detail['mod_price']);
                 $total += $detail['qty'] * $detail['mod_price'];
+                $order_detail[$k]['mod_price'] = $detail['mod_price'];
+                $order_detail[$k]['promote_value'] = $data['price'] - $detail['mod_price'];
             }
             $promote = $this->request->data['Order']['promote_value'];
             if ($this->request->data['Order']['promote_type'] == 1) {
@@ -433,6 +437,57 @@ class OrdersController extends AppController
             if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
                 $saveData['Order']['created'] = $this->request->data['Order']['created'];
             }
+            $storeDetail = array();
+            $this->loadModel('Warehouse');
+            $warehouse = array();
+            foreach ($order_detail as $detail) {
+                $data = json_decode($detail['data'], true);
+                $storeDetail[] = array(
+                    'order_id' => $id,
+                    'product_id' => $data['id'],
+                    'name' => $data['name'],
+                    'price' => $detail['mod_price'],
+                    'sku' => $data['sku'],
+                    'qty' => $detail['qty'],
+                    'code' => $data['code'],
+                    'product_options' => $data['options'],
+                    'data' => $detail['data'],
+                );
+                $newData = $this->Warehouse->find('first', array(
+                    'conditions' => array(
+                        'Warehouse.store_id' => $this->request->data['Order']['store_id'],
+                        'Warehouse.product_id' => $data['id'],
+                        'Warehouse.options' => $data['options']
+                    ),
+                    'recursive' => -1
+                ));
+                debug($newData);
+                $t = array();
+                if (isset($oldData['Warehouse'])) {
+                    $t['id'] = $oldData['Warehouse']['id'];
+                    if(isset($oldDetail[$data['id']])){
+                        $t['qty'] = $newData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
+                        unset($oldDetail[$data['id']]);
+                    }else{
+                        $t['qty'] = $newData['Warehouse']['qty'] - $detail['qty'];
+                    }
+                }
+                $warehouse[] = $t;
+            }
+            foreach($oldDetail as $old_k=>$old_d){
+                $data = json_decode($old_d['data'], true);
+
+                $oldData = $this->Warehouse->find('first', array(
+                    'conditions' => array(
+                        'Warehouse.id' => $data['warehouse'],
+                    ),
+                    'recursive' => -1
+                ));
+                debug($oldData);
+            }
+            debug($warehouse);
+            debug($storeDetail);
+            die;
             if ($this->Order->save($saveData)) {
                 $this->Order->OrderDetail->deleteAll(array('OrderDetail.order_id' => $id), false);
                 $storeDetail = array();
