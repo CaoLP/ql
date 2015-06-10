@@ -1,39 +1,12 @@
-<div class="posts view">
-<ul class="breadcrumb">
-    <li>
-		<?php echo $this->Html->link('Post', array('action'=>'home'));?>
-		<span class="divider">/</span>
-	</li>
-    <li class="active"><?php echo __('View Post'); ?></li>
-</ul>
-	<table class="condensed-table">
-	<tr>
-		<th><?php echo __('Title'); ?></th>
-		<td>
-			<?php echo h($post['Post']['title']); ?>
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<th><?php echo __('Body'); ?></th>
-		<td>
-			<?php echo h($post['Post']['body']); ?>
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<th><?php echo __('Created'); ?></th>
-		<td>
-			<?php echo h($post['Post']['created']); ?>
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<th><?php echo __('Action'); ?></th>
-		<td>
-			<?php echo $this->Html->link('Edit', array('action'=>'edit', $post['Post']['id']));?>
-			&nbsp;
-		</td>
-	</tr>
-	</table>
+<div class="row">
+    <div class="col-lg-12">
+      <h4><?php echo $post['Post']['title']?></h4>
+        <small><?php echo $post['Creater']['name']?></small>
+        <hr>
+        <p><span class="glyphicon glyphicon-time"></span> <?php echo date('H\hi\, \n\g\à\y d \t\h\á\n\g m \n\ă\m Y')?></p>
+        <hr>
+    </div>
+    <div class="col-lg-12">
+        <?php echo $post['Post']['body']?>
+    </div>
 </div>

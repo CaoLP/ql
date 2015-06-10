@@ -26,5 +26,20 @@ class Post extends AppModel {
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
+    public $belongsTo = array(
+        'Creater' => array(
+            'className' => 'User',
+            'foreignKey' => 'created_by',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'Updater' => array(
+            'className' => 'User',
+            'foreignKey' => 'updated_by',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        )
+    );
 }

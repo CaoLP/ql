@@ -7,6 +7,8 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController {
 
+    public $title_for_layout = 'Thông báo';
+
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow("index", "view");      
