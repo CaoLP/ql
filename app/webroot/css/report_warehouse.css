@@ -15,3 +15,11 @@
 .footer_tb td{
     vertical-align: middle !important;
 }
+@media print {
+    h2>small ul, header, footer, form{
+        display: none;
+    }
+    .page-title h2{
+        font-size : 20px
+    }
+}
