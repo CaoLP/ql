@@ -69,7 +69,7 @@
 		<div id="filelist">
 			<?php echo $this->Form->create('Media',array('url'=>array('controller'=>'medias','action'=>'order'))); ?>
 			<?php foreach($medias as $media): $media = current($media);  ?>
-				<?php require('media.ctp'); ?>
+				<?php require('admin_media.ctp'); ?>
 			<?php endforeach; ?>
 			<?php echo $this->Form->end(); ?>
 		</div>

@@ -77,24 +77,30 @@ class ProductsController extends AppController {
 	}
     public function admin_ajax_index()
     {
+        $this->Product->belongsTo = array(
+            'Thumb' => array(
+                'className' => 'Media',
+                'foreignKey' => 'media_id',
+                'conditions' => null,
+                'counterCache' => false
+            )
+        );
+        $this->Product->hasMany = array();
         if(isset($this->request->query['q'])){
             $settings = array(
-                'fields'=>array(
-                    'Product.id','Product.name','Product.sku'
-                ),
                 'conditions'=>array(
                     'Product.name <>' => '0',
-                    'Product.name like' => '%'.$this->request->query['q'].'%'
+                    'Product.sku' => $this->request->query['q']
                 ),
-                'recursive' => -1,
-                'limit'=>10
             );
             $products=$this->Product->find('all',$settings);
             $res = array();
             foreach($products as $p){
                 $res[] = array(
                     'value' => $p['Product']['id'],
-                    'label' => $p['Product']['name'] . '( Mã '. $p['Product']['sku'] .' )' ,
+                    'label' => $p['Product']['sku'] ,
+                    'name' => $p['Product']['name'] ,
+                    'image' => $p['Thumb']['file'] ,
                     'sku' =>$p['Product']['sku']
                 );
             }

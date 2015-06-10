@@ -17,13 +17,50 @@
         <p class="small">(<?php echo __d('media','%s seulement',implode(', ', $extensions)); ?>)</p>
     </div>
 </div>
-<div id="filelist" class="col-md-12">
+<div id="filelist" class="col-md-9">
     <?php echo $this->Form->create('Media',array('url'=>array('controller'=>'medias','action'=>'order'))); ?>
     <?php foreach($medias as $media): $media = current($media);  ?>
-        <?php require('media2.ctp'); ?>
+        <?php require('admin_media2.ctp'); ?>
     <?php endforeach; ?>
     <?php echo $this->Form->end(); ?>
 </div>
+    <div class="col-md-3">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="product_name" placeholder="Mã hàng">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Tìm</button>
+                      </span>
+                </div>
+                <!-- /input-group -->
+            </div>
+            <div class="panel-body drop-area">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="http://placehold.it/150x200" alt="">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="pro-name">Tên sản phẩm</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <input type="hidden" id="product_id" value="-1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12" id="drop-area">
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer text-right">
+                <button class="btn btn-success save-media">Lưu</button>
+            </div>
+        </div>
+    </div>
 </div>
 <?php $this->Html->script('jquery.form.js',array('inline'=>false)); ?>
 <?php $this->Html->script('plupload.js',array('inline'=>false)); ?>
@@ -161,39 +198,3 @@ jQuery(function(){
 
 <?php $this->Html->scriptEnd(); ?>
 <!-- Modal -->
-<div class="modal fade" id="product-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <form action="<?php echo $this->Html->url(array(
-        'controller' => 'medias',
-        'action' => 'update_media'
-    ))?>" method="post">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Chọn sản phẩm</h4>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="product_name">Tìm sản phẩm</label>
-                        <input type="text" class="form-control" id="product_name" placeholder="Nhập tên sản phẩm">
-                        <input type="hidden" class="form-control" name="product_id" id="product_id">
-                        <input type="hidden" class="form-control" name="media_id" id="media_id">
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" name="use_as_thumb" id="use_as_thumb" value="true"> Làm ảnh đại diện
-                        </label>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary">Lưu lại</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>

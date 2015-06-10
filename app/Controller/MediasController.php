@@ -74,21 +74,33 @@ class MediasController extends AppController{
         $editor = isset($this->request->params['named']['editor']) ? $this->request->params['named']['editor'] : false;
         $this->set(compact('id', 'medias', 'thumbID', 'editor', 'extensions'));
     }
-    public function admin_update_media($ref = 'Product'){
-       if(!empty($this->request->data['product_id']) && !empty($this->request->data['media_id'])){
-           $this->Media->save(array(
-               'id' => $this->request->data['media_id'],
-               'ref_id' => $this->request->data['product_id'],
-           ));
-           if(!empty($this->request->data['use_as_thumb']) && $this->request->data['use_as_thumb'] == true){
-               $this->loadModel($ref);
-               $this->$ref->save(array(
-                   'id' => $this->request->data['product_id'],
-                   'media_id' => $this->request->data['media_id'],
-               ));
-           }
-       }
-       return $this->redirect(Router::url(array('action'=>'fast_import',$ref)));
+
+    public function admin_update_media($ref = 'Product')
+    {
+        if ($this->request->is('ajax')) {
+            if (!empty($this->request->data['id']) && count($this->request->data['media_id']) > 0) {
+                $saveData = array();
+                foreach ($this->request->data['media_id'] as $media) {
+                    $saveData[] = array(
+                        'id' => $media,
+                        'ref_id' => $this->request->data['id'],
+                    );
+                }
+              //  $this->Media->saveMany($saveData);
+                $this->loadModel($ref);
+                $product = $this->$ref->find('first', array('conditions' => array('Product.id' => $this->request->data['id']), 'recursive' => -1));
+                if (empty($product['Product']['media_id'])) {
+                    $this->$ref->save(array(
+                        'id' => $this->request->data['id'],
+                        'media_id' => $this->request->data['media_id'][0],
+                    ));
+                }
+                echo 1;
+            }else{
+                echo 0;
+            }
+            die;
+        }
     }
     /**
     * Upload (Ajax)

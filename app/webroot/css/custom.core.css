@@ -92,3 +92,25 @@
 .bg4{
     background-color: rgba(250, 129, 157, 0.4);
 }
+.drop-area{
+    min-height: 300px;
+}
+.ui-draggable{
+    z-index: 100;
+}
+.drop-area .media-left{
+    display: inline-block;
+}
+.drop-area .media-left .media-object{
+    width: 75px;
+}
+.drop-area .media-body{
+    display: inline-block;
+    overflow-wrap: break-word;
+    vertical-align: top;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.ui-helper-hidden-accessible{
+    display: none;
+}
