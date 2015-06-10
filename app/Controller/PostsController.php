@@ -29,7 +29,7 @@ class PostsController extends AppController {
  *
  * @return void
  */
-	public function manage() {
+	public function admin_manage() {
         $this->set('title', __('Post'));
         $this->set('description', __('Manage Post'));
 		
@@ -58,16 +58,20 @@ class PostsController extends AppController {
  * @return void
  */
 	public function admin_add() {
-		if ($this->request->is('post')) {
-			$this->Post->create();
-			$this->request->data["Post"]["user_id"] = $this->Auth->user("id");
-			if ($this->Post->save($this->request->data)) {
-				$this->Session->setFlash(__('The post has been saved'), 'success');
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The post could not be saved. Please, try again.'), 'error');
-			}
-		}
+            $temp = array(
+                'Post' => array(
+                    'title' => 'lưu nháp',
+                    'status' => '0'
+                )
+            );
+            $data = $this->Post->find('first',array('conditions'=>array('Post.title like'=>'%lưu nháp%','Post.status'=>0)));
+            if($data){
+                $id = $data['Post']['id'];
+            }else{
+                $this->Post->save($temp);
+                $id = $this->Post->id;
+            }
+            $this->redirect(Router::url(array('action'=>'edit',$id)));
 	}
 
 /**
@@ -85,7 +89,7 @@ class PostsController extends AppController {
 			$this->request->data["Post"]["user_id"] = $this->Auth->user("id");
 			if ($this->Post->save($this->request->data)) {
 				$this->Session->setFlash(__('The post has been saved'), 'success');
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'manage'));
 			} else {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.'), 'error');
 			}
@@ -110,9 +114,9 @@ class PostsController extends AppController {
 		}
 		if ($this->Post->delete()) {
 			$this->Session->setFlash(__('Post deleted'), 'error');
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('action' => 'manage'));
 		}
 		$this->Session->setFlash(__('Post was not deleted'), 'success');
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'manage'));
 	}
 }

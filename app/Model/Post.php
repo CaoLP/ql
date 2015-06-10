@@ -6,6 +6,7 @@ App::uses('AppModel', 'Model');
  * @property User $User
  */
 class Post extends AppModel {
+    public $actsAs = array('Media');
 /**
  * Validation rules
  *

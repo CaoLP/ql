@@ -1,7 +1,7 @@
 <div class="posts">
 	<?php
 	foreach ($posts as $post): ?>
-	<h3><a href="<?php echo $this->Html->url("/posts/view/".$post['Post']['id']);?>"><?php echo h($post['Post']['title']); ?></a></h3>
+	<h3><a href="<?php echo $this->Html->url("/admin/posts/view/".$post['Post']['id']);?>"><?php echo h($post['Post']['title']); ?></a></h3>
 	<p><?php echo h($post['Post']['body']); ?></p>
 	<?php endforeach; ?>
 </div>
