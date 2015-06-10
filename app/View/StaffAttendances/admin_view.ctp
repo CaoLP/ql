@@ -36,10 +36,10 @@ $salary;
                     <thead>
                     <tr>
                         <th>Bắt đầu</th>
-                        <th>Trể</th>
+                        <th>Đi trể</th>
                         <th>Ghi chú bắt đầu</th>
                         <th>Kết thúc</th>
-                        <th>Trể</th>
+                        <th>Về sớm</th>
                         <th>Ghi chú kết thúc</th>
                         <th>Tổng thời gian</th>
                         <?php if($isAdmin){?>

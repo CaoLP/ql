@@ -261,9 +261,15 @@ class StaffAttendancesController extends AppController
             if ($this->StaffAttendance->save($saveData)) {
                 $this->view = 'success';
                 if($this->request->data['type'] == 1 && $late_early){
-                    $msg = 'Bạn đã trể hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                    if($allow > 0)
+                        $msg = 'Bạn đã trể hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                    else
+                        $msg = 'Điểm danh đúng giờ ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
                 }else if ($this->request->data['type'] == 2 && $late_early){
-                    $msg = 'Bạn về sớm hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                    if($allow > 0)
+                        $msg = 'Bạn về sớm hơn ' . $allow . ' phút ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
+                    else
+                        $msg = 'Bạn về đúng giờ ('.$minutes.' phút/'.$delay.' phút)<br> Cảm ơn đã điểm danh !';
                 }else{
                     if($this->request->data['type'] == 1){
                         $msg = 'Bạn đi làm đúng giờ <br> Cảm ơn đã điểm danh !';
@@ -272,6 +278,42 @@ class StaffAttendancesController extends AppController
                     }
                 }
                 $this->set(compact('msg'));
+
+//                data
+                $id = $this->request->data['staff_id'];
+                $years = array();
+                $months = array();
+                for($i = 1; $i <= 12; $i++){
+                    $months[$i] = $i;
+                    $years[(date('Y') - 4)+$i] = (date('Y') - 4)+$i;
+                }
+                $conditions = array(
+                    array(
+                        'StaffAttendance.staff_id' => $id
+                    )
+                );
+                if(isset($this->request->data['year']) && isset($this->request->data['month'])){
+                    $d = date('Y-m', strtotime($this->request->data['year'].'-'.$this->request->data['month'].'-'. 1));
+                    $conditions['StaffAttendance.begin_time like'] = '%'.$d.'%';
+                }else{
+                    $this->request->data['year'] = date('Y');
+                    $this->request->data['month'] = date('m');
+                    $conditions['StaffAttendance.begin_time like'] = '%'.date('Y-m').'%';
+                }
+                $result = $this->StaffAttendance->find('all',array(
+                    'conditions'=> $conditions
+                ));
+                $this->loadModel('User');
+                $user = $this->User->find('first',array(
+                    'conditions' => array(
+                        'User.id' => $id
+                    )
+                ));
+                $salary = $this->StaffAttendance->StaffWorkSession->find('all');
+                $salary = Set::combine($salary,'{n}.StaffWorkSession.group_id','{n}.StaffWorkSession.basic_salary');
+                $this->set('attendances', $result);
+                $this->set(compact('years','months','user','salary'));
+//                end data
             } else {
 
             }
