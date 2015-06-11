@@ -63,7 +63,12 @@ class AppController extends Controller {
             $this->Toolbar = $this->Components->load('DebugKit.Toolbar');
         }
         $this->loadModel('Post');
-        $news = $this->Post->find('first',array('fields'=>array('Post.id','Post.title','Post.type'),'conditions'=>array('Post.status'=>1),'recursive'=>-1));
+        $news = $this->Post->find('first',array(
+            'fields'=>array('Post.id','Post.title','Post.type'),
+            'conditions'=>array('Post.status'=>1),
+            'recursive'=>-1,
+            'order'=>array('Post.created' => 'DESC')
+        ));
         if($news){
             $this->set(compact('news'));
         }
