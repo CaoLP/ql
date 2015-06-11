@@ -28,13 +28,22 @@ echo $this->Html->css(array('order'), array('inline' => false));
             ?>
             <div class="widget-body order-w-b" id="order-product">
                 <table id="order-product-list">
+                    <tr>
+                        <th></th>
+                        <th class="text-left">Mã hàng</th>
+                        <th class="text-left">Tên hàng</th>
+                        <th class="text-right">Giá sỉ</th>
+                        <th class="text-right">Giá</th>
+                        <th class="text-right">Số lượng</th>
+                        <th class="text-right">Thành tiền</th>
+                    </tr>
                     <?php
                     if(isset($this->request->data['OrderDetail'])){
                         ?>
                         <?php
                         foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                             $data = json_decode($order_detail['data'], true);
-                            if(!isset($data['mod_price'])) $data['mod_price'] = $data['retail_price'];
+                            if(!isset($data['mod_price'])) $data['mod_price'] = $order_detail['price'];
                             ?>
                             <tr class="row<?php echo $key?>" data-id="<?php echo $data['id']?>" data-options="<?php echo $data['options']?>">
                                 <td>
@@ -44,15 +53,19 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-left"><span><?php echo $data['name']?></span><br><span class="opt">
                                    <?php echo $data['optionsName']?></span></td>
                                 <td class="text-right">
-                                    <a href="javascript:;" class="pov" data-price="<?php echo $data['retail_price']?>" data-key="<?php echo $key?>">
+                                    <span class="price-text"><?php echo number_format($data['retail_price'], 0, '.', ','); ?></span>
+                                </td>
+                                <td class="text-right">
+                                    <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
                                     <span class="price-text" id="<?php echo $key?>-price-text">
-                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
-                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
+                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span> <i class="icon icon-pen"></i>
+                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo number_format($data['mod_price'], 0, '.', ',');?>">
                                     </a>
                                 </td>
                                 <td class="text-right">
                                     <a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>
-                                    <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" data-price="<?php echo $data['mod_price']?>" value="<?php echo $order_detail['qty']?>">
+                                    <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $data['warehouse']?>" 
+                                           data-price="<?php echo $data['mod_price']?>" data-basic_price="<?php echo $data['retail_price']?>" value="<?php echo $order_detail['qty']?>">
                                     <a href="javascript:;" class="price-up"><i class="icon icon-arrow-up"></i></a>
                                 </td>
                                 <td class="text-right">
@@ -95,6 +108,12 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <span class="input-group-addon">Khách hàng</span>
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
+                                        ?>
+                                        <?php
+                                        echo $this->Form->hidden('basic_price');
+                                        ?>
+                                        <?php
+                                        echo $this->Form->hidden('flag_type');
                                         ?>
                                         <input id="input-customer" class="form-control" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
@@ -148,25 +167,23 @@ echo $this->Html->css(array('order'), array('inline' => false));
 
                 </div>
                 <div class="col-md-12">
+                    <div class="input-group input-group-sm input-total">
+                        <span class="input-group-addon">Thành tiền</span>
+                        <?php
+                        echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
+                            'readonly' => 'readonly',
+                            'id' => 'summary-total',
+                            'class' => 'form-control',
+                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                        ));
+                        ?>
+                    </div>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active"><a href="#info-total" role="tab" data-toggle="tab">Thông tin</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="info-total">
                             <ul class="list-group no-margin">
-                                <li class="list-group-item">
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-addon">Thành tiền</span>
-                                        <?php
-                                        echo $this->Form->input('total', array('label' => false, 'type' => 'text', 'div' => false,
-                                            'readonly' => 'readonly',
-                                            'id' => 'summary-total',
-                                            'class' => 'form-control',
-                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
-                                        ));
-                                        ?>
-                                    </div>
-                                </li>
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Khuyến mãi</span>
@@ -205,6 +222,9 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>
+                                        <span class="input-group-addon has-checkbox">
+                                            <input type="checkbox" <?php if(isset($this->request->data['Dept']['id'])) echo 'checked="checked"'?> id="is_dept" name="data[Order][debt]" value="1">Nợ
+                                        </span>
                                     </div>
                                 </li>
                                 <li class="list-group-item">
@@ -216,6 +236,19 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'class' => 'form-control',
                                             'type' => 'text',
                                             'readonly' => 'readonly',
+                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                        ));
+                                        ?>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon">Phí Ship</span>
+                                        <?php
+                                        echo $this->Form->input('ship_increment_price', array('label' => false,
+                                            'div' => false,
+                                            'class' => 'form-control',
+                                            'type' => 'text',
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>
@@ -234,10 +267,11 @@ echo $this->Html->css(array('order'), array('inline' => false));
             </div>
             <div class="col-md-12">
                 <textarea style="display: none" name="data[oldData]"><?php echo $this->request->data['oldData'];?></textarea>
+                <input type="hidden" name="dept" value="<?php if(isset($this->request->data['Dept']['id'])) echo $this->request->data['Dept']['id']; ?>">
 
                 <div class="text-center bt-done">
                     <div class="btn-group">
-                        <a class="btn btn-danger" onclick="history.back()">Trở về</a>
+                        <a class="btn btn-info" id="refresh">Làm mới</a>
                         <?php
                         echo '<button type="submit" class="btn btn-success" id="save">Thanh toán</button>';
                         ?>

@@ -31,7 +31,12 @@
                                 <?php echo $this->Html->link ($dept['Customer']['name'], array ('controller' => 'customers', 'action' => 'view', $dept['Customer']['id'])); ?>
 							</td>
 							<td>
-								<?php echo $this->Html->link ($dept['Order']['code'], array ('controller' => 'orders', 'action' => 'view', $dept['Order']['id'])); ?>
+								<?php
+                                if($dept['Order']['type'] == 0)
+                                echo $this->Html->link ($dept['Order']['code'], array ('controller' => 'orders', 'action' => 'view', $dept['Order']['id']));
+                                else
+                                echo $this->Html->link ($dept['Order']['code'], array ('controller' => 'orders', 'action' => 'viewretail', $dept['Order']['id']));
+                                ?>
 							</td>
 							<td class="price-text"><?php echo number_format($dept['Dept']['total'], 0, '.', ',');?></td>
 							<td><?php echo number_format($dept['Dept']['paid'], 0, '.', ',');?></td>

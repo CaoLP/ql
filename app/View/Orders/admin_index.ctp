@@ -179,12 +179,15 @@ setlocale(LC_MONETARY, "vi_VN");
                             <td class="text-right price-text"><?php echo number_format($order['Order']['amount'], 0, '.', ',');?></td>
                             <td class="text-right"><?php echo number_format($order['Order']['receive'], 0, '.', ',');?></td>
                             <td class="actions">
-                                <?php echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $order['Order']['id']), array('escape' => false, 'title' => 'Xem thông tin')); ?>
                                 <?php
-                                if($order['Order']['type'] == 0)
-                                echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin'));
-                                else
+                                if($order['Order']['type'] == 0){
+                                    echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'view', $order['Order']['id']), array('escape' => false, 'title' => 'Xem thông tin'));
+                                    echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'edit', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin'));
+                                }
+                                else{
+                                    echo $this->Html->link('<i class="glyphicon glyphicon-folder-open"></i>', array('action' => 'viewretail', $order['Order']['id']), array('escape' => false, 'title' => 'Xem thông tin'));
                                     echo $this->Html->link('<i class="glyphicon glyphicon-edit"></i>', array('action' => 'editretail', $order['Order']['id']), array('escape' => false, 'title' => 'Thay đổi thông tin'));
+                                }
                                 ?>
                             </td>
                         </tr>

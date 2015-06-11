@@ -336,7 +336,7 @@ $(document).ready(function () {
         var i_key = $(this).data('key');
         var  s_price = $(this).data('price');
         var tep = s_price;
-        var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val()
+        var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
         i_price = parseNumber(i_price);
         var type_box = $(this).closest('.popover-content').find('input[type=checkbox]');
         var type = 0;

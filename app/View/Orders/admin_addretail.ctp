@@ -58,8 +58,8 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <td class="text-right">
                                     <a href="javascript:;" class="pov" data-price="<?php echo $data['price']?>" data-key="<?php echo $key?>">
                                     <span class="price-text" id="<?php echo $key?>-price-text">
-                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span>
-                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo $data['mod_price']?>">
+                                        <?php echo number_format($data['mod_price'], 0, '.', ','); ?></span> <i class="icon icon-pen"></i>
+                                    <input type="hidden" name="data[OrderDetail][<?php echo $key?>][mod_price]" id="<?php echo $key?>-mod-price" value="<?php echo number_format($data['mod_price'], 0, '.', ',');?>">
                                     </a>
                                 </td>
                                 <td class="text-right">
@@ -166,25 +166,23 @@ echo $this->Html->css(array('order'), array('inline' => false));
 
                 </div>
                 <div class="col-md-12">
+                    <div class="input-group input-group-sm input-total">
+                        <span class="input-group-addon">Thành tiền</span>
+                        <?php
+                        echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
+                            'readonly' => 'readonly',
+                            'id' => 'summary-total',
+                            'class' => 'form-control',
+                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                        ));
+                        ?>
+                    </div>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active"><a href="#info-total" role="tab" data-toggle="tab">Thông tin</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="info-total">
                             <ul class="list-group no-margin">
-                                <li class="list-group-item">
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-addon">Thành tiền</span>
-                                        <?php
-                                        echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
-                                            'readonly' => 'readonly',
-                                            'id' => 'summary-total',
-                                            'class' => 'form-control',
-                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
-                                        ));
-                                        ?>
-                                    </div>
-                                </li>
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Khuyến mãi</span>
@@ -242,6 +240,19 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         ?>
                                     </div>
                                 </li>
+                                <li class="list-group-item">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon">Phí Ship</span>
+                                        <?php
+                                        echo $this->Form->input('ship_increment_price', array('label' => false,
+                                            'div' => false,
+                                            'class' => 'form-control',
+                                            'type' => 'text',
+                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                        ));
+                                        ?>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="note">
@@ -256,7 +267,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
             <div class="col-md-12">
                 <div class="text-center bt-done">
                     <div class="btn-group">
-                        <a class="btn btn-danger" onclick="history.back()">Trở về</a>
+                        <a class="btn btn-info" id="refresh">Làm mới</a>
                         <?php
                         echo '<button type="submit" class="btn btn-success" id="save">Thanh toán</button>';
                         ?>

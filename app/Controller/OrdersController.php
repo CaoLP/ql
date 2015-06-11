@@ -751,6 +751,13 @@ class OrdersController extends AppController
         if (!$this->Order->exists($id)) {
             throw new NotFoundException(__('Invalid order'));
         }
+        $this->Order->hasOne['Dept'] = array(
+                                                    'className' => 'Dept',
+                                                    'foreignKey' => 'order_id',
+                                                    'conditions' => '',
+                                                    'fields' => '',
+                                                    'order' => ''
+                                                );
         $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
         $this->request->data = $this->Order->find('first', $options);
         $customers = $this->Order->Customer->find('list');
@@ -771,10 +778,14 @@ class OrdersController extends AppController
                 $order_detail = $this->request->data['OrderDetail'];
                 $basic_total = 0;
                 $debt = 0;
-                foreach ($order_detail as $detail) {
+                $receive = str_replace(',', '', $this->request->data['Order']['receive']);
+                foreach ($order_detail as $k=>$detail) {
                     $data = json_decode($detail['data'], true);
                     $basic_total += $detail['qty'] * $data['retail_price'];
+                    $detail['mod_price'] = str_replace(',', '', $detail['mod_price']);
                     $total += $detail['qty'] * $detail['mod_price'];
+                    $order_detail[$k]['mod_price'] = $detail['mod_price'];
+                    $order_detail[$k]['promote_value'] = $data['retail_price'] - $detail['mod_price'];
                 }
                 if(empty($this->request->data['Order']['promote_value'])){
                     $this->request->data['Order']['promote_value'] = 0;
@@ -796,8 +807,8 @@ class OrdersController extends AppController
                     $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
                     return $this->redirect(array('action' => 'addretail'));
                 }else{
-                    if(empty($this->request->data['Order']['receive'])) $this->request->data['Order']['receive'] = 0;
-                    $debt = $amount - $this->request->data['Order']['receive'];
+                    if(empty($this->request->data['Order']['receive'])) $receive = 0;
+                    $debt = $amount - $receive;
                 }
                 if(empty($this->request->data['Order']['refund'])){
                     $this->request->data['Order']['refund'] = 0;
@@ -818,18 +829,30 @@ class OrdersController extends AppController
                         'code' => $orCode,
                         'total_promote' => $promote,
                         'amount' => $amount,
-                        'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                        'receive' => $receive,
                         'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
-                        'type' => 1
+                        'type' => 1,
+                        'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
                     )
                 );
-                debug($debt);
-                debug($saveData);die;
-
                 if ($this->Order->save($saveData)) {
                     $storeDetail = array();
 
                     $id = $this->Order->id;
+                    $saveDept = array(
+                        'Dept' => array(
+                            'name' => 'Nợ đơn hàng ['.$orCode.']',
+                            'customer_id' => $this->request->data['Order']['customer_id'],
+                            'order_id' => $id,
+                            'total' => $amount,
+                            'paid' => str_replace(',', '', $this->request->data['Order']['receive']),
+                            'pending' => $debt,
+                            'note' =>  $this->request->data['Order']['note'],
+                            'type' => 0,
+                        )
+                    );
+                    $this->loadModel('Dept');
+                    $this->Dept->save($saveDept);
                     //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
                     $this->loadModel('Warehouse');
                     $warehouse = array();
@@ -947,8 +970,8 @@ class OrdersController extends AppController
             $temp = array();
             foreach($this->request->data['OrderDetail'] as $key=>$detail){
                 $data = json_decode($detail['data'],true);
-                $data['mod_price'] = $detail['mod_price'];
-                $temp[$key]['mod_price'] = $detail['mod_price'];
+                $data['mod_price'] = str_replace(',', '', $detail['mod_price']);
+                $temp[$key]['mod_price'] = str_replace(',', '', $detail['mod_price']);
                 $temp[$key]['qty'] = $detail['qty'];
                 $temp[$key]['data'] = json_encode($data);
             }
@@ -967,19 +990,38 @@ class OrdersController extends AppController
             $total = 0;
             $amount = 0;
             $order_detail = $this->request->data['OrderDetail'];
-            $oldDetail = json_decode($this->request->data['oldData'],true);
-            $oldDetail = Set::combine($oldDetail['OrderDetail'],'{n}.product_id','{n}.qty');
-
-            foreach ($order_detail as $detail) {
+            $old_order = json_decode($this->request->data['oldData'],true);
+            $oldDetail = $old_order['OrderDetail'];
+            $oldDetail = Set::combine($oldDetail,'{n}.product_id','{n}');
+            $basic_total = 0;
+            $receive = str_replace(',', '', $this->request->data['Order']['receive']);
+            $debt = 0;
+            foreach ($order_detail as $k=>$detail) {
                 $data = json_decode($detail['data'], true);
-                $total += $detail['qty'] * $data['retail_price'];
+                $basic_total += $detail['qty'] * $data['retail_price'];
+                $detail['mod_price'] = str_replace(',', '', $detail['mod_price']);
+                $total += $detail['qty'] * $detail['mod_price'];
+                $order_detail[$k]['mod_price'] = $detail['mod_price'];
+                $order_detail[$k]['promote_value'] = $data['retail_price'] - $detail['mod_price'];
             }
             $promote = $this->request->data['Order']['promote_value'];
             if ($this->request->data['Order']['promote_type'] == 1) {
                 $promote = $total * ($promote / 100);
             }
-            $amount = $total - $promote;
+            if($promote == 0){
+                $promote = $basic_total - $total;
+                $amount = $total;
+            }else{
+                $amount = $total - $promote;
+            }
             $id = $this->request->data['Order']['id'];
+            if(!isset($this->request->data['Order']['debt'])){
+                $this->Session->setFlash(__('Vui lòng điền số tiền nhận từ khách.'), 'message', array('class' => 'alert-danger'));
+                return $this->redirect(array('action' => 'editretail',$id));
+            }else{
+                if(empty($this->request->data['Order']['receive'])) $receive = 0;
+                $debt = $amount - $receive;
+            }
             $saveData = array(
                 'Order' => array(
                     'id' => $this->request->data['Order']['id'],
@@ -989,6 +1031,8 @@ class OrdersController extends AppController
                     'promote_type' => $this->request->data['Order']['promote_type'],
                     'note' => $this->request->data['Order']['note'],
                     'store_id' => $this->request->data['Order']['store_id'],
+                    'flag_type' => $this->request->data['Order']['flag_type'],
+                    'basic_total' => $basic_total,
                     'total' => $total,
                     'code' => $this->request->data['Order']['code'],
                     'total_promote' => $promote,
@@ -997,6 +1041,7 @@ class OrdersController extends AppController
                     'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
                     'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
                     'type' => 1,
+                    'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
                 )
             );
             if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
@@ -1004,11 +1049,44 @@ class OrdersController extends AppController
             }
             if ($this->Order->save($saveData)) {
                 $this->Order->OrderDetail->deleteAll(array('OrderDetail.order_id' => $id), false);
-                $storeDetail = array();
 
+                $saveDept = array(
+                    'Dept' => array(
+                        'name' => 'Nợ đơn hàng ['.$this->request->data['Order']['code'].']',
+                        'customer_id' => $this->request->data['Order']['customer_id'],
+                        'order_id' => $id,
+                        'total' => $amount,
+                        'paid' => str_replace(',', '', $this->request->data['Order']['receive']),
+                        'pending' => $debt,
+                        'note' =>  $this->request->data['Order']['note'],
+                        'type' => 0,
+                    )
+                );
+                if(!empty($this->request->data['dept'])){
+                    $saveDept['Dept']['id'] = $this->request->data['dept'];
+                }
+                $this->loadModel('Dept');
+                $this->Dept->save($saveDept);
+
+                $storeDetail = array();
                 //`id`, `order_id`, `product_id`, `name`, `price`, `sku`, `qty`
                 $this->loadModel('Warehouse');
                 $warehouse = array();
+                foreach($oldDetail as $old_k=>$old_d){
+                    $data = json_decode($old_d['data'], true);
+                    $curData = $this->Warehouse->find('first', array(
+                        'conditions' => array(
+                            'Warehouse.id' => $data['warehouse'],
+                        ),
+                        'recursive' => -1
+                    ));
+                    $t= array();
+                    if(isset($curData['Warehouse']['id']) && isset($oldDetail[$curData['Warehouse']['product_id']])){
+                        $t['id'] = $curData['Warehouse']['id'];
+                        $t['qty'] = $curData['Warehouse']['qty'] + $oldDetail[$curData['Warehouse']['product_id']]['qty'];
+                        $warehouse[$curData['Warehouse']['id']] = $t;
+                    }
+                }
                 foreach ($order_detail as $detail) {
                     $data = json_decode($detail['data'], true);
                     $storeDetail[] = array(
@@ -1022,28 +1100,26 @@ class OrdersController extends AppController
                         'product_options' => $data['options'],
                         'data' => $detail['data'],
                     );
-                    $oldData = $this->Warehouse->find('first', array(
+                    $newData = $this->Warehouse->find('first', array(
                         'conditions' => array(
-                            'Warehouse.store_id' => $this->request->data['Order']['store_id'],
-                            'Warehouse.product_id' => $data['id'],
-                            'Warehouse.options' => $data['options']
+                            'Warehouse.id' => $data['warehouse'],
                         ),
                         'recursive' => -1
                     ));
 
                     $t = array();
-                    if (isset($oldData['Warehouse'])) {
-                        $t['id'] = $oldData['Warehouse']['id'];
-                        if(isset($oldDetail[$data['id']])){
-                            $t['qty'] = $oldData['Warehouse']['qty'] + $oldDetail[$data['id']] - $detail['qty'];
+                    if(isset($newData['Warehouse']['id'])){
+                        if(isset($warehouse[$newData['Warehouse']['id']])){
+                            $warehouse[$newData['Warehouse']['id']]['qty'] = $warehouse[$newData['Warehouse']['id']]['qty'] - $detail['qty'];
                         }else{
-                            $t['qty'] = $oldData['Warehouse']['qty'] - $detail['qty'];
+                            $t['id'] = $newData['Warehouse']['id'];
+                            $t['qty'] = $newData['Warehouse']['qty'] - $detail['qty'];
+                            $warehouse[$newData['Warehouse']['id']] = $t;
                         }
                     }
-                    $warehouse[] = $t;
                 }
-                $this->Order->OrderDetail->saveMany($storeDetail);
                 $this->Warehouse->saveMany($warehouse);
+                $this->Order->OrderDetail->saveMany($storeDetail);
                 $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                 $this->Session->delete('CartRetail');
 
@@ -1075,6 +1151,13 @@ class OrdersController extends AppController
                 $this->Session->setFlash(__('The order could not be saved. Please, try again.'), 'message', array('class' => 'alert-danger'));
             }
         } else {
+            $this->Order->hasOne['Dept'] = array(
+                'className' => 'Dept',
+                'foreignKey' => 'order_id',
+                'conditions' => '',
+                'fields' => '',
+                'order' => ''
+            );
             $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
             $this->request->data = $this->Order->find('first', $options);
             $this->request->data['oldData'] = json_encode($this->request->data);

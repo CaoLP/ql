@@ -323,7 +323,7 @@ $(document).ready(function () {
         if($(this).is(':checked')){
             $(this).closest('.popover-content').find('input[name=mod-price]').val(0).focus();
         }else{
-            $(this).closest('.popover-content').find('input[name=mod-price]').val(s_price).focus();
+            $(this).closest('.popover-content').find('input[name=mod-price]').val(digits(s_price)).focus();
         }
     });
     $(document).on('click','.popover-content button',function(){
@@ -335,6 +335,7 @@ $(document).ready(function () {
         var s_price = $(this).data('price');
         var tep = s_price;
         var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
+        i_price = parseNumber(i_price);
         var type_box = $(this).closest('.popover-content').find('input[type=checkbox]');
         var type = 0;
         if(type_box.is(':checked')){
@@ -351,7 +352,7 @@ $(document).ready(function () {
             }
                 var mod_price_field = $('#'+i_key+'-mod-price');
                 var price_field = $('#'+i_key+'-price-text');
-                mod_price_field.val(i_price);
+            	mod_price_field.val(digits(i_price));
                 $('#'+i_key+'-cur-price').data('price',i_price).change();
                 price_field.text(digits(i_price*1));
                 $('.pov').each(function () {
@@ -369,7 +370,7 @@ $(document).ready(function () {
 
                 i_price = s_price + s_price * (i_price/100);
 
-                mod_price_field.val(i_price);
+            	mod_price_field.val(digits(i_price));
                 $('#'+i_key+'-cur-price').data('price',i_price).change();
                 price_field.text(digits(i_price*1));
                 $('.pov').each(function () {
@@ -388,6 +389,9 @@ $(document).ready(function () {
         }
 
     });
+    $('#refresh').on('click',function(){
+        updatePrice();
+    })
 //    =============================================================
 //    END POPOVER
 //    =============================================================
@@ -440,7 +444,8 @@ $(document).ready(function () {
                 '<td class="text-right">' +
                 '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
                 '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
-                '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+pPrice+'">'+
+                ' <i class="icon icon-pen"></i>'+
+                '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+digits(pPrice)+'">'+
                 '</a>'+
                 '</td>' +
                 '<td class="text-right">' +
