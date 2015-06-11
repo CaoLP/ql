@@ -62,6 +62,11 @@ class AppController extends Controller {
         if($this->Session->read('Auth.User.id') == 8){
             $this->Toolbar = $this->Components->load('DebugKit.Toolbar');
         }
+        $this->loadModel('Post');
+        $news = $this->Post->find('first',array('fields'=>array('Post.id','Post.title','Post.type'),'conditions'=>array('Post.status'=>1),'recursive'=>-1));
+        if($news){
+            $this->set(compact('news'));
+        }
         parent::beforeFilter();
     }
 

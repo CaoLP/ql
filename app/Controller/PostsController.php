@@ -11,7 +11,12 @@ class PostsController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow("index", "view");      
+        $this->Auth->allow("index", "view");
+        $this->set('types', array(
+           'Bình thường',
+           'Chú ý',
+           'Quan trọng',
+        ));
 	}
 /**
  * home method
@@ -20,7 +25,6 @@ class PostsController extends AppController {
  */
 	public function admin_index() {
         $this->set('title', __('Posts'));        
-
 		$this->paginate = array('order'=>array('Post.created' => 'DESC'));
 		$this->Post->recursive = 0;
 		$this->set('posts', $this->paginate());

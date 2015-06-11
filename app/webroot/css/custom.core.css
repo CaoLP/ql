@@ -114,3 +114,16 @@
 .ui-helper-hidden-accessible{
     display: none;
 }
+.red{
+    color: #ff0000;
+}
+.warning{
+    color: rgb(255, 103, 0);
+}
+.blue{
+    color: #52bdff;
+}
+.marquee{
+    height: 35px;
+    overflow: hidden;
+}

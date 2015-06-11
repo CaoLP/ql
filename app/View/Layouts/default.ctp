@@ -58,6 +58,7 @@ setlocale(LC_MONETARY, "vi_VN");
     <div class="dashboard-wrapper">
         <div class="container">
             <?php echo $this->element('content_header') ?>
+            <?php echo $this->element('news')?>
             <div class="row">
                 <div class="col-md-12">
                     <?php echo $this->Session->flash(); ?>
@@ -96,6 +97,7 @@ echo $this->Html->script(array(
 
 ));
 echo $this->fetch('script');
+echo $this->Html->script('marquee.js');
 ?>
 <?php echo $this->fetch('scriptBottom'); ?>
 </body>

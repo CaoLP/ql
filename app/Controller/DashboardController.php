@@ -22,7 +22,11 @@ class DashboardController extends AppController {
 	 * @return void
 	 */
 	public function admin_index() {
-
+        $this->loadModel('Post');
+        $posts = $this->Post->find('all',array(
+            'order'=>array('Post.created' => 'DESC')
+        ));
+        $this->set(compact('posts'));
 	}
 
 }

@@ -9,6 +9,9 @@
             <?php echo $this->Form->input('status', array('class' => 'form-control', 'placeholder' => 'Status'));?>
         </div>
         <div class="form-group">
+            <?php echo $this->Form->input('type', array('class' => 'form-control', 'placeholder' => 'Type'));?>
+        </div>
+        <div class="form-group">
             <?php echo $this->Media->ckeditor('body', array('label' => array('text' => 'Nội dung', 'class' => 'control-label')));?>
         </div>
         <div class="form-group">
