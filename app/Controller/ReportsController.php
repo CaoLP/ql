@@ -254,6 +254,28 @@ class ReportsController extends AppController
             )
         ));
         $warehouse_logs = Set::combine($warehouse_logs, '{n}.WarehouseLog.product_id', '{n}.WarehouseLog');
+
+
+        $warehouse_logs_2 = $this->WarehouseLog->find('all', array(
+            'fields' => array('WarehouseLog.product_id','WarehouseLog.qty'),
+            'joins' => array(
+                array(
+                    'table' => "(SELECT warehouse_id , MIN(created) as min_created
+						from warehouse_logs
+						where created > '" . $date[1] . "' AND store_id = " . $store_id . "
+						group by warehouse_id)",
+                    'type' => 'INNER',
+                    'alias' => 'MinDate',
+                    'conditions' => array(
+                        'MinDate.min_created = WarehouseLog.created',
+                        'MinDate.warehouse_id = WarehouseLog.warehouse_id',
+                    )
+                )
+            )
+        ));
+        $warehouse_logs_2 = Set::combine($warehouse_logs_2, '{n}.WarehouseLog.product_id', '{n}.WarehouseLog');
+
+
         $array_rebuild = array();
         $this->loadModel('Store');
         $stores = $this->Store->find('list');
@@ -344,8 +366,6 @@ class ReportsController extends AppController
                 'category_id' => $p['Product']['category_id'],
                 'product_id' => $p['Warehouse']['product_id'],
             );
-            $summary['after_total'] += $p[0]['total'];
-            $summary['after_price'] += $p[0]['total'] * $p['Product']['price'] ;
 //            if($p['Warehouse']['product_id'] == 161) {
 //                debug($order_products[$p['Warehouse']['product_id']]['qty']);
 //                debug($in[$p['Warehouse']['product_id']]['qty']);
@@ -373,6 +393,16 @@ class ReportsController extends AppController
                 $summary['out_qty'] += $out[$p['Warehouse']['product_id']]['qty'];
                 $summary['out_price'] += $out[$p['Warehouse']['product_id']]['price'];
             }
+            if(isset($warehouse_logs_2[$p['Warehouse']['product_id']])){
+                $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p['Warehouse']['product_id']]['qty'];
+                $summary['after_total'] += $warehouse_logs_2[$p['Warehouse']['product_id']]['qty'];
+                $summary['after_price'] += $array_rebuild[$p['Warehouse']['product_id']]['after_total'] * $p['Product']['price'];
+            }else{
+
+                $summary['after_total'] += $p[0]['total'];
+                $summary['after_price'] += $p[0]['total'] * $p['Product']['price'] ;
+            }
+
             if(isset($warehouse_logs[$p['Warehouse']['product_id']])){
                 $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p['Warehouse']['product_id']]['qty'];
                 $summary['before_total'] += $warehouse_logs[$p['Warehouse']['product_id']]['qty'];
