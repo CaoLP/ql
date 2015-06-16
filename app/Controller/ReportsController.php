@@ -561,7 +561,7 @@ class ReportsController extends AppController
 //                    }
                     $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = 0;
                     if(count($order_products_sub_1) == 0 && count($in_sub_1) == 0 && count($out_sub_1)  == 0){
-                        $array_rebuild[$p['Warehouse']['product_id']]['before_total'] =  $warehouse_logs[$p_id]['WarehouseLog']['qty'];
+                        $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $array_rebuild[$p['Warehouse']['product_id']]['after_total'];
                     }else{
                         if(count($order_products_sub_1) > 0){
                             $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p_id]['WarehouseLog']['qty'] - $order_products_sub_1[$p_id]['qty'];
