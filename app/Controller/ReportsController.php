@@ -237,7 +237,7 @@ class ReportsController extends AppController
         ));
         $this->loadModel('WarehouseLog');
         $warehouse_logs = $this->WarehouseLog->find('all', array(
-            'fields' => array('WarehouseLog.product_id','WarehouseLog.qty'),
+            'fields' => array('WarehouseLog.product_id','WarehouseLog.qty','WarehouseLog.new_qty','MaxDate.max_created'),
             'joins' => array(
                 array(
                     'table' => "(SELECT warehouse_id , MAX(created) as max_created
@@ -253,11 +253,10 @@ class ReportsController extends AppController
                 )
             )
         ));
-        $warehouse_logs = Set::combine($warehouse_logs, '{n}.WarehouseLog.product_id', '{n}.WarehouseLog');
-
+        $warehouse_logs = Set::combine($warehouse_logs, '{n}.WarehouseLog.product_id', '{n}');
 
         $warehouse_logs_2 = $this->WarehouseLog->find('all', array(
-            'fields' => array('WarehouseLog.product_id','WarehouseLog.qty'),
+            'fields' => array('WarehouseLog.product_id','WarehouseLog.qty','WarehouseLog.new_qty','MinDate.min_created'),
             'joins' => array(
                 array(
                     'table' => "(SELECT warehouse_id , MIN(created) as min_created
@@ -273,7 +272,7 @@ class ReportsController extends AppController
                 )
             )
         ));
-        $warehouse_logs_2 = Set::combine($warehouse_logs_2, '{n}.WarehouseLog.product_id', '{n}.WarehouseLog');
+        $warehouse_logs_2 = Set::combine($warehouse_logs_2, '{n}.WarehouseLog.product_id', '{n}');
 
 
         $array_rebuild = array();
@@ -336,7 +335,7 @@ class ReportsController extends AppController
                 'Sum(InoutWarehouseDetail.qty_received * InoutWarehouseDetail.price) as price',
             ),
             'conditions' => array(
-                'InoutWarehouse.approved between ? and ?' => $date,
+                'InoutWarehouse.created between ? and ?' => $date,
                 'InoutWarehouse.status' => 1,
                 'InoutWarehouse.type' => 1,
                 'InoutWarehouse.store_id' => $store_id,
@@ -394,20 +393,196 @@ class ReportsController extends AppController
                 $summary['out_price'] += $out[$p['Warehouse']['product_id']]['price'];
             }
             if(isset($warehouse_logs_2[$p['Warehouse']['product_id']])){
-                $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p['Warehouse']['product_id']]['qty'];
-                $summary['after_total'] += $warehouse_logs_2[$p['Warehouse']['product_id']]['qty'];
+                if( $warehouse_logs_2[$p['Warehouse']['product_id']]['WarehouseLog']['new_qty'] > -1){
+                    $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p['Warehouse']['product_id']]['WarehouseLog']['new_qty'];
+                }else{
+                    $p_id= $p['Warehouse']['product_id'];
+                    $min_date = $warehouse_logs_2[$p['Warehouse']['product_id']]['MinDate']['min_created'];
+                    $min_date = date('Y-m-d H:i', strtotime($min_date));
+                    $order_products_sub_1 = $this->OrderDetail->find('all', array(
+                        'fields' => array(
+                            'OrderDetail.product_id',
+                            'Sum(OrderDetail.qty) as qty',
+                            'Sum(OrderDetail.qty * OrderDetail.price) as price',
+                            'Sum(OrderDetail.qty * OrderDetail.promote_value) as promote',
+                        ),
+                        'conditions' => array(
+                            'Order.created like' => '%'.$min_date.'%',
+//                            'Order.created like' => '%'.$min_date.'%',
+                            'OrderDetail.product_id'=> $p_id,
+                            'Order.status' => 1,
+                            'Order.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'OrderDetail.product_id'
+                        )
+                    ));
+                    $order_products_sub_1 = Set::combine($order_products_sub_1, '{n}.OrderDetail.product_id', '{n}.0');
+                    $in_sub_1 = $this->InoutWarehouseDetail->find('all', array(
+                        'fields' => array(
+                            'InoutWarehouseDetail.product_id',
+                            'Sum(InoutWarehouseDetail.qty) as qty',
+                            'Sum(InoutWarehouseDetail.qty * InoutWarehouseDetail.price) as price',
+                        ),
+                        'conditions' => array(
+                            'InoutWarehouse.approved like'=> '%'.$min_date.'%',
+                            'InoutWarehouseDetail.product_id'=> $p_id,
+                            'InoutWarehouse.status' => 1,
+                            'InoutWarehouse.type' => 0,
+                            'InoutWarehouse.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'InoutWarehouseDetail.product_id'
+                        )
+                    ));
+                    $in_sub_1 = Set::combine($in_sub_1, '{n}.InoutWarehouseDetail.product_id', '{n}.0');
+                    $out_sub_1 = $this->InoutWarehouseDetail->find('all', array(
+                        'fields' => array(
+                            'InoutWarehouseDetail.product_id',
+                            'Sum(InoutWarehouseDetail.qty_received) as qty',
+                            'Sum(InoutWarehouseDetail.qty_received * InoutWarehouseDetail.price) as price',
+                        ),
+                        'conditions' => array(
+                            'InoutWarehouse.created like'=> '%'.$min_date.'%',
+                            'InoutWarehouseDetail.product_id'=> $p_id,
+                            'InoutWarehouse.status' => 1,
+                            'InoutWarehouse.type' => 1,
+                            'InoutWarehouse.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'InoutWarehouseDetail.product_id'
+                        )
+                    ));
+                    $out_sub_1 = Set::combine($out_sub_1, '{n}.InoutWarehouseDetail.product_id', '{n}.0');
+
+
+                    $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = 0;
+                    if(count($order_products_sub_1) == 0 && count($in_sub_1) == 0 && count($out_sub_1)  == 0){
+                        $array_rebuild[$p['Warehouse']['product_id']]['after_total'] =  $warehouse_logs_2[$p_id]['WarehouseLog']['qty'];
+                    }else{
+                        if(count($order_products_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p_id]['WarehouseLog']['qty'] +  $order_products_sub_1[$p_id]['qty'];
+                        }
+                        if(count($in_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p_id]['WarehouseLog']['qty'] - $in_sub_1[$p_id]['qty'];
+                        }
+                        if(count($out_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p_id]['WarehouseLog']['qty'] + $out_sub_1[$p_id]['qty'];
+                        }
+                    }
+
+                }
+//                $array_rebuild[$p['Warehouse']['product_id']]['after_total'] = $warehouse_logs_2[$p['Warehouse']['product_id']]['qty'];
+                $summary['after_total'] += $array_rebuild[$p['Warehouse']['product_id']]['after_total'];
                 $summary['after_price'] += $array_rebuild[$p['Warehouse']['product_id']]['after_total'] * $p['Product']['price'];
             }else{
+                if( $array_rebuild[$p['Warehouse']['product_id']]['after_total'] == 0
+                && ($array_rebuild[$p['Warehouse']['product_id']]['in_qty'] > 0)
+                )
+                $array_rebuild[$p['Warehouse']['product_id']]['after_total'] =
+                     $array_rebuild[$p['Warehouse']['product_id']]['in_qty']
+                    - $array_rebuild[$p['Warehouse']['product_id']]['out_qty']
+                    - $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'];
 
-                $summary['after_total'] += $p[0]['total'];
-                $summary['after_price'] += $p[0]['total'] * $p['Product']['price'] ;
+                $summary['after_total'] += $array_rebuild[$p['Warehouse']['product_id']]['after_total'];
+                $summary['after_price'] += $array_rebuild[$p['Warehouse']['product_id']]['after_total'] * $p['Product']['price'] ;
             }
 
             if(isset($warehouse_logs[$p['Warehouse']['product_id']])){
-                $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p['Warehouse']['product_id']]['qty'];
-                $summary['before_total'] += $warehouse_logs[$p['Warehouse']['product_id']]['qty'];
+                if( $warehouse_logs[$p['Warehouse']['product_id']]['WarehouseLog']['new_qty'] > -1){
+                    $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p['Warehouse']['product_id']]['WarehouseLog']['new_qty'];
+                }else{
+                    $p_id= $p['Warehouse']['product_id'];
+                    $max_date = $warehouse_logs[$p['Warehouse']['product_id']]['MaxDate']['max_created'];
+                    $max_date = date('Y-m-d H:i', strtotime($max_date));
+                    $order_products_sub_1 = $this->OrderDetail->find('all', array(
+                        'fields' => array(
+                            'OrderDetail.product_id',
+                            'Sum(OrderDetail.qty) as qty',
+                            'Sum(OrderDetail.qty * OrderDetail.price) as price',
+                            'Sum(OrderDetail.qty * OrderDetail.promote_value) as promote',
+                        ),
+                        'conditions' => array(
+                            'Order.created like' => '%'.$max_date.'%',
+//                            'Order.created like' => '%'.$max_date.'%',
+                            'OrderDetail.product_id'=> $p_id,
+                            'Order.status' => 1,
+                            'Order.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'OrderDetail.product_id'
+                        )
+                    ));
+                    $order_products_sub_1 = Set::combine($order_products_sub_1, '{n}.OrderDetail.product_id', '{n}.0');
+                    $in_sub_1 = $this->InoutWarehouseDetail->find('all', array(
+                        'fields' => array(
+                            'InoutWarehouseDetail.product_id',
+                            'Sum(InoutWarehouseDetail.qty) as qty',
+                            'Sum(InoutWarehouseDetail.qty * InoutWarehouseDetail.price) as price',
+                        ),
+                        'conditions' => array(
+                            'InoutWarehouse.approved like'=> '%'.$max_date.'%',
+                            'InoutWarehouseDetail.product_id'=> $p_id,
+                            'InoutWarehouse.status' => 1,
+                            'InoutWarehouse.type' => 0,
+                            'InoutWarehouse.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'InoutWarehouseDetail.product_id'
+                        )
+                    ));
+                    $in_sub_1 = Set::combine($in_sub_1, '{n}.InoutWarehouseDetail.product_id', '{n}.0');
+                    $out_sub_1 = $this->InoutWarehouseDetail->find('all', array(
+                        'fields' => array(
+                            'InoutWarehouseDetail.product_id',
+                            'Sum(InoutWarehouseDetail.qty_received) as qty',
+                            'Sum(InoutWarehouseDetail.qty_received * InoutWarehouseDetail.price) as price',
+                        ),
+                        'conditions' => array(
+                            'InoutWarehouse.created like'=> '%'.$max_date.'%',
+                            'InoutWarehouseDetail.product_id'=> $p_id,
+                            'InoutWarehouse.status' => 1,
+                            'InoutWarehouse.type' => 1,
+                            'InoutWarehouse.store_id' => $store_id,
+                        ),
+                        'group' => array(
+                            'InoutWarehouseDetail.product_id'
+                        )
+                    ));
+                    $out_sub_1 = Set::combine($out_sub_1, '{n}.InoutWarehouseDetail.product_id', '{n}.0');
+//                    if($p_id == 497){
+//                        debug(
+//                            array(
+//                                $order_products_sub_1,
+//                                $in_sub_1,
+//                                $out_sub_1,
+//                            )
+//                        );
+//                    }
+                    $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = 0;
+                    if(count($order_products_sub_1) == 0 && count($in_sub_1) == 0 && count($out_sub_1)  == 0){
+                        $array_rebuild[$p['Warehouse']['product_id']]['before_total'] =  $warehouse_logs[$p_id]['WarehouseLog']['qty'];
+                    }else{
+                        if(count($order_products_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p_id]['WarehouseLog']['qty'] - $order_products_sub_1[$p_id]['qty'];
+                        }
+                        if(count($in_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p_id]['WarehouseLog']['qty'] + $in_sub_1[$p_id]['qty'];
+                        }
+                        if(count($out_sub_1) > 0){
+                            $array_rebuild[$p['Warehouse']['product_id']]['before_total'] = $warehouse_logs[$p_id]['WarehouseLog']['qty'] - $out_sub_1[$p_id]['qty'];
+                        }
+                    }
+                }
+                $summary['before_total'] += $array_rebuild[$p['Warehouse']['product_id']]['before_total'];
                 $summary['before_price'] += $array_rebuild[$p['Warehouse']['product_id']]['before_total'] * $p['Product']['price'];
             }else{
+
+//                if($p['Warehouse']['product_id'] == 497){
+//                    debug(array(
+//                        $array_rebuild[$p['Warehouse']['product_id']]
+//                    ));
+//                }
                 $array_rebuild[$p['Warehouse']['product_id']]['before_total'] =
                     $array_rebuild[$p['Warehouse']['product_id']]['after_total']
                     - $array_rebuild[$p['Warehouse']['product_id']]['in_qty']
