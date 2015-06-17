@@ -86,7 +86,7 @@ class MediasController extends AppController{
                         'ref_id' => $this->request->data['id'],
                     );
                 }
-              //  $this->Media->saveMany($saveData);
+                $this->Media->saveMany($saveData);
                 $this->loadModel($ref);
                 $product = $this->$ref->find('first', array('conditions' => array('Product.id' => $this->request->data['id']), 'recursive' => -1));
                 if (empty($product['Product']['media_id'])) {

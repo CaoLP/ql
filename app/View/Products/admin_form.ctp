@@ -14,6 +14,8 @@ echo $this->Html->script(
         'inline' => false
     )
 );
+$isAdmin = false;
+if($this->Session->read('Auth.User.group_id')) $isAdmin = true;
 ?>
 <?php echo $this->Form->create('Product', array(
     'class' => 'form-horizontal',
@@ -67,6 +69,7 @@ echo $this->Html->script(
                     <?php
                     echo $this->Form->input('price', array('label' => array('text' => 'Giá bán lẻ', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('retail_price', array('label' => array('text' => 'Giá bán sỉ', 'class' => 'col-lg-2 control-label')));
+                    if($isAdmin)
                     echo $this->Form->input('source_price', array('label' => array('text' => 'Giá tiền gốc', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('excert', array('label' => array('text' => 'Tóm tắt', 'class' => 'col-lg-2 control-label')));
                     ?>
