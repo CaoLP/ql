@@ -50,7 +50,7 @@ $(function(){
         '    <td><div class="p-total price-text text-right"></div><div style="display: none" class="p-hidden-info"></div>' +
         '    </td>'+
         '</tr>';
-
+        
         var id = $(this).data('key');
 
         var total = $(id).data('total');

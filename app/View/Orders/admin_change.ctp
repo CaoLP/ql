@@ -72,14 +72,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                             <td colspan="7" style="padding: 0">
                                 <table id="tb-<?php echo $key;?>" data-id="<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
                                     <tr style="background-color: rgba(229, 255, 202, 0.33)">
-                                        <td style="width: 10px; padding: 0">
-                                            <a href="javascript:;" class="btn add-more" data-key="#tb-<?php echo $key;?>"><i class="icon icon-plus"></i></a>
-                                        </td>
-                                        <td style="width: 150px"><input class="form-control input-sm product-p"></td>
-                                        <td style="width: 250px"><div class="p-name"></div></td>
-                                        <td><div class="p-price price-text text-right"></div></td>
-                                        <td><div class="p-qty text-right"></div></td>
-                                        <td><div class="get-total p-total price-text text-right" total="0"></div><div style="display: none" class="p-hidden-info"></div></td>
+                                        <td colspan="7"><input class="form-control input-sm product-p"  data-key="#tb-<?php echo $key;?>"></td>
                                     </tr>
                             </table>
                             </td>
