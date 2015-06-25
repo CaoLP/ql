@@ -34,7 +34,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                     <?php
                     foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                         ?>
-                        <tr class="row<?php echo $key?>">
+                        <tr class="row_table" data-key="<?php echo $key?>">
                             <td>
                                 <?php echo $key+1?>
                             </td>
@@ -68,13 +68,13 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                             ?>
                             <textarea style="display: none;" name="OrderDetail[<?php echo $key;?>][oldData]" ><?php echo json_encode($temp_data);?></textarea>
                         </tr>
-                        <tr>
+                        <tr style="background-color: rgba(229, 255, 202, 0.33)">
+                            <td colspan="7"><input class="form-control input-sm product-p"  data-key="#tb-<?php echo $key;?>"></td>
+                        </tr>
+                        <tr class="row_<?php echo $key?>_table">
                             <td colspan="7" style="padding: 0">
                                 <table id="tb-<?php echo $key;?>" data-id="<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
-                                    <tr style="background-color: rgba(229, 255, 202, 0.33)">
-                                        <td colspan="7"><input class="form-control input-sm product-p"  data-key="#tb-<?php echo $key;?>"></td>
-                                    </tr>
-                            </table>
+                                </table>
                             </td>
                         </tr>
                     <?php
