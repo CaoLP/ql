@@ -24,6 +24,7 @@ class DashboardController extends AppController {
 	public function admin_index() {
         $this->loadModel('Post');
         $posts = $this->Post->find('all',array(
+			'conditions'=>array('Post.status'=>1),
             'order'=>array('Post.created' => 'DESC')
         ));
         $this->set(compact('posts'));

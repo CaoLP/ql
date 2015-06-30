@@ -352,6 +352,15 @@ echo $this->Html->css(array('order'), array('inline' => false));
                     <div class="row">
                         <div class="col-md-12">
                             <div class="input-group">
+                                <div class="input-group-addon">Mã thẻ</div>
+                                <input name="data[Customer][code]" class="form-control"
+                                       type="text" id="CustomerCode" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
                                 <div class="input-group-addon">Tên Khách</div>
                                 <input name="data[Customer][name]" class="form-control"
                                        type="text" id="CustomerName" required="required">

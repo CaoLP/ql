@@ -54,6 +54,7 @@ $(document).ready(function () {
                 Customer: {
                     name: cus_name,
                     phone: $('#CustomerPhone').val(),
+                    code: $('#CustomerCode').val(),
                     email: $('#CustomerEmail').val(),
                     facebook: $('#CustomerFacebook').val(),
                     address: $('#CustomerAddress').val(),

@@ -14,7 +14,7 @@ setlocale(LC_MONETARY, "vi_VN");
                     if(isset($this->request->data['q'])) echo $this->request->data['q'];
                     ?>" placeholder="Theo mã">
                     <?php
-                    if($this->Session->read('Auth.User.group_id') == 1){
+//                    if($this->Session->read('Auth.User.group_id') == 1){
                         ?>
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon">Cửa hàng</span>
@@ -23,7 +23,7 @@ setlocale(LC_MONETARY, "vi_VN");
                             ?>
                         </div>
                     <?php
-                    }
+//                    }
                     ?>
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">Nhân viên</span>

@@ -27,6 +27,7 @@
 					<tr>
 						<th><?php echo $this->Paginator->sort ('id'); ?></th>
 						<th><?php echo $this->Paginator->sort ('name','Tên'); ?></th>
+						<th><?php echo $this->Paginator->sort ('code','Code'); ?></th>
 						<th><?php echo $this->Paginator->sort ('phone','Số điện thoại'); ?></th>
 						<th><?php echo $this->Paginator->sort ('email','Thư điện tử'); ?></th>
 						<th><?php echo $this->Paginator->sort ('address','Địa chỉ'); ?></th>
@@ -42,6 +43,7 @@
 						<tr>
 							<td><?php echo h ($customer['Customer']['id']); ?></td>
 							<td><?php echo h ($customer['Customer']['name']); ?></td>
+							<td><?php echo h ($customer['Customer']['code']); ?></td>
 							<td><?php echo h ($customer['Customer']['phone']); ?></td>
 							<td><?php echo h ($customer['Customer']['email']); ?></td>
 							<td><?php echo h ($customer['Customer']['address']); ?></td>

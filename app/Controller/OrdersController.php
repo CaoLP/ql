@@ -66,13 +66,13 @@ class OrdersController extends AppController
                     $input =$this->request->data['q'];
                     $settings['conditions']['Order.code like'] = '%' . $input . '%';
                 }
-                if($this->Session->read('Auth.User.group_id') == 1){
+//                if($this->Session->read('Auth.User.group_id') == 1){
                     if(isset($this->request->data['store_id']) && !empty($this->request->data['store_id'])){
                         $settings['conditions']['Order.store_id'] = $this->request->data['store_id'];
                     }
-                }else{
-                    $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
-                }
+//                }else{
+//                    $settings['conditions']['Order.store_id'] = $this->Session->read('Auth.User.store_id');
+//                }
                 if(isset($this->request->data['status']) && $this->request->data['status'] !=''){
                     $settings['conditions']['Order.status'] = $this->request->data['status'];
                 }else{

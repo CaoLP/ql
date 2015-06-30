@@ -38,6 +38,7 @@ if ($this->request->params['action'] == 'admin_add') {
 													  ),
 												));
 					echo $this->Form->input('name',array ('label' => array ('text' => 'Tên khách', 'class' => 'col-lg-2 control-label')));
+					echo $this->Form->input('code',array ('label' => array ('text' => 'Code', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('phone',array ('label' => array ('text' => 'Số điện thoại', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('email',array ('label' => array ('text' => 'Email', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('facebook',array ('label' => array ('text' => 'Facebook', 'class' => 'col-lg-2 control-label')));

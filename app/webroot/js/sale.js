@@ -29,6 +29,7 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 });
 
 $(document).ready(function () {
+    $('#p-search').focus();
     $("#p-search").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.
         showHeader: true,
