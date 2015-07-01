@@ -218,6 +218,7 @@ class OrdersController extends AppController
                     $this->request->data['Order']['refund'] = 0;
                 }
                 $orCode = 'BL'.date('dmYhms');
+                $receive = str_replace(',', '', $this->request->data['Order']['receive']);
                 $saveData = array(
                     'Order' => array(
                         'customer_id' => $this->request->data['Order']['customer_id'],
@@ -233,9 +234,10 @@ class OrdersController extends AppController
                         'code' => $orCode,
                         'total_promote' => $promote,
                         'amount' => $amount,
-                        'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                        'receive' => $receive,
                         'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
                         'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
+                        'point' => round($amount/Configure::read('point_cal'))
                     )
                 );
                 if ($this->Order->save($saveData)) {
@@ -413,6 +415,7 @@ class OrdersController extends AppController
             }
 
             $id = $this->request->data['Order']['id'];
+            $receive = str_replace(',', '', $this->request->data['Order']['receive']);
             $saveData = array(
                 'Order' => array(
                     'id' => $this->request->data['Order']['id'],
@@ -429,9 +432,10 @@ class OrdersController extends AppController
                     'total_promote' => $promote,
                     'status' => 1,
                     'amount' => $amount,
-                    'receive' => str_replace(',', '', $this->request->data['Order']['receive']),
+                    'receive' => $receive,
                     'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
                     'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
+                    'point' => round($amount/Configure::read('point_cal'))
                 )
             );
             if(isset($this->request->data['Order']['created']) && !empty($this->request->data['Order']['created'])){
