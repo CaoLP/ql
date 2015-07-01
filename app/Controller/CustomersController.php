@@ -39,7 +39,10 @@ class CustomersController extends AppController {
         $this->Customer->recursive = 0;
          $this->paginate = array(
             'conditions' => array(
-                'Customer.name LIKE'=>'%'.$name.'%'
+				'OR' => array(
+					'Customer.name LIKE'=>'%'.$name.'%',
+					'Customer.code'=> $name
+				)
             )
         );
         $this->set('customers', $this->Paginator->paginate());

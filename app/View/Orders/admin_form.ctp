@@ -10,6 +10,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
 <script>
     var ajax_url = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'product_ajax'))?>';
     var saveUrl = '<?php echo $this->Html->url(array('controller'=>'orders','action'=>'admin_save_cart'))?>';
+    var customerUrl = '<?php echo $this->Html->url(array('controller'=>'customers','action'=>'index'))?>';
     var store_id = '<?php echo $this->Session->read('Auth.User.store_id')?>';
     var promotes = <?php echo json_encode($promoteData);?>;
     var customers = <?php echo json_encode($customers);?>;
@@ -20,7 +21,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
         <div class="widget">
             <div class="widget-header">
                 <div class="title pull-right" style="width: 70%">
-                    <input class="form-control" id="p-search">
+                    <input class="form-control" id="p-search" autocomplete='off'>
                 </div>
                 <h3>Nhập hàng</h3>
             </div>

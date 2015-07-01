@@ -71,7 +71,10 @@ class Customer extends AppModel {
  public function search($name, $not_recursive = false){
      $params = array(
          'conditions'=>array(
-             'Customer.name LIKE'=>'%'.$name.'%'
+			 'OR' => array(
+                 'Customer.name LIKE'=>'%'.$name.'%',
+                 'Customer.code'=> $name
+             )
          )
      );
     if($not_recursive){

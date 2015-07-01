@@ -30,34 +30,60 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 
 $(document).ready(function () {
     $('#p-search').focus();
-    $('#p-search').on('keyup',function(e){
-        var code = e.keyCode
-        if (code == 13) {
-            $.ajax({
-                url: ajax_url + '/' + store_id,
-                dataType: 'json',
-                data: {
-                    term: $(this).val().trim()
-                },
-                // The success event handler will display "No match found" if no items are returned.
-                success: function (data) {
-                    if(typeof data.Product.id != "undefined"){
-                        addProduct(
-                            data.Product.id,
-                            data.Product.code,
-                            data.Product.name,
-                            data.Product.options,
-                            data.Product.qty,
-                            data.Product.optionsName,
-                            data.Product.price,
-                            JSON.stringify(data.Product)
-                        )
+    $('#p-search').on('keyup paste',function(e){
+        var field = $(this);
+        clearTimeout(field.data('timeout'));
+        $(this).data('timeout', setTimeout(function(){
+            if(field.val().match(/^[A-Za-z]/)){
+                $.ajax({
+                    url: ajax_url + '/' + store_id,
+                    dataType: 'json',
+                    data: {
+                        term: field.val().trim()
+                    },
+                    // The success event handler will display "No match found" if no items are returned.
+                    success: function (data) {
+                        if(typeof data[0] != "undefined"){
+                            field.val('');
+                            addProduct(
+                                data[0].Product.id,
+                                data[0].Product.code,
+                                data[0].Product.name,
+                                data[0].Product.options,
+                                data[0].Product.qty,
+                                data[0].Product.optionsName,
+                                data[0].Product.price,
+                                JSON.stringify(data[0].Product)
+                            );
+                        }
                     }
-                }
-            });
-        }
+                });
+            }else if(field.val().match(/[0-9]/g) != null){
+                $.ajax({
+                    url: customerUrl,
+                    dataType: 'json',
+                    data: {
+                        term: field.val().trim()
+                    },
+                    // The success event handler will display "No match found" if no items are returned.
+                    success: function (data) {
+                        if(typeof data[0] != "undefined"){
+                            field.val('');
+                            $('#input-customer').val(data[0].Customer.name);
+                            $('#input-customer-id').val(data[0].Customer.id);
+                            console.log(data[0]);
+                        }else{
+                            $('#CustomerCode').val(field.val());
+                            field.val('');
+                            $('#customer').modal('show');
+                        }
+                    }
+                });
+
+            }
+        }, 200));
     });
-    $("#xxxx").mcautocomplete({
+    $("#p-searchxx").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.
         showHeader: true,
         columns: [
@@ -426,108 +452,6 @@ $(document).ready(function () {
 //    END POPOVER
 //    =============================================================
 
-
-    function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
-        var duplicated = false;
-        $('#order-product-list tr').each(function () {
-            var listId = $(this).data('id'),
-                listOptions = $(this).data('options');
-            if (pId == listId && pOptions == listOptions) {
-                duplicated = true;
-                var hiddenQty = $(this).find('.qty');
-                var to = parseInt(hiddenQty.val()) + 1;
-                if (to > parseInt(limit)) {
-                    alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
-                    to = limit;
-                    return false;
-                }
-                hiddenQty.val(to);
-                var newPrice = hiddenQty.val();
-                newPrice = newPrice * pPrice;
-                $(this).find('.new-total-price').text(digits(newPrice));
-                return false;
-            }
-        });
-        if (!duplicated) {
-            if (parseInt(limit) < 1) {
-                alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
-                return false;
-            }
-            var uuid = uniqId();
-            pPrice = pPrice * 1;
-            var template = '<tr class="row' + uuid + '" data-id="' + pId + '" data-options="' + pOptions + '">' +
-                '<td>' +
-                '<a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '">' +
-                '<i class="icon-close"></i>' +
-                '</a>' +
-                '</td>' +
-                '<td class="text-left">' +
-                '<span>' + pSku + '</span>' +
-                '</td>' +
-                '<td class="text-left">' +
-                '<span>' + pName + '</span>' +
-                '<br><span class="opt">' + optionNames + '</span>' +
-                '</td>' +
-                '<td class="text-right">' +
-                ' <span class="price-text">'+ digits(pPrice) +'</span>'+
-                '</td>'+
-                '<td class="text-right">' +
-                '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
-                '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
-                ' <i class="icon icon-pen"></i>'+
-                '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+digits(pPrice)+'">'+
-                '</a>'+
-                '</td>' +
-                '<td class="text-right">' +
-                '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-                '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
-                '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
-                '</td>' +
-                '<td class="text-right">' +
-                '<span class="new-total-price price-text">' + digits(pPrice) + '</span>' +
-                '<textarea type="hidden" style="display: none" name="data[OrderDetail][' + uuid + '][data]">' + pData + '</textarea>' +
-                '</td>' +
-                '</tr>';
-            $('#order-product-list').append(template);
-        }
-        updatePrice();
-    }
-    function removeRow(row) {
-        $(row).remove();
-        updatePrice();
-    }
-
-
-    function updatePrice() {
-        var summary = 0;
-        $('#order-product-list .qty').each(function () {
-            var price = $(this).data('basic_price');
-            var qty = $(this).val();
-            summary += parseInt(price) * parseInt(qty);
-        });
-        $('#summary-total').val(summary);
-        $('#summary-total').change();
-        $('#OrderReceive').change();
-        saveCart();
-    }
-
-    function uniqId() {
-        return Math.round(new Date().getTime() + (Math.random() * 100));
-    }
-
-    function parseNumber(number) {
-        number = number.replace(/\..+/g, '');
-        number = number.replace(/,/g, '');
-        number = parseInt(number);
-        if (isNaN(number)) number = 0;
-        return number;
-    }
-
-    function digits(number) {
-        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-    }
-
-
 //    filter
     $('.btn-expand').on('click',function(){
         var position = $('#panel-from-left').css('left');
@@ -559,38 +483,138 @@ $(document).ready(function () {
     $(document).on('change','#search-select',function(){
         loadajaxPro({q:$('#search-input').val(),category_id:$(this).val()});
     });
-    function loadajaxProPage(link){
-        $.ajax({
-            url : link,
-            type : 'post',
-            beforeSend: function(){
-                var loading = '<div class="col-md-12 text-center">'+
-                    '<img src="/img/select2-spinner.gif">'+
-                    '</div>';
-                $('#product-list').html(loading);
-            },
-            success: function(response){
-                $('#product-list').html(response);
-            }
-        });
-    }
-    function loadajaxPro(data){
-        $.ajax({
-            url : product_ajax + '/' + store_id,
-            type : 'post',
-            data : data,
-            beforeSend: function(){
-                var loading = '<div class="col-md-12 text-center">'+
-                    '<img src="/img/select2-spinner.gif">'+
-                    '</div>';
-                $('#product-list').html(loading);
-            },
-            success: function(response){
-                $('#product-list').html(response);
-            }
-        });
-    }
+
 });
+function loadajaxProPage(link){
+    $.ajax({
+        url : link,
+        type : 'post',
+        beforeSend: function(){
+            var loading = '<div class="col-md-12 text-center">'+
+                '<img src="/img/select2-spinner.gif">'+
+                '</div>';
+            $('#product-list').html(loading);
+        },
+        success: function(response){
+            $('#product-list').html(response);
+        }
+    });
+}
+function loadajaxPro(data){
+    $.ajax({
+        url : product_ajax + '/' + store_id,
+        type : 'post',
+        data : data,
+        beforeSend: function(){
+            var loading = '<div class="col-md-12 text-center">'+
+                '<img src="/img/select2-spinner.gif">'+
+                '</div>';
+            $('#product-list').html(loading);
+        },
+        success: function(response){
+            $('#product-list').html(response);
+        }
+    });
+}
+function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData) {
+    var duplicated = false;
+    $('#order-product-list tr').each(function () {
+        var listId = $(this).data('id'),
+            listOptions = $(this).data('options');
+        if (pId == listId && pOptions == listOptions) {
+            duplicated = true;
+            var hiddenQty = $(this).find('.qty');
+            var to = parseInt(hiddenQty.val()) + 1;
+            if (to > parseInt(limit)) {
+                alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+                to = limit;
+                return false;
+            }
+            hiddenQty.val(to);
+            var newPrice = hiddenQty.val();
+            newPrice = newPrice * pPrice;
+            $(this).find('.new-total-price').text(digits(newPrice));
+            return false;
+        }
+    });
+    if (!duplicated) {
+        if (parseInt(limit) < 1) {
+            alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+            return false;
+        }
+        var uuid = uniqId();
+        pPrice = pPrice * 1;
+        var template = '<tr class="row' + uuid + '" data-id="' + pId + '" data-options="' + pOptions + '">' +
+            '<td>' +
+            '<a href="javascript:;" class="remove-row" data-needremove=".row' + uuid + '">' +
+            '<i class="icon-close"></i>' +
+            '</a>' +
+            '</td>' +
+            '<td class="text-left">' +
+            '<span>' + pSku + '</span>' +
+            '</td>' +
+            '<td class="text-left">' +
+            '<span>' + pName + '</span>' +
+            '<br><span class="opt">' + optionNames + '</span>' +
+            '</td>' +
+            '<td class="text-right">' +
+            ' <span class="price-text">'+ digits(pPrice) +'</span>'+
+            '</td>'+
+            '<td class="text-right">' +
+            '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
+            '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
+            ' <i class="icon icon-pen"></i>'+
+            '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+digits(pPrice)+'">'+
+            '</a>'+
+            '</td>' +
+            '<td class="text-right">' +
+            '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
+            '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
+            '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
+            '</td>' +
+            '<td class="text-right">' +
+            '<span class="new-total-price price-text">' + digits(pPrice) + '</span>' +
+            '<textarea type="hidden" style="display: none" name="data[OrderDetail][' + uuid + '][data]">' + pData + '</textarea>' +
+            '</td>' +
+            '</tr>';
+        $('#order-product-list').append(template);
+    }
+    updatePrice();
+}
+function removeRow(row) {
+    $(row).remove();
+    updatePrice();
+}
+
+
+function updatePrice() {
+    var summary = 0;
+    $('#order-product-list .qty').each(function () {
+        var price = $(this).data('basic_price');
+        var qty = $(this).val();
+        summary += parseInt(price) * parseInt(qty);
+    });
+    $('#summary-total').val(summary);
+    $('#summary-total').change();
+    $('#OrderReceive').change();
+    saveCart();
+}
+
+function uniqId() {
+    return Math.round(new Date().getTime() + (Math.random() * 100));
+}
+
+function parseNumber(number) {
+    number = number.replace(/\..+/g, '');
+    number = number.replace(/,/g, '');
+    number = parseInt(number);
+    if (isNaN(number)) number = 0;
+    return number;
+}
+
+function digits(number) {
+    return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+}
 function saveCart(){
     $.ajax({
         url: saveUrl,
