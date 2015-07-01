@@ -30,7 +30,34 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 
 $(document).ready(function () {
     $('#p-search').focus();
-    $("#p-search").mcautocomplete({
+    $('#p-search').on('keyup',function(e){
+        var code = e.keyCode
+        if (code == 13) {
+            $.ajax({
+                url: ajax_url + '/' + store_id,
+                dataType: 'json',
+                data: {
+                    term: $(this).val().trim()
+                },
+                // The success event handler will display "No match found" if no items are returned.
+                success: function (data) {
+                    if(typeof data.Product.id != "undefined"){
+                        addProduct(
+                            data.Product.id,
+                            data.Product.code,
+                            data.Product.name,
+                            data.Product.options,
+                            data.Product.qty,
+                            data.Product.optionsName,
+                            data.Product.price,
+                            JSON.stringify(data.Product)
+                        )
+                    }
+                }
+            });
+        }
+    });
+    $("#xxxx").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.
         showHeader: true,
         columns: [
