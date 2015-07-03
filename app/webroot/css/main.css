@@ -3161,7 +3161,7 @@ form input[type=checkbox] {
 }
 
 .ui-datepicker {
-    z-index: 10 !important;
+    z-index: 1061 !important;
 }
 
 .error-input {

@@ -46,16 +46,23 @@ $(document).ready(function () {
     }
         ;
     $('#submit-customer').on('click', function () {
+        if(!validate($('#customer'))) return false;
         var cus_name = $('#CustomerName').val();
         $.ajax({
             url: '/admin/customers/add',
             type: 'POST',
             data: {
                 Customer: {
-                    name: cus_name,
                     phone: $('#CustomerPhone').val(),
+                    name: $('#CustomerName').val(),
                     code: $('#CustomerCode').val(),
                     email: $('#CustomerEmail').val(),
+                    gender: $('#customer *[name="data[Customer][gender]"]').val(),
+                    birthday: {
+                        'day' : $('#customer *[name="data[Customer][birthday][day]"]').val(),
+                        'month' : $('#customer *[name="data[Customer][birthday][month]"]').val(),
+                        'year' : $('#customer *[name="data[Customer][birthday][year]"]').val()
+                    },
                     facebook: $('#CustomerFacebook').val(),
                     address: $('#CustomerAddress').val(),
                     district: $('#CustomerDistrict').val(),
@@ -81,3 +88,26 @@ $(document).ready(function () {
         });
     });
 });
+function validate(obj){
+    var has_error = false;
+    obj.find(':input').each(function(i,v){
+        if(typeof $(v).attr('required') != "undefined"){
+            if($(v).val().trim().length == 0 || $(v).val() == ""){
+                $(v).focus();
+                has_error = true;
+                return false;
+            }
+        }
+        if(typeof $(v).attr('num-max') != "undefined"){
+            if($(v).val() > $(v).attr('num-max')){
+                $(v).focus();
+                has_error = true;
+                return false;
+            }
+        }
+    });
+    if(!has_error)
+        return true;
+    else
+        return false;
+}

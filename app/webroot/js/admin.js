@@ -80,6 +80,16 @@ $(document).ready(function(){
         buttonText: 'Chọn ngày',
         dateFormat : 'yy-mm-dd'
     });
+    $( ".datepicker4" ).datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        buttonText: 'Chọn ngày',
+        dateFormat : 'yy-mm-dd',
+        showOn: "button",
+        buttonImage: "/img/dateIcon.png",
+        buttonImageOnly: true
+    });
     $('#real-log-btn').on('click',function(){
         $('#real-log-btn').hide();
         $('#real-log').css('right','0px');
@@ -96,5 +106,33 @@ $(document).ready(function(){
     $('#real-log-close').on('click',function(){
         $('#real-log').css('right','-350px');
         $('#real-log-btn').show();
+    });
+    $(document).on('keydown', '*[data-type=number]', function (e) {
+        var min = $(this).attr('min');
+        var max = $(this).attr('max');
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: Ctrl+C
+            (e.keyCode == 67 && e.ctrlKey === true) ||
+            // Allow: Ctrl+X
+            (e.keyCode == 88 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }else{
+            if(typeof min != "undefined" && typeof min != "undefined"){
+                if($(this).val().length == max) {
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
     });
 });

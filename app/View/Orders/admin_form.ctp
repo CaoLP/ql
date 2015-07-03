@@ -380,9 +380,41 @@ echo $this->Html->css(array('order'), array('inline' => false));
                     <div class="row">
                         <div class="col-md-12">
                             <div class="input-group">
+                                <div class="input-group-addon">Birthday</div>
+                                <div class="input-group-addon" style="width: 10%">Ngày</div>
+                                <input name="data[Customer][birthday][day]" class="input-sm"
+                                   num-max="31" data-type="number" min="1" max="2" type="text" required="required">
+                                <div class="input-group-addon" style="width: 10%">Tháng</div>
+                                <input name="data[Customer][birthday][month]" class="input-sm"
+                                   num-max="12" data-type="number" min="1" max="2" type="text" required="required">
+                                <div class="input-group-addon" style="width: 10%">Năm</div>
+                                <input name="data[Customer][birthday][year]" class="input-sm"
+                                   data-type="number" min="4" max="4" type="text" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-addon">Giới tính</div>
+                                <div class="input-group-addon" style="width: 30%">Nam
+                                    <input name="data[Customer][gender]" class="form-control"
+                                           type="radio" checked required="required" value="0">
+                                </div>
+                                <div class="input-group-addon" style="width: 30%">Nữ
+                                    <input name="data[Customer][gender]" class="form-control"
+                                           type="radio" required="required" value="1">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
                                 <div class="input-group-addon">Email</div>
                                 <input name="data[Customer][email]" class="form-control"
-                                       type="text" id="CustomerEmail" required="required">
+                                       type="text" id="CustomerEmail">
                             </div>
                         </div>
                     </div>
@@ -391,7 +423,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                             <div class="input-group">
                                 <div class="input-group-addon">Facebook</div>
                                 <input name="data[Customer][facebook]" class="form-control"
-                                       type="text" id="CustomerFacebook" required="required">
+                                       type="text" id="CustomerFacebook">
                             </div>
                         </div>
                     </div>
@@ -400,7 +432,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                             <div class="input-group">
                                 <div class="input-group-addon">Địa chỉ</div>
                                 <input name="data[Customer][address]" class="form-control"
-                                       type="text" id="CustomerAddress" required="required">
+                                       type="text" id="CustomerAddress">
                             </div>
                         </div>
                     </div>
@@ -409,7 +441,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                             <div class="input-group">
                                 <div class="input-group-addon">Quận huyện</div>
                                 <input name="data[Customer][district]" class="form-control"
-                                       type="text" id="CustomerDistrict" required="required">
+                                       type="text" id="CustomerDistrict">
                             </div>
                         </div>
                     </div>
@@ -418,7 +450,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                             <div class="input-group">
                                 <div class="input-group-addon">Thành phố</div>
                                 <input name="data[Customer][city]" class="form-control"
-                                       type="text" id="CustomerCity" required="required">
+                                       type="text" id="CustomerCity">
                             </div>
                         </div>
                     </div>

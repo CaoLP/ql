@@ -39,6 +39,21 @@ if ($this->request->params['action'] == 'admin_add') {
 												));
 					echo $this->Form->input('name',array ('label' => array ('text' => 'Tên khách', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('code',array ('label' => array ('text' => 'Code', 'class' => 'col-lg-2 control-label')));
+					echo $this->Form->input('birthday',array ('label' => array ('text' => 'Ngày sinh', 'class' => 'col-lg-2 control-label'),'class'=>''));
+                    echo $this->Form->input('gender', array(
+                            'options' => array(
+                                '0' => 'Nam',
+                                '1' => 'Nữ'
+                            ),
+                            'before' => '<div class="col-lg-2 control-label"><strong>Giới tính</strong></div><div class="col-lg-5">',
+                            'separator' => '</div><div class="col-lg-5">',
+                            'after' => '</div>',
+                            'type'  => 'radio',
+                            'class' => 'input-sm col-lg-2',
+                            'label' => array ('class' => 'col-lg-2 control-label'),
+                            'legend' => false
+                        )
+                    );
 					echo $this->Form->input('phone',array ('label' => array ('text' => 'Số điện thoại', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('email',array ('label' => array ('text' => 'Email', 'class' => 'col-lg-2 control-label')));
 					echo $this->Form->input('facebook',array ('label' => array ('text' => 'Facebook', 'class' => 'col-lg-2 control-label')));
