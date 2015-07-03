@@ -62,13 +62,13 @@
 
                     $numb = 1;
                     foreach ($order as $o) {
-                        $total1 += $o['total'];
+                        $total1 += $o['basic_total'];
                         $total2 += $o['total_promote'];
                         $total3 += $o['amount'];
                         $total4 += $o['receive'];
                         $total5 += $o['refund'];
 
-                        $summary1 += $o['total'];
+                        $summary1 += $o['basic_total'];
                         $summary2 += $o['total_promote'];
                         $summary3 += $o['amount'];
                         $summary4 += $o['receive'];
@@ -83,7 +83,7 @@
                         ?>">
                             <td><?php echo $numb; ?></td>
                             <td><?php echo $o['code']; ?></td>
-                            <td class="text-right price-text"><?php echo number_format($o['total'], 0, '.', ','); ?></td>
+                            <td class="text-right price-text"><?php echo number_format($o['basic_total'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo number_format($o['total_promote'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo number_format($o['amount'], 0, '.', ','); ?></td>
                             <td class="text-right price-text"><?php echo $customers[$o['customer_id']]['name'];//echo number_format($o['receive'], 0, '.', ','); ?></td>
