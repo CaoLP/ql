@@ -42,9 +42,11 @@ foreach($worksessions_d as $wk){
             </div>
             <div class="widget-body">
                 <?php foreach($staff_attendances as $staff_id => $worked_sessions) {?>
+                    <?php $salary = $salaries[$users_role[$staff_id]];?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                       <h5 class="att-staff-name"><?php echo $this->Html->link($users[$staff_id], array('action' => 'view',$staff_id)); ?></h5>
+                       <h5 class="att-staff-name"><?php echo $this->Html->link($users[$staff_id], array('action' => 'view',$staff_id)); ?>
+                           <span>[ Lương cơ bản : <?php echo $this->Common->formatMoney($salary)?> ]</span></h5>
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -55,7 +57,11 @@ foreach($worksessions_d as $wk){
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($worked_sessions as $session_id => $attendances) { ?>
+                                <?php $time = 0;
+                                $ontime = 0;
+                                $late = 0;
+                                $incorrect = 0;
+                                foreach ($worked_sessions as $session_id => $attendances) { ?>
                                 <tr>
                                     <td colspan="<?php echo date('d',strtotime($end))?>">
                                         <strong><?php echo $worksessions[$session_id]?></strong>
@@ -63,12 +69,26 @@ foreach($worksessions_d as $wk){
                                 </tr>
                                 <tr>
                                     <?php
-                                    $time = 0;
+
                                     $attendances = Set::combine($attendances, '{n}.StaffAttendance.date', '{n}.StaffAttendance');
-                                    echo $this->Common->createCalendarTable($end,'td',$attendances, $time);
+                                    echo $this->Common->createCalendarTable($end,'td',$attendances, $time, $ontime, $late, $incorrect);
                                     ?>
                                 </tr>
                                 <?php }?>
+                                <tr>
+                                    <?php
+                                    $total_days = date('d',strtotime($end));
+                                    $salary_per_day = round($salary/$total_days);
+                                    ?>
+                                    <td class="text-right" colspan="<?php echo date('d',strtotime($end))?>">
+                                        <strong>Tổng công làm : <?php echo $time;?></strong><br>
+                                        <strong>Đúng giờ : <?php echo $ontime;?></strong><br>
+                                        <strong>Trể giờ : <?php echo $late;?></strong><br>
+                                        <strong>Không điểm : <?php echo $incorrect;?></strong>
+                                        <hr>
+                                        <strong>Lương ước tính : <?php echo $this->Common->formatMoney($salary_per_day*$time);?></strong><br>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td colspan="<?php echo date('d',strtotime($end))?>">
                                         <div class="label-attendance"><strong>Ghi chú màu sắc : </strong></div>

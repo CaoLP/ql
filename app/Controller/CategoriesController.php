@@ -22,6 +22,12 @@ class CategoriesController extends AppController {
 	 * @return void
 	 */
 	public function admin_index () {
+//        $test = $this->Category->find('all');
+//        foreach($test as $t){
+//            $temp = $t;
+//            $temp['Category']['slug'] = $this->make_slug($temp['Category']['name']);
+//            $this->Category->save($temp['Category']);
+//        }
 		$this->Category->recursive = 0;
 		if ($this->request->isAjax ()) {
 			$this->set ('categories', $this->Category->find('list'));

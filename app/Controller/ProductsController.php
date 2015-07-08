@@ -23,6 +23,12 @@ class ProductsController extends AppController {
  * @return void
  */
 	public function admin_index() {
+//        $test = $this->Product->find('all');
+//        foreach($test as $t){
+//            $temp = $t;
+//            $temp['Product']['slug'] = $this->make_slug($temp['Product']['name']) . '-' . $temp['Product']['id'];
+//            $this->Product->save($temp['Product']);
+//        }
 		if($this->request->isAjax()){
 			$input='';
 			if(isset($this->request->query['term'])) $input = $this->request->query['term'];
@@ -249,7 +255,8 @@ class ProductsController extends AppController {
         $providersDataCode =Set::combine($providersData,'{n}.Provider.id','{n}.Provider.code');
         $categoriesDataCode =Set::combine($categories,'{n}.Category.id','{n}.Category.code');
         if ($this->request->is(array('post', 'put'))) {
-		
+            if(!isset($this->request->data['Product']['slug']) || empty($this->request->data['Product']['slug']))
+                $this->request->data['Product']['slug'] = $this->make_slug($this->request->data['Product']['name']) .'-'.$this->request->data['Product']['id'];
 			if ($this->Product->save($this->request->data)) {
 				$product_id = $this->request->data['Product']['id'];
                 if(isset($this->request->data['ProductOption']['option_id']) && $this->request->data['ProductOption']['option_id'] && count($this->request->data['ProductOption']['option_id']) >0){

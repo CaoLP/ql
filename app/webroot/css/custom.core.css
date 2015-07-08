@@ -50,6 +50,10 @@
     background-color: rgba(82, 189, 255, 0.29);
     color: rgb(0, 0, 0);
 }
+.attendance-supper-danger{
+    background-color: rgb(117, 0, 8);
+    color: rgb(255, 255, 255);
+}
 .label-attendance {
     position: relative;
     margin-right: 5px;

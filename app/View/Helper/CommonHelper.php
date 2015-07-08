@@ -8,7 +8,7 @@
 
 class CommonHelper extends AppHelper {
 
-    public function createCalendarTable($date, $type = 'th', $data='', &$time = 0 , $link=false){
+    public function createCalendarTable($date, $type = 'th', $data='', &$time = 0 , &$ontime = 0, &$late = 0,&$incorect = 0){
         $begin = date('Y-m-01',strtotime($date));
         $end = date('Y-m-t',strtotime($date));
         $result = '';
@@ -33,17 +33,25 @@ class CommonHelper extends AppHelper {
                     $t_late_e =  $data[$t]['delay_time_end'];
                     $total = $data[$t]['total'];
                     $total = $this->convertToHoursMins($total);
-                    if($total > 0 && $data[$t]['delay_time_begin'] == 0 && $data[$t]['delay_time_end'] == 0){
+                    $time++;
+                    if($total > 0 && $data[$t]['delay_time_begin'] <= 0 && $data[$t]['delay_time_end'] <= 0){
                         $class = 'attendance-ok';
-                    }
-                    $time+=$data[$t]['total'];
+                        $ontime++;
+                    }else
                     if($data[$t]['type'] == 1) {
                         $class = 'error-begin';
                         $total = 'B';
-                    }
+                        $incorect++;
+                    }else
                     if($data[$t]['type'] == 2) {
                         $class = 'error-end';
                         $total = 'E';
+                        $incorect++;
+                    }else{
+                        if($total == 0){
+                            $class = "attendance-supper-danger";
+                        }else
+                            $late++;
                     }
                 }else{
                     $class="not-attendance";
@@ -58,9 +66,9 @@ class CommonHelper extends AppHelper {
                             title="Thông tin điểm danh"
                             data-content="
                             <strong>Bắt đầu : </strong> <span>'.$t_begin.'</span> <br>
-                            <strong>Đi trể : </strong> <span>'.$t_late_b.'</span> <br>
+                            <strong>Đi trể : </strong> <span>'.($t_late_b < 0 ? 0 : $t_late_b).'</span> <br>
                             <strong>Kết thúc : </strong> <span>'.$t_end.'</span> <br>
-                            <strong>Về sớm : </strong> <span>'.$t_late_e.'</span> <br>
+                            <strong>Về sớm : </strong> <span>'.($t_late_e < 0 ? 0 : $t_late_e) .'</span> <br>
                             ">';
                 $result.= $total;
                 $result.= '</a>';

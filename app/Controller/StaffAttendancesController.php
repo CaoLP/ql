@@ -31,10 +31,11 @@ class StaffAttendancesController extends AppController
     public function admin_index()
     {
         $this->StaffAttendance->recursive = -1;
-        $users = $this->StaffAttendance->User->find('list');
-        $salaries = $this->StaffAttendance->StaffWorkSession->find('list',array(
-            'fields' =>'temp_id, basic_salary'
-        ));
+        $users_data = $this->StaffAttendance->User->find('all',array('recursive' => -1));
+        $users_role = Set::combine($users_data ,'{n}.User.id','{n}.User.group_id');
+        $users = Set::combine($users_data,'{n}.User.id','{n}.User.name');
+        $salaries = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive' => -1));
+        $salaries = Set::combine($salaries,'{n}.StaffWorkSession.group_id','{n}.StaffWorkSession.basic_salary');
         $this->loadModel('WorkSession');
         $worksessions_d = $this->WorkSession->find('all', array('recursive'=>-1));
         $res = array();
@@ -107,7 +108,7 @@ class StaffAttendancesController extends AppController
             $months[$i] = $i;
             $years[(date('Y') - 4)+$i] = (date('Y') - 4)+$i;
         }
-        $this->set(compact('staff_attendances','users','worksessions_d','salaries','years','months','end'));
+        $this->set(compact('staff_attendances','users','worksessions_d','salaries','years','months','end','users_role','users_data'));
         /*
                 if(isset($this->request->query['sample'])){
                     $listAt = $this->StaffAttendance->StaffWorkSession->find('all',array('recursive'=>-1));
