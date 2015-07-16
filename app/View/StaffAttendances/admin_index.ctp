@@ -97,6 +97,7 @@ foreach($worksessions_d as $wk){
                                         <div class="label-attendance not-attendance">Chưa điểm danh</div>
                                         <div class="label-attendance error-begin">Không điểm danh bắt đầu</div>
                                         <div class="label-attendance error-end">Không điểm danh kết thúc</div>
+                                        <div class="label-attendance attendance-supper-danger">Bắt đầu = Kết thúc</div>
                                     </td>
                                 </tr>
                                 </tbody>

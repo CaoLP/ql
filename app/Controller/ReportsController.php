@@ -659,6 +659,7 @@ class ReportsController extends AppController
                 'Product.name',
                 'Product.sku',
                 'Product.price',
+                'Product.category_id',
                 'Product.retail_price',
                 'Product.source_price',
             ),
@@ -795,12 +796,20 @@ class ReportsController extends AppController
                 'sale_price' => 0,
                 'after_total' => $p[0]['total'],
                 'profit' => 0,
+                'category_id' => $p['Product']['category_id'],
+                'product_id' => $p['Warehouse']['product_id'],
             );
             $summary['after_total'] += $p[0]['total'];
             if (isset($order_products[$p['Warehouse']['product_id']])) {
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_qty'] = $order_products[$p['Warehouse']['product_id']]['qty'];
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_promote'] = $order_products[$p['Warehouse']['product_id']]['promote'];
                 $array_rebuild[$p['Warehouse']['product_id']]['sale_price'] = $order_products[$p['Warehouse']['product_id']]['price'];
+
+                $total_source = $p['Product']['source_price'] * $order_products[$p['Warehouse']['product_id']]['qty'];
+                $sale= $array_rebuild[$p['Warehouse']['product_id']]['sale_price'];
+                $array_rebuild[$p['Warehouse']['product_id']]['profit'] = $sale - $total_source;
+
+                $summary['profit'] += $array_rebuild[$p['Warehouse']['product_id']]['profit'];
                 $summary['sale_qty'] += $order_products[$p['Warehouse']['product_id']]['qty'];
                 $summary['sale_price'] += $order_products[$p['Warehouse']['product_id']]['price'];
             }
@@ -838,9 +847,13 @@ class ReportsController extends AppController
             }
         }
 //        die;
-        $products = $array_rebuild;
+        $categories = Set::combine($array_rebuild,'{n}.code','{n}','{n}.category_id');
+        $this->loadModel('Category');
+        $cats = $this->Category->find('list');
+        //$products = $array_rebuild;
         $this->set('title_for_layout', 'Báo cáo thống kê lợi nhuận từ ' . $date[0] . ' đến ' . $date[1]);
-        $this->set(compact('products', 'stores', 'order_products', 'date', 'summary'));
+        //$this->set(compact('products', 'stores', 'order_products', 'date', 'summary'));
+        $this->set(compact('categories', 'stores', 'order_products', 'date', 'summary','cats'));
     }
 
 }
