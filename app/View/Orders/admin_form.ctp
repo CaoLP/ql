@@ -15,6 +15,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
     var promotes = <?php echo json_encode($promoteData);?>;
     var customers = <?php echo json_encode($customers);?>;
     var product_ajax = '<?php echo $this->Html->url(array('controller'=>'warehouses','action'=>'ajax_product'))?>';
+    var point_cal = <?php echo Configure::read('point_cal',10000);?>;
 </script>
 <div class="row">
     <div class="col-md-8">
@@ -253,6 +254,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'div' => false,
                                             'class' => 'form-control',
                                             'type' => 'text',
+                                            'readonly' => 'readonly',
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>

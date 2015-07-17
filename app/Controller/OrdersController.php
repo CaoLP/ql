@@ -237,7 +237,7 @@ class OrdersController extends AppController
                         'receive' => $receive,
                         'refund' => str_replace(',', '', $this->request->data['Order']['refund']),
                         'ship_increment_price' => str_replace(',', '', $this->request->data['Order']['ship_increment_price']),
-                        'point' => round($amount/Configure::read('point_cal'))
+                        'point' => round($basic_total/Configure::read('point_cal'))
                     )
                 );
                 if ($this->Order->save($saveData)) {

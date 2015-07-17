@@ -597,6 +597,7 @@ function updatePrice() {
     $('#summary-total').val(summary);
     $('#summary-total').change();
     $('#OrderReceive').change();
+    $('#OrderPoint').val(Math.round(summary/point_cal))
     saveCart();
 }
 
