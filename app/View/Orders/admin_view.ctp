@@ -128,25 +128,23 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
 
             </div>
             <div class="col-md-12">
+                <div class="input-group input-group-sm input-total">
+                    <span class="input-group-addon">Thành tiền</span>
+                    <?php
+                    echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
+                        'readonly' => 'readonly',
+                        'id' => 'summary-total',
+                        'class' => 'form-control',
+                        'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                    ));
+                    ?>
+                </div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#info-total" role="tab" data-toggle="tab">Thông tin</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="info-total">
                         <ul class="list-group no-margin">
-                            <li class="list-group-item">
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-addon">Thành tiền</span>
-                                    <?php
-                                    echo $this->Form->input('basic_total', array('label' => false, 'type' => 'text', 'div' => false,
-                                        'readonly' => 'readonly',
-                                        'id' => 'summary-total',
-                                        'class' => 'form-control',
-                                        'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
-                                    ));
-                                    ?>
-                                </div>
-                            </li>
                             <li class="list-group-item">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-addon">Khuyến mãi</span>
@@ -202,6 +200,40 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','view_order'), array('
                                     ?>
                                 </div>
                             </li>
+                            <?php
+                            if($this->request->data['Customer']['id'] != 1 && $this->request->data['Customer']['id'] != 2){
+                                ?>
+                            <li class="list-group-item">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Điểm tích lũy</span>
+                                    <?php
+                                    echo $this->Form->input('point', array('label' => false,
+                                        'div' => false,
+                                        'class' => 'form-control',
+                                        'type' => 'text',
+                                        'readonly' => 'readonly',
+                                        'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                    ));
+                                    ?>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Tổng điểm tích lũy</span>
+                                    <?php
+                                    echo $this->Form->input('Customer.point', array('label' => false,
+                                        'div' => false,
+                                        'class' => 'form-control',
+                                        'type' => 'text',
+                                        'readonly' => 'readonly',
+                                        'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                    ));
+                                    ?>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                            ?>
                         </ul>
                     </div>
                     <div class="tab-pane fade" id="note">

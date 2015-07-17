@@ -247,9 +247,9 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 </li>
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
-                                        <span class="input-group-addon">Phí Ship</span>
+                                        <span class="input-group-addon">Điểm tích lũy</span>
                                         <?php
-                                        echo $this->Form->input('ship_increment_price', array('label' => false,
+                                        echo $this->Form->input('point', array('label' => false,
                                             'div' => false,
                                             'class' => 'form-control',
                                             'type' => 'text',

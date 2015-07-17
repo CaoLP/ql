@@ -283,7 +283,10 @@ class OrdersController extends AppController
                     $this->Session->setFlash(__('The order has been saved.'), 'message', array('class' => 'alert-success'));
                     $this->Session->delete('Cart');
 
-
+                    $this->Order->Customer->updateAll(
+                        array('Customer.point' => 'Customer.point + ' . $saveData['Order']['point']),
+                        array('Customer.id' => $saveData['Order']['customer_id'])
+                    );
 
                     $this->loadModel('OrderLog');
 

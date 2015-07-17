@@ -3034,9 +3034,11 @@ form input[type=checkbox] {
     border: 1px solid rgba(0, 0, 0, 0.25) !important;
     margin-top: 15px;
 }
-
+.order-w-b-s  .nav > li > a{
+    padding: 1px 15px;
+}
 .order-w-b-s {
-    height: 355px;
+    max-height: 355px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -3317,6 +3319,7 @@ span.help-inline {
     width: 350px;
     overflow-y: auto;
     border-left: 1px solid rgba(82, 189, 255, 0.81);
+    z-index: 1000;
 }
 #real-log .title{
     font-size: 20px;

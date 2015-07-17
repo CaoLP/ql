@@ -102,6 +102,20 @@
             <td colspan="4" class="bill-bold">Tiền thừa</td>
             <td class="text-right"><?php echo number_format($this->request->data['Order']['refund'], 0, '.', ',');?></td>
         </tr>
+        <?php
+        if($this->request->data['Customer']['id'] != 1 && $this->request->data['Customer']['id'] != 2){
+        ?>
+        <tr class="dot-bottom">
+            <td colspan="4" class="bill-bold">Điểm tích lũy cho đơn hàng</td>
+            <td class="text-right"><?php echo number_format($this->request->data['Order']['point'], 0, '.', ',');?></td>
+        </tr>
+        <tr class="dot-bottom">
+            <td colspan="4" class="bill-bold">Điểm tích lũy hiện có</td>
+            <td class="text-right"><?php echo number_format($this->request->data['Customer']['point'], 0, '.', ',');?></td>
+        </tr>
+        <?php
+        }
+        ?>
         <tr>
             <td colspan="5" class="text-center bill-italic">
                 Trân trọng cảm ơn quý khách hàng
