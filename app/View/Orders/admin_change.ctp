@@ -12,7 +12,10 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
 <div class="col-md-8">
     <div class="widget">
         <div class="widget-header">
-            <h3>Đơn hàng</h3>
+            <div class="title pull-right" style="width: 70%">
+                <input class="form-control" id="p-search" autocomplete='off'>
+            </div>
+            <h3>Đổi hàng</h3>
         </div>
         <?php
         echo $this->Form->create('Order', array('class' => 'form-horizontal'));
@@ -23,6 +26,7 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                 if($this->request->data['OrderDetail']){
                     ?>
                     <tr>
+                        <th></th>
                         <th>Stt</th>
                         <th></th>
                         <th  style="width: 150px" class="text-left">Mã hàng</th>
@@ -35,6 +39,9 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                     foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
                         ?>
                         <tr class="row_table" data-key="<?php echo $key?>">
+                            <td>
+                                <a href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                            </td>
                             <td>
                                 <?php echo $key+1?>
                             </td>
@@ -55,34 +62,76 @@ echo $this->Html->script(array('sale', 'jquery.inputmask','change'), array('inli
                                     $op = implode(',',$temp);
                                     echo $op;
                                     ?></span></td>
-                            <td class="text-right"><span class="price-text"><?php echo number_format($order_detail['price'], 0, '.', ','); ?></span></td>
+                            <td class="text-right"><span class="price-text"><?php echo $this->Common->formatMoney($order_detail['price']); ?></span></td>
                             <td class="text-right" id="old-qty-text-<?php echo $key;?>" qty="<?php echo $order_detail['qty']?>" staticQty="<?php echo $order_detail['qty']?>">
+                                <a href="javascript:;"><i class="glyphicon glyphicon-minus-sign"></i></a>
                                 <?php echo $order_detail['qty']?>
+                                <a href="javascript:;"><i class="glyphicon glyphicon-plus-sign"></i></a>
                             </td>
                             <td class="text-right">
-                                <span id="new-total-price-<?php echo $key;?>" class="price-text get-total" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo number_format(($order_detail['qty'] * $order_detail['price']),0, '.', ',')?></span>
+                                <span id="new-total-price-<?php echo $key;?>" class="price-text get-total" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo $this->Common->formatMoney(($order_detail['qty'] * $order_detail['price']))?></span>
+                                <?php
+                                $temp_data = $order_detail;
+                                unset($temp_data['data'])
+                                ?>
+                                <textarea style="display: none;" name="OrderDetail[<?php echo $key;?>][oldData]" ><?php echo json_encode($temp_data);?></textarea>
                             </td>
-                            <?php
-                            $temp_data = $order_detail;
-                            unset($temp_data['data'])
-                            ?>
-                            <textarea style="display: none;" name="OrderDetail[<?php echo $key;?>][oldData]" ><?php echo json_encode($temp_data);?></textarea>
-                        </tr>
-                        <tr style="background-color: rgba(229, 255, 202, 0.33)">
-                            <td colspan="7"><input class="form-control input-sm product-p"  data-key="#tb-<?php echo $key;?>"></td>
-                        </tr>
-                        <tr class="row_<?php echo $key?>_table">
-                            <td colspan="7" style="padding: 0">
-                                <table id="tb-<?php echo $key;?>" data-id="<?php echo $key;?>" data-total="<?php echo $order_detail['qty'];?>">
-                                </table>
-                            </td>
+
                         </tr>
                     <?php
                     }
+
                     ?>
                 <?php
                 }
                 ?>
+                <tr>
+                    <td colspan="8">
+                        <hr>
+                        <table>
+                            <?php  foreach($this->request->data['OrderDetail'] as $key=>$order_detail){
+                                ?>
+                                <tr class="row_table" data-key="<?php echo $key?>">
+                                    <td>
+                                        <a href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                                    </td>
+                                    <td>
+                                        <?php echo $key+1?>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td class="text-left" style="width: 150px"><span><?php echo $order_detail['code']?></span></td>
+                                    <td class="text-left" style="width: 250px"><span><?php
+                                            echo $order_detail['name']
+                                            ?></span><br><span class="opt">
+                                    <?php
+                                    $opts = explode(',',$order_detail['product_options']);
+                                    $temp = array();
+                                    foreach($opts as $opt){
+                                        if(isset($options[$opt]))
+                                            $temp[] = $options[$opt];
+                                    }
+                                    $op = implode(',',$temp);
+                                    echo $op;
+                                    ?></span></td>
+                                    <td class="text-right"><span class="price-text"><?php echo $this->Common->formatMoney($order_detail['price']); ?></span></td>
+                                    <td class="text-right" id="old-qty-text-<?php echo $key;?>" qty="<?php echo $order_detail['qty']?>" staticQty="<?php echo $order_detail['qty']?>">
+                                        <a href="javascript:;"><i class="glyphicon glyphicon-minus-sign"></i></a>
+                                        <?php echo $order_detail['qty']?>
+                                        <a href="javascript:;"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                                    </td>
+                                    <td class="text-right">
+                                        <span id="new-total-price-<?php echo $key;?>" class="price-text get-total" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo $this->Common->formatMoney(($order_detail['qty'] * $order_detail['price']))?></span>
+                                        <textarea style="display: none;" name="OrderNewDetail[<?php echo $key;?>][data]" ><?php echo json_encode($order_detail);?></textarea>
+                                    </td>
+                                </tr>
+                                <?php
+                            }?>
+                        </table>
+                    </td>
+                </tr>
+
             </table>
         </div>
     </div>
