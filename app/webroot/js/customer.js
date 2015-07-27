@@ -10,6 +10,13 @@ $(document).ready(function () {
             return false;
         }
     });
+    $('[rel=popover]').popover({
+        html:true,
+        placement:'left',
+        content:function(){
+            return $($(this).data('contentwrapper')).html();
+        }
+    });
     $( "#input-customer" ).autocomplete({
         minLength: 0,
         source: customers,

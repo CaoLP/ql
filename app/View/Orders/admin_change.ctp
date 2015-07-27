@@ -40,7 +40,7 @@ echo $this->Html->script(array('jquery.inputmask','change'), array('inline' => f
                         ?>
                         <tr class="row_table" data-key="<?php echo $key?>">
                             <td>
-                                <a href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                                <a href="javascript:;" class="remove-row" ><i class="glyphicon glyphicon-trash"></i></a>
                             </td>
                             <td>
 
@@ -61,14 +61,13 @@ echo $this->Html->script(array('jquery.inputmask','change'), array('inline' => f
                                     ?></span></td>
                             <td class="text-right"><span class="price-text"><?php echo $this->Common->formatMoney($order_detail['price']); ?></span></td>
                             <td class="text-right" id="old-qty-text-<?php echo $key;?>" qty="<?php echo $order_detail['qty']?>" staticQty="<?php echo $order_detail['qty']?>">
-                                <a href="javascript:;"><i class="glyphicon glyphicon-minus-sign"></i></a>
-                                <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]"
+                                <a href="javascript:;" class="price-down"><i class="glyphicon glyphicon-minus-sign"></i></a>
+                                <input class="qty" id="<?php echo $key?>-cur-price" name="data[OrderDetail][<?php echo $key?>][qty]" data-limit="<?php echo $order_detail['qty']?>"
                                        data-price="<?php echo $order_detail['price']?>"  value="<?php echo $order_detail['qty']?>">
-
-                                <a href="javascript:;"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                                <a href="javascript:;" class="price-up"><i class="glyphicon glyphicon-plus-sign"></i></a>
                             </td>
                             <td class="text-right">
-                                <span id="new-total-price-<?php echo $key;?>" class="price-text get-total" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo $this->Common->formatMoney(($order_detail['qty'] * $order_detail['price']))?></span>
+                                <span id="new-total-price-<?php echo $key;?>" class="price-text new-total-price" price="<?php echo $order_detail['price'];?>" total="<?php echo ($order_detail['qty'] * $order_detail['price']);?>"><?php echo $this->Common->formatMoney(($order_detail['qty'] * $order_detail['price']))?></span>
                                 <?php
                                 $temp_data = $order_detail;
                                 unset($temp_data['data'])
@@ -226,6 +225,20 @@ echo $this->Html->script(array('jquery.inputmask','change'), array('inline' => f
                                         'readonly' => 'readonly',
                                         'class' => 'form-control',
                                         'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
+                                    ));
+                                    ?>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Đã thanh toán</span>
+                                    <?php
+                                    echo $this->Form->input('amount', array('label' => false, 'type' => 'text',
+                                                                            'id' =>"paid",
+                                                                            'div' => false,
+                                                                            'readonly' => 'readonly',
+                                                                            'class' => 'form-control',
+                                                                            'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                     ));
                                     ?>
                                 </div>

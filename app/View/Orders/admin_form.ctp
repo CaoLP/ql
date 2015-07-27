@@ -112,7 +112,6 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <li class="list-group-item">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-addon">Khách hàng</span>
-
                                         <?php
                                         echo $this->Form->hidden('store_id', array('value' => $this->Session->read('Auth.User.store_id')));
                                         ?>
@@ -464,6 +463,46 @@ echo $this->Html->css(array('order'), array('inline' => false));
                 </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" data-original-title="">Đóng</button>
             </div>
+        </div>
+    </div>
+</div>
+<a href="#" class="btn btn-info" id="btn-search-customer" data-contentwrapper="#search-customer"  rel="popover"><i class="icon-search"></i></a>
+<div class="hidden" id="search-customer">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <strong>Tìm kiếm khách hàng</strong>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control" placeholder="Nhập tên hoặc SĐT" name="term">
+                        <div class="input-group-btn">
+                            <button class="btn btn-info"><i class="icon-search"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+
         </div>
     </div>
 </div>

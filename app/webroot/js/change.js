@@ -73,8 +73,7 @@ $(function(){
 
     $(document).on('click', '.remove-row', function () {
         if (confirm("Bạn có muốn xoá sản phẩm này không?")) {
-            var id = $(this).data('needremove');
-            $(id).remove();
+            $(this).closest('tr').remove();
             updatePrice();
         }
     });
@@ -110,7 +109,6 @@ $(function(){
             $('#OrderPromoteValue').val(value);
             $('#OrderPromoteType').val(type);
             $('#summary-total').change();
-            $('#OrderFlagType').val('3');
         }else{
             $('#OrderPromoteValue').val(0);
             $('#OrderPromoteType').val('');
@@ -123,33 +121,40 @@ $(function(){
         var amount = $('#OrderAmount');
         var promote_val =  $('#OrderPromoteValue').val();
         var promote_type = $('#OrderPromoteType').val();
+        var paid  = parseNumber($('#paid').val());
         var result = 0;
         var total = parseNumber($(this).val());
-        if($('#OrderFlagType').val() == '3' || $('#OrderFlagType').val() == ''){
-            if(promote_type == 0){
-                $('#OrderTotalPromote').val(promote_val);
-            }else
-            if(promote_type == 1){
-                promote_val = total * (parseNumber(promote_val)/100);
-                $('#OrderTotalPromote').val(promote_val);
-            }else{
-                $('#OrderTotalPromote').val(0);
-            }
-            var promote = parseNumber($('#OrderTotalPromote').val());
+        var summary = 0;
+
+        if(promote_type == 0){
+            $('#OrderTotalPromote').val(promote_val);
+        }else
+        if(promote_type == 1){
+            promote_val = total * (parseNumber(promote_val)/100);
+            $('#OrderTotalPromote').val(promote_val);
         }else{
-            var summary1 = 0, summary2 = 0;
-            $('#order-product-list .qty').each(function () {
-                var basis_price = $(this).data('basic_price');
-                var price = $(this).data('price');
-                var qty = $(this).val();
-                summary1 += parseInt(basis_price) * parseInt(qty);
-                summary2 += parseInt(price) * parseInt(qty);
-            });
-            var promote = summary1 - summary2 ;
-            $('#OrderTotalPromote').val(promote);
+            $('#OrderTotalPromote').val(0);
         }
+        var promote = parseNumber($('#OrderTotalPromote').val());
+
+        $('#order-product-list .qty').each(function () {
+            var price = $(this).data('price');
+            var qty = $(this).val();
+            summary += parseInt(price) * parseInt(qty);
+        });
+
+        $('#new-order-product-list .qty').each(function () {
+            var price = $(this).data('price');
+            var qty = $(this).val();
+            summary += parseInt(price) * parseInt(qty);
+        });
+        $('#OrderTotalPromote').val(promote);
+
         if (total >= promote) {
             result = total - promote;
+        }
+        if(result >= paid){
+            result = result - paid;
         }
         amount.val(result);
     });
@@ -164,7 +169,7 @@ $(function(){
             return false;
         }
         if (qty > parseInt(limit)) {
-            alert('Số lượng nhập không được lớn hơn số lượng hàng trong kho');
+            alert('Số lượng nhập quá giới hạn');
             qty = limit;
             $(this).val(qty);
         }
@@ -393,15 +398,11 @@ function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pDat
             ' <span class="price-text">'+ digits(pPrice) +'</span>'+
             '</td>'+
             '<td class="text-right">' +
-            '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
             '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
-            ' <i class="icon icon-pen"></i>'+
-            '<input type="hidden" name="data[NewOrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+digits(pPrice)+'">'+
-            '</a>'+
             '</td>' +
             '<td class="text-right">' +
             '<a href="javascript:;" class="price-down"><i class="glyphicon glyphicon-minus-sign"></i></a>' +
-            '<input class="qty"  id="'+uuid+'-cur-price"  name="data[NewOrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
+            '<input class="qty"  id="'+uuid+'-cur-price"  name="data[NewOrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-price="' + pPrice + '" value="1">' +
             '<a href="javascript:;"  class="price-up"><i class="glyphicon glyphicon-plus-sign"></i></a>' +
             '</td>' +
             '<td class="text-right">' +
@@ -421,15 +422,19 @@ function removeRow(row) {
 
 function updatePrice() {
     var summary = 0;
+    $('#order-product-list .qty').each(function () {
+        var price = $(this).data('price');
+        var qty = $(this).val();
+        summary += parseInt(price) * parseInt(qty);
+    });
     $('#new-order-product-list .qty').each(function () {
-        var price = $(this).data('basic_price');
+        var price = $(this).data('price');
         var qty = $(this).val();
         summary += parseInt(price) * parseInt(qty);
     });
     $('#summary-total').val(summary);
     $('#summary-total').change();
     $('#OrderReceive').change();
-    $('#OrderPoint').val(Math.round(summary/point_cal))
     saveCart();
 }
 
