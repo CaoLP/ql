@@ -30,8 +30,19 @@ class CustomersController extends AppController {
             }
             die;
         }else{
-            $this->Customer->recursive = 0;
-            $this->set('customers', $this->Paginator->paginate());
+			if($this->request->is('post')){
+				$this->layout = 'excel';
+				$conditions = array();
+				if($this->request->data('type')== 1 || $this->request->data('type') == 0){
+					$conditions['gender'] = $this->request->data('type');
+				}
+				$data = $this->Customer->find('all', array('conditions'=>$conditions, 'rescursive'=> -1));
+				$this->set(compact('data'));
+				$this->view = 'export_customer';
+			}else{
+				$this->Customer->recursive = 0;
+				$this->set('customers', $this->Paginator->paginate());
+			}
         }
 	}
     public function admin_search() {
