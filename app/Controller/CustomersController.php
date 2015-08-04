@@ -30,11 +30,121 @@ class CustomersController extends AppController {
             }
             die;
         }else{
+			$this->loadModel('Store');
+			$stores = $this->Store->find('list');
 			if($this->request->is('post')){
 				$this->layout = 'excel';
 				$conditions = array();
-				if($this->request->data('type')== 1 || $this->request->data('type') == 0){
-					$conditions['gender'] = $this->request->data('type');
+				if($this->request->data('type')!= 'all'){
+					$conditions['Customer.gender'] = $this->request->data('type');
+				}
+				if($this->request->data('store') != 'all'){
+					$conditions['Creater.store_id'] = $this->request->data('store');
+				}
+				if($this->request->data('phone') != 'all'){
+					switch($this->request->data('phone')){
+						case 1:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '097%'),
+								array('Customer.phone like' => '098%'),
+								array('Customer.phone like' => '0163%'),
+								array('Customer.phone like' => '0164%'),
+								array('Customer.phone like' => '0165%'),
+								array('Customer.phone like' => '0166%'),
+								array('Customer.phone like' => '0167%'),
+								array('Customer.phone like' => '0168%'),
+								array('Customer.phone like' => '0169%'),
+							);
+							break;
+						case 2:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '090%'),
+								array('Customer.phone like' => '093%'),
+								array('Customer.phone like' => '0120%'),
+								array('Customer.phone like' => '0121%'),
+								array('Customer.phone like' => '0122%'),
+								array('Customer.phone like' => '0126%'),
+								array('Customer.phone like' => '0128%'),
+							);
+							break;
+						case 3:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '091%'),
+								array('Customer.phone like' => '094%'),
+								array('Customer.phone like' => '0123%'),
+								array('Customer.phone like' => '0124%'),
+								array('Customer.phone like' => '0125%'),
+								array('Customer.phone like' => '0127%'),
+								array('Customer.phone like' => '0129%'),
+							);
+							break;
+						case 4:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '092%'),
+								array('Customer.phone like' => '0188%'),
+							);
+							break;
+						case 5:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '0996%'),
+								array('Customer.phone like' => '0199%'),
+							);
+							break;
+						case 6:
+							$conditions['OR'] = array(
+								array('Customer.phone like' => '095%')
+							);
+							break;
+						case 7:
+							$conditions[] = array(
+								array('Customer.phone not like' => '097%'),
+								array('Customer.phone not like' => '098%'),
+								array('Customer.phone not like' => '0163%'),
+								array('Customer.phone not like' => '0164%'),
+								array('Customer.phone not like' => '0165%'),
+								array('Customer.phone not like' => '0166%'),
+								array('Customer.phone not like' => '0167%'),
+								array('Customer.phone not like' => '0168%'),
+								array('Customer.phone not like' => '0169%'),
+								array('Customer.phone not like' => '090%'),
+								array('Customer.phone not like' => '093%'),
+								array('Customer.phone not like' => '0120%'),
+								array('Customer.phone not like' => '0121%'),
+								array('Customer.phone not like' => '0122%'),
+								array('Customer.phone not like' => '0126%'),
+								array('Customer.phone not like' => '0128%'),
+								array('Customer.phone not like' => '091%'),
+								array('Customer.phone not like' => '094%'),
+								array('Customer.phone not like' => '0123%'),
+								array('Customer.phone not like' => '0124%'),
+								array('Customer.phone not like' => '0125%'),
+								array('Customer.phone not like' => '0127%'),
+								array('Customer.phone not like' => '0129%'),
+								array('Customer.phone not like' => '092%'),
+								array('Customer.phone not like' => '0188%'),
+								array('Customer.phone not like' => '0996%'),
+								array('Customer.phone not like' => '0199%'),
+								array('Customer.phone not like' => '095%'),
+							);
+							break;
+					}
+				}
+				if($this->request->data('code') != 'all'){
+					if($this->request->data('code') == 1){
+						$conditions['AND'] = array(
+							'OR' => array(
+								array('Customer.code <>' => null),
+								array('Customer.code <>' => '')
+							)
+						);
+					}else{
+						$conditions['AND'] = array(
+							'OR' => array(
+								array('Customer.code' => null),
+								array('Customer.code' => '')
+							)
+						);
+					}
 				}
 				$data = $this->Customer->find('all', array('conditions'=>$conditions, 'rescursive'=> -1));
 				$this->set(compact('data'));
@@ -43,6 +153,7 @@ class CustomersController extends AppController {
 				$this->Customer->recursive = 0;
 				$this->set('customers', $this->Paginator->paginate());
 			}
+			$this->set(compact('stores'));
         }
 	}
     public function admin_search() {

@@ -70,16 +70,45 @@
                         <div class="col-md-12">
                             <div class="col-md-6">
                                 <div class="" style="margin-top: 20px;"></div>
-                                <form method="post" class="form-inline">
-                                        <div class="input-group">
-                                            <select class="form-control" name="type">
-                                                <option value="all">Tất cã</option>
-                                                <option value="0">Nam</option>
-                                                <option value="1">Nữ</option>
-                                            </select>
-										<span class="input-group-btn">
-											<button type="submit" class="btn btn-primary">Export</button>
-										</span>
+                                <form method="post">
+                                    <div class="form-group">
+                                        <select class="form-control input-sm" name="store">
+                                            <option value="all">Tất cã shop</option>
+                                            <?php
+                                            foreach ($stores as $key => $store) {
+                                                echo '<option value="' . $key . '">' . $store . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control input-sm" name="phone">
+                                            <option value="all">Tất cã hãng điện thoại</option>
+                                            <option value="1">Viettel</option>
+                                            <option value="2">Mobifone</option>
+                                            <option value="3">Vinaphone</option>
+                                            <option value="4">Vietnamobile</option>
+                                            <option value="5">Beeline</option>
+                                            <option value="6">Sfone</option>
+                                            <option value="7">Khác</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control input-sm" name="code">
+                                            <option value="all">Tất cã khách</option>
+                                            <option value="1">Khách hàng thân thiết</option>
+                                            <option value="0">Chưa là thành viên</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control input-sm" name="type">
+                                            <option value="all">Tất cã giới tính</option>
+                                            <option value="0">Nam</option>
+                                            <option value="1">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Export</button>
                                     </div>
                                 </form>
                             </div>
