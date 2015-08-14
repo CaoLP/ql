@@ -121,7 +121,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <?php
                                         echo $this->Form->hidden('flag_type');
                                         ?>
-                                        <input id="input-customer" class="form-control" value="<?php
+                                        <input id="input-customer" readonly class="form-control" value="<?php
                                         if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
                                             echo $customersl[$this->request->data['Order']['customer_id']];
                                         else echo $customersl[1];
