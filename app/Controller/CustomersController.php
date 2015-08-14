@@ -24,11 +24,15 @@ class CustomersController extends AppController {
 	public function admin_index() {
         if($this->request->is('ajax')){
             $this->layout = 'ajax';
-            if(isset($this->request->query['term'])){
-                $customers = $this->Customer->search($this->request->query['term'], true);
+            if(isset($this->request->query['term']) && !isset($this->request->query['use_phone'])){
+                $customers = $this->Customer->search($this->request->query['term'], true, false);
                 echo json_encode($customers);
-            }
-            die;
+				die;
+			}else{
+				$customers = $this->Customer->search($this->request->query['term'], true, true);
+				$this->set(compact('customers'));
+				$this->view = 'customer_ajax';
+			}
         }else{
 			$this->loadModel('Store');
 			$stores = $this->Store->find('list');

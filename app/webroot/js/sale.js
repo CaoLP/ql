@@ -71,6 +71,7 @@ $(document).ready(function () {
                             field.val('');
                             $('#input-customer').val(data[0].Customer.name);
                             $('#input-customer-id').val(data[0].Customer.id);
+                            $('#cur-point').text(digits(data[0].Customer.point));
                             console.log(data[0]);
                         }else{
                             $('#CustomerCode').val(field.val());
@@ -82,6 +83,40 @@ $(document).ready(function () {
 
             }
         }, 200));
+    });
+    $('#search-customer-input').on("keyup keypress", function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            if($('#search-customer-input').val().length > 0){
+                $('#search-customer-btn').click();
+            }
+            e.preventDefault();
+            return false;
+        }
+    });
+    $('#search-customer-btn').on('click', function () {
+        $.ajax({
+            url: customerUrl,
+            data: {
+                term: $('#search-customer-input').val().trim(),
+                use_phone: true,
+            },
+            // The success event handler will display "No match found" if no items are returned.
+            success: function (data) {
+                $('#customer-table').html(data);
+                saveCart();
+            }
+        });
+    });
+    $(document).on('click','.add-customer-btn', function () {
+        var id = $(this).data('id');
+        var name = $(this).data('name');
+        var point = $(this).data('point');
+        $('#input-customer').val(name);
+        $('#input-customer-id').val(id);
+        $('#cur-point').text(digits(point));
+        $('#search-customer').modal('hide');
+        $('#customer-table').html('');
     });
     $("#p-searchxx").mcautocomplete({
         // These next two options are what this plugin adds to the autocomplete widget.

@@ -68,7 +68,7 @@ class Customer extends AppModel {
 		),
 	);
 
- public function search($name, $not_recursive = false){
+ public function search($name, $not_recursive = false, $use_phone = false){
      $params = array(
          'conditions'=>array(
 			 'OR' => array(
@@ -77,6 +77,9 @@ class Customer extends AppModel {
              )
          )
      );
+	 if($use_phone){
+		 $params['conditions']['OR']['Customer.phone LIKE'] = '%'.$name.'%';
+	 }
     if($not_recursive){
         $params['recursive'] = -1;
     }

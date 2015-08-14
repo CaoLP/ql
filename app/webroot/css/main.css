@@ -3350,3 +3350,11 @@ span.help-inline {
     width: 70% !important;
     right: 0;
 }
+#cur-point{
+    font-weight: bold;
+    color: red;
+    text-align: right;
+    font-size: 22px;
+    padding: 0 10px 0 10px;
+    background-color: #fff;
+}

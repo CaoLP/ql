@@ -17,7 +17,7 @@ $(document).ready(function () {
             return $($(this).data('contentwrapper')).html();
         }
     });
-    $( "#input-customer" ).autocomplete({
+    $( "#input-customerxxx" ).autocomplete({
         minLength: 0,
         source: customers,
         select: function( event, ui ) {

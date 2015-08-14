@@ -132,6 +132,11 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         else echo 1;
                                         ?>">
                                             <span class="input-group-btn">
+                                                <button class="btn btn-info" type="button" data-toggle="modal"
+                                                        data-target="#search-customer"><i class="icon-search"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" data-toggle="modal"
                                                         data-target="#customer"><i class="icon-plus"></i>
                                                 </button>
@@ -257,6 +262,12 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                             'data-inputmask' => '\'alias\': \'numeric\', \'groupSeparator\': \',\', \'autoGroup\': true, \'digitsOptional\': true, \'placeholder\': \'0\''
                                         ));
                                         ?>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon">Điểm hiện có</span>
+                                        <div class="form-control" id="cur-point">0</div>
                                     </div>
                                 </li>
                             </ul>
@@ -466,43 +477,51 @@ echo $this->Html->css(array('order'), array('inline' => false));
         </div>
     </div>
 </div>
-<a href="#" class="btn btn-info" id="btn-search-customer" data-contentwrapper="#search-customer"  rel="popover"><i class="icon-search"></i></a>
-<div class="hidden" id="search-customer">
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <strong>Tìm kiếm khách hàng</strong>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control" placeholder="Nhập tên hoặc SĐT" name="term">
-                        <div class="input-group-btn">
-                            <button class="btn btn-info"><i class="icon-search"></i></button>
+<div class="modal fade" id="search-customer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-original-title="">×
+                </button>
+                <h4 class="modal-title">Tìm kiếm khách hàng</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-success">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control" placeholder="Nhập tên hoặc SĐT" name="term" id="search-customer-input">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-info" id="search-customer-btn"><i class="icon-search"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Mã thành viên</th>
+                                    <th>Tên</th>
+                                    <th>Số điện thoại</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="customer-table">
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="modal-footer text-right">
+                <button class="btn btn-danger" data-dismiss="modal">Đóng</button>
             </div>
         </div>
-        <div class="panel-footer">
-
-        </div>
     </div>
+
 </div>

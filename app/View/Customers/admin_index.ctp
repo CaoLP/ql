@@ -36,6 +36,7 @@
                             <th><?php echo $this->Paginator->sort('district', 'Quận'); ?></th>
                             <th><?php echo $this->Paginator->sort('city', 'Thành phố'); ?></th>
                             <th><?php echo $this->Paginator->sort('created', 'Ngày tạo'); ?></th>
+                            <th><?php echo $this->Paginator->sort('point', 'Điểm'); ?></th>
                             <th><?php echo $this->Paginator->sort('created_by', 'Tạo bởi'); ?></th>
                             <th class="actions"><?php echo __('Actions'); ?></th>
                         </tr>
@@ -53,6 +54,7 @@
                                 <td><?php echo h($customer['Customer']['district']); ?></td>
                                 <td><?php echo h($customer['Customer']['city']); ?></td>
                                 <td><?php echo h($customer['Customer']['created']); ?></td>
+                                <td><?php echo number_format($customer['Customer']['point'], 0, '.', ','); ?></td>
                                 <td>
                                     <?php echo $this->Html->link($customer['Creater']['name'],
                                         array('controller' => 'users', 'action' => 'view', $customer['Creater']['id'])); ?>
