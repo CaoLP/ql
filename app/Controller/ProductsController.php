@@ -185,8 +185,7 @@ class ProductsController extends AppController {
                     )
                 );
             }
-
-            $this->redirect(Router::url(array('action'=>'edit',$id,'?'=>array('media_id'=>$this->request->query['media_id']))));
+            return $this->redirect(Router::url(array('action'=>'edit',$id,'?'=>array('media_id'=>$this->request->query['media_id']))));
         }
         $providersData = $this->Product->Provider->find('all',array('recursive'=>-1));
         $categories = $this->Product->Category->find('all',array('recursive'=>-1));

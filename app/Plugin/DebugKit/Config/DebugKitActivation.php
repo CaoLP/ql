@@ -51,4 +51,3 @@ class DebugKitActivation {
         $controller->Croogo->removeAco('DebugKit'); // ExampleController ACO and it's actions will be removed
     }
 }
-?>

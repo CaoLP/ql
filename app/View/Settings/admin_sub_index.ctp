@@ -2,12 +2,12 @@
     <h3 class="panel-title">
         <a href="javascript:void(0);" class="toggle-sidebar">
             <span class="fa fa-angle-double-left" data-toggle="offcanvas" title="Maximize Panel"></span></a>
-        <?php echo __('Settings'); ?>    </h3>
+        <?php echo $title_for_layout; ?>    </h3>
 </div>
 <div class="panel-body">
     <div class="col-md-12">
         <ul class="nav nav-pills nav-justified">
-            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>'.__('New Setting'), array('action' => 'add'), array('escape' => false)); ?></li>
+            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>'.__('Thêm') .' ' . $title_for_layout, array('action' => 'add_sub', $key), array('escape' => false)); ?></li>
         </ul>
     </div>
     <div class="col-md-12">
@@ -26,10 +26,7 @@
             <tbody>
             <?php foreach ($settings as $setting): ?>
                 <tr>
-                    <td><?php
-                        if ($setting['Thumb']['file'])
-                            echo $this->Media->image($setting['Thumb']['file'], 50, 50, array('class' => 'thumbnail'));
-                        ?></td>
+                    <td><?php if ($setting['Thumb']['file']) echo $this->Media->image($setting['Thumb']['file'], 50, 50, array('class' => 'thumbnail'));?></td>
                     <td><?php echo h($setting['Setting']['id']); ?>&nbsp;</td>
                     <td>
                         <?php echo $this->Html->link($setting['ParentSetting']['name'], array('controller' => 'settings', 'action' => 'view', $setting['ParentSetting']['id'])); ?>
@@ -37,8 +34,11 @@
                     <td><?php echo h($setting['Setting']['name']); ?>&nbsp;</td>
                     <td><?php echo h($setting['Setting']['key']); ?>&nbsp;</td>
                     <td class="actions">
-                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-search"></span>', array('action' => 'view', $setting['Setting']['id']), array('escape' => false)); ?>
-                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', array('action' => 'edit', $setting['Setting']['id']), array('escape' => false)); ?>
+                        <?php
+                        if(empty($setting['ParentSetting']['parent_id']))
+                            echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>', array('action' => 'index', $setting['Setting']['key']), array('escape' => false));
+                        ?>
+                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', array('action' => 'add_sub', $setting['Setting']['key'], 'edit', $key), array('escape' => false)); ?>
                         <?php echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span>', array('action' => 'delete', $setting['Setting']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $setting['Setting']['id'])); ?>
                     </td>
                 </tr>

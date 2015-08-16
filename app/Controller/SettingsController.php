@@ -1,137 +1,218 @@
 <?php
 App::uses('AppController', 'Controller');
+
 /**
  * Settings Controller
  *
+ * @property Setting $Setting
+ * @property PaginatorComponent $Paginator
  */
-class SettingsController extends AppController {
+class SettingsController extends AppController
+{
 
-	public $components = array('Paginator');
-	public $title_for_layout = 'Tuỳ chỉnh';
-	/**
-	 * Admin index
-	 *
-	 * @return void
-	 * @access public
-	 */
-	public function admin_index() {
-		$this->Setting->recursive = 0;
-		$this->set('settings', $this->Paginator->paginate());
-	}
+    /**
+     * Components
+     *
+     * @var array
+     */
+    public $components = array('Paginator');
+    public $title_for_layout = 'Tuỳ chỉnh';
 
-	/**
-	 * Admin view
-	 *
-	 * @param view $id
-	 * @return void
-	 * @access public
-	 */
-	public function admin_view($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__( 'Invalid Setting.'), 'default', array('class' => 'error'));
-			return $this->redirect(array('action' => 'index'));
-		}
-		$this->set('setting', $this->Setting->read(null, $id));
-	}
+    /**
+     * index method
+     * @param string $key
+     * @return void
+     */
+    public function admin_index($key = null)
+    {
+        $this->Setting->recursive = 0;
+        $this->Paginator->settings = array(
+            'contain' => array('Thumb'),
+            'conditions' => array(
+                'Setting.name <>' => 'temp'
+            )
+        );
+        if (!empty($key)) {
+            $this->Paginator->settings['conditions']['ParentSetting.key'] = $key;
+            $parent = $this->Setting->find('first', array('conditions' => array('Setting.key' => $key)));
+            if (count($parent) > 0) {
+                $this->setTitle($parent['Setting']['name']);
+            }
+            $this->view = 'admin_sub_index';
+            $this->set('key', $key);
+        }
+        $settings = $this->Paginator->paginate();
+        $this->set(compact('settings'));
+    }
 
-	/**
-	 * Admin add
-	 *
-	 * @return void
-	 * @access public
-	 */
-	public function admin_add() {
+    /**
+     * view method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_view($id = null)
+    {
+        if (!$this->Setting->exists($id)) {
+            throw new NotFoundException(__('Invalid setting'));
+        }
+        $options = array('conditions' => array('Setting.' . $this->Setting->primaryKey => $id));
+        $this->set('setting', $this->Setting->find('first', $options));
+    }
 
-		if (!empty($this->request->data)) {
-			$this->Setting->create();
-			if ($this->Setting->save($this->request->data)) {
-				$this->Session->setFlash(__( 'The Setting has been saved'), 'default', array('class' => 'success'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__( 'The Setting could not be saved. Please, try again.'), 'default', array('class' => 'error'));
-			}
-		}
-		$type = $this->Setting->getType();
-		$jsontype = json_encode($type);
-		$this->set(compact('jsontype'));
-	}
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function admin_add()
+    {
+        $temp = array(
+            'Setting' => array(
+                'name' => 'temp',
+                'key' => 'temp',
+            )
+        );
+        $data = $this->Setting->find('first', array('conditions' => array('Setting.name' => 'temp')));
+        if ($data) {
+            $id = $data['Setting']['id'];
+        } else {
+            $this->Setting->save($temp);
+            $id = $this->Setting->id;
+        }
 
-	/**
-	 * Admin edit
-	 *
-	 * @param integer $id
-	 * @return void
-	 * @access public
-	 */
-	public function admin_edit($id = null) {
+        if (!$this->Setting->exists($id)) {
+            throw new NotFoundException(__('Invalid setting'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
 
-		if (!$id && empty($this->request->data)) {
-			$this->Session->setFlash(__( 'Invalid Setting'), 'default', array('class' => 'error'));
-			return $this->redirect(array('action' => 'index'));
-		}
-		if (!empty($this->request->data)) {
-			if ($this->Setting->save($this->request->data)) {
-				$this->Session->setFlash(__( 'The Setting has been saved'), 'default', array('class' => 'success'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__( 'The Setting could not be saved. Please, try again.'), 'default', array('class' => 'error'));
-			}
-		}
-		if (empty($this->request->data)) {
-			$this->request->data = $this->Setting->read(null, $id);
-		}
-		$type = $this->Setting->getType();
-		$jsontype = json_encode($type);
-		$this->set(compact('jsontype'));
-	}
+            if ($this->Setting->save($this->request->data)) {
+                $this->Session->setFlash(__('The setting has been saved.'), 'default', array('class' => 'alert alert-success'));
+                return $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('The setting could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+            }
+        } else {
+            $options = array('conditions' => array('Setting.' . $this->Setting->primaryKey => $id));
+            $this->request->data = $this->Setting->find('first', $options);
+        }
+        $parents = $this->Setting->ParentSetting->find('list', array('conditions' => array('ParentSetting.key <>' => 'temp')));
+        $this->set(compact('parents'));
+        $this->view = 'admin_edit';
+    }
 
-	/**
-	 * Admin delete
-	 *
-	 * @param integer $id
-	 * @return void
-	 * @access public
-	 */
-	public function admin_delete($id = null) {
-		if (!$id) {
-			$this->Session->setFlash(__( 'Invalid id for Setting'), 'default', array('class' => 'error'));
-			return $this->redirect(array('action' => 'index'));
-		}
-		if ($this->Setting->delete($id)) {
-			$this->Session->setFlash(__( 'Setting deleted'), 'default', array('class' => 'success'));
-			return $this->redirect(array('action' => 'index'));
-		}
-	}
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function admin_add_sub($key, $edit = null, $parent_key = null)
+    {
+        if ($this->request->is(array('post', 'put'))) {
+            if ($this->Setting->save($this->request->data)) {
+                $this->Session->setFlash(__('The setting has been saved.'), 'default', array('class' => 'alert alert-success'));
+                if ($parent_key == null)
+                    return $this->redirect(array('action' => 'index', $key));
+                else
+                    return $this->redirect(array('action' => 'index', $parent_key));
+            } else {
+                $this->Session->setFlash(__('The setting could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+            }
+        } else {
+            if ($parent_key != null) {
+                $parent = $this->Setting->find('first', array('conditions' => array('Setting.key' => $parent_key)));
+            } else {
+                $parent = $this->Setting->find('first', array('conditions' => array('Setting.key' => $key)));
+            }
 
-	/**
-	 * Admin prefix
-	 *
-	 * @param string $prefix
-	 * @return void
-	 * @access public
-	 */
-	public function prefix($prefix = null) {
+            if (count($parent) > 0) {
+                $this->setTitle($parent['Setting']['name']);
+                $temp = array(
+                    'Setting' => array(
+                        'name' => 'temp',
+                        'key' => 'temp',
+                    )
+                );
+                if ($edit == 'edit') {
+                    $data = $this->Setting->find('first', array('conditions' => array('Setting.key' => $key)));
+                    $temp = $data;
+                } else {
+                    $data = $this->Setting->find('first', array('conditions' => array('Setting.name' => 'temp')));
+                    if ($data) {
+                        $temp = $data;
+                        $temp['Setting']['parent_id'] = $parent['Setting']['id'];
+                        $temp['Setting']['name'] = '';
+                        $temp['Setting']['key'] = '';
+                    } else {
+                        $this->Setting->save($temp);
+                        $temp['Setting']['id'] = $this->Setting->id;
+                        $temp['Setting']['parent_id'] = $parent['Setting']['id'];
+                        $temp['Setting']['name'] = '';
+                        $temp['Setting']['key'] = '';
+                    }
+                }
+                $parents = $this->Setting->ParentSetting->find('list', array('conditions' => array('ParentSetting.key <>' => 'temp')));
+                $this->set(compact('parents', 'key', 'parent'));
+                if ($parent['ParentSetting']['key'] == 'slide' && !empty($parent['Setting']['parent_id'])) {
+                    $this->view = 'admin_add_slide';
+                    $temp['Setting']['name'] = $parent['Setting']['key'] . '_' . $temp['Setting']['id'];
+                    $temp['Setting']['key'] = $parent['Setting']['key'] . '_' . $temp['Setting']['id'];
+                }
+                $this->request->data = $temp;
+            } else {
+                return $this->redirect(array('action' => 'index'));
+            }
+        }
+    }
 
-		$this->Setting->Behaviors->attach('Croogo.Params');
-		if (!empty($this->request->data) && $this->Setting->saveAll($this->request->data['Setting'])) {
-			$this->Session->setFlash(__( "Settings updated successfully"), 'default', array('class' => 'success'));
-			return $this->redirect(array('action' => 'prefix', $prefix));
-		}
+    /**
+     * edit method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_edit($id = null)
+    {
+        if (!$this->Setting->exists($id)) {
+            throw new NotFoundException(__('Invalid setting'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
 
-		$settings = $this->Setting->find('all', array(
-													 'order' => 'Setting.weight ASC',
-													 'conditions' => array(
-														 'Setting.key LIKE' => $prefix . '.%'
-													 ),
-												));
-		$this->set(compact('settings'));
+            if ($this->Setting->save($this->request->data)) {
+                $this->Session->setFlash(__('The setting has been saved.'), 'default', array('class' => 'alert alert-success'));
+                return $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('The setting could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+            }
+        } else {
+            $options = array('conditions' => array('Setting.' . $this->Setting->primaryKey => $id));
+            $this->request->data = $this->Setting->find('first', $options);
+        }
+        $parents = $this->Setting->ParentSetting->find('list', array('conditions' => array('ParentSetting.key <>' => 'temp')));
+        $this->set(compact('parents'));
+    }
 
-		if (count($settings) == 0) {
-			$this->Session->setFlash(__( "Invalid Setting key"), 'default', array('class' => 'error'));
-		}
-
-		$this->set("prefix", $prefix);
-	}
-
-
+    /**
+     * delete method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_delete($id = null)
+    {
+        $this->Setting->id = $id;
+        if (!$this->Setting->exists()) {
+            throw new NotFoundException(__('Invalid setting'));
+        }
+        $this->request->onlyAllow('post', 'delete');
+        if ($this->Setting->delete()) {
+            $this->Session->setFlash(__('The setting has been deleted.'), 'default', array('class' => 'alert alert-success'));
+        } else {
+            $this->Session->setFlash(__('The setting could not be deleted. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+        }
+        return $this->redirect(array('action' => 'index'));
+    }
 }

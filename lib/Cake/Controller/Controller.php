@@ -754,6 +754,10 @@ class Controller extends Object implements CakeEventListener {
  * @link http://book.cakephp.org/2.0/en/controllers.html#Controller::redirect
  */
 	public function redirect($url, $status = null, $exit = true) {
+
+		if (headers_sent($file, $line)) {
+			CakeLog::write('debug', "Header was sent on file: {$file}, line number: {$line}");
+		}
 		$this->autoRender = false;
 
 		if (is_array($status)) {
@@ -784,7 +788,6 @@ class Controller extends Object implements CakeEventListener {
 		if ($status) {
 			$this->response->statusCode($status);
 		}
-
 		if ($exit) {
 			$this->response->send();
 			$this->_stop();

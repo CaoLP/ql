@@ -2,12 +2,14 @@
     <h3 class="panel-title">
         <a href="javascript:void(0);" class="toggle-sidebar">
             <span class="fa fa-angle-double-left" data-toggle="offcanvas" title="Maximize Panel"></span></a>
-        <?php echo __('Settings'); ?>    </h3>
+        <?php echo __('Menu Positions'); ?>    </h3>
 </div>
 <div class="panel-body">
     <div class="col-md-12">
         <ul class="nav nav-pills nav-justified">
-            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>'.__('New Setting'), array('action' => 'add'), array('escape' => false)); ?></li>
+            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>' . __('New Menu Position'), array('action' => 'add'), array('escape' => false)); ?></li>
+            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>' . __('List Options'), array('controller' => 'options', 'action' => 'index'), array('escape' => false)); ?> </li>
+            <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>' . __('New Option'), array('controller' => 'options', 'action' => 'add'), array('escape' => false)); ?> </li>
         </ul>
     </div>
     <div class="col-md-12">
@@ -15,31 +17,20 @@
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <thead>
             <tr>
-                <th></th>
                 <th><?php echo $this->Paginator->sort('id'); ?></th>
-                <th><?php echo $this->Paginator->sort('parent_id'); ?></th>
                 <th><?php echo $this->Paginator->sort('name'); ?></th>
-                <th><?php echo $this->Paginator->sort('key'); ?></th>
                 <th class="actions"></th>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($settings as $setting): ?>
+            <?php foreach ($menuPositions as $menuPosition): ?>
                 <tr>
-                    <td><?php
-                        if ($setting['Thumb']['file'])
-                            echo $this->Media->image($setting['Thumb']['file'], 50, 50, array('class' => 'thumbnail'));
-                        ?></td>
-                    <td><?php echo h($setting['Setting']['id']); ?>&nbsp;</td>
-                    <td>
-                        <?php echo $this->Html->link($setting['ParentSetting']['name'], array('controller' => 'settings', 'action' => 'view', $setting['ParentSetting']['id'])); ?>
-                    </td>
-                    <td><?php echo h($setting['Setting']['name']); ?>&nbsp;</td>
-                    <td><?php echo h($setting['Setting']['key']); ?>&nbsp;</td>
+                    <td><?php echo h($menuPosition['MenuPosition']['id']); ?>&nbsp;</td>
+                    <td><?php echo h($menuPosition['MenuPosition']['name']); ?>&nbsp;</td>
                     <td class="actions">
-                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-search"></span>', array('action' => 'view', $setting['Setting']['id']), array('escape' => false)); ?>
-                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', array('action' => 'edit', $setting['Setting']['id']), array('escape' => false)); ?>
-                        <?php echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span>', array('action' => 'delete', $setting['Setting']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $setting['Setting']['id'])); ?>
+                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-search"></span>', array('action' => 'view', $menuPosition['MenuPosition']['id']), array('escape' => false)); ?>
+                        <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', array('action' => 'edit', $menuPosition['MenuPosition']['id']), array('escape' => false)); ?>
+                        <?php echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span>', array('action' => 'delete', $menuPosition['MenuPosition']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $menuPosition['MenuPosition']['id'])); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -220,4 +220,3 @@ class UserPermissionsController extends AppController {
         }
     }
 }
-?>

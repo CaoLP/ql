@@ -1,4 +1,5 @@
 <?php
+
 class MediaBehavior extends ModelBehavior
 {
 

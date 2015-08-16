@@ -81,5 +81,3 @@ class AclActionListComponent extends Component {
         return $controllersList;
     }
 }
-
-?>
