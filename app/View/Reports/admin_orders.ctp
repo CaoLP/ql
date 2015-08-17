@@ -100,7 +100,7 @@
                         <td class="text-right price-text"><?php echo number_format($total2, 0, '.', ','); ?></td>
                         <td class="text-right price-text"><?php echo number_format($total3, 0, '.', ','); ?></td>
                         <td class="text-right price-text"><?php //echo number_format($total4, 0, '.', ','); ?></td>
-                        <td class="text-right price-text"><?php// echo number_format($total5, 0, '.', ','); ?></td>
+                        <td class="text-right price-text"><?php // echo number_format($total5, 0, '.', ','); ?></td>
                     </tr>
                     </tbody>
                 </table>
