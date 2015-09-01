@@ -3038,7 +3038,7 @@ form input[type=checkbox] {
     padding: 1px 15px;
 }
 .order-w-b-s {
-    max-height: 355px;
+    /*max-height: 355px;*/
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;

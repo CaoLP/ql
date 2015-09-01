@@ -6,6 +6,8 @@ $excelCol = array('A','B','C','D');
 $rows = array();
 $rows[] = $tbhead;
 $array_phones = array();
+$abc = 1;
+$pos = 0;
 foreach($data as $key=>$customer){
     $rows[] = array(
         'Stt' => $key+1,
@@ -15,10 +17,19 @@ foreach($data as $key=>$customer){
         'phone' =>$customer['Customer']['phone']
     );
     if($customer['Customer']['phone'] && strlen($customer['Customer']['phone']) >= 10){
-        $array_phones[] = str_replace('.','',$customer['Customer']['phone']);
+        if($abc == $total) {
+            $pos++;
+            $abc = 1;
+        }
+        $array_phones[$pos][] = str_replace('.','',$customer['Customer']['phone']);
+        $abc++;
     }
 }
-$rows[] = array('Stt'=>implode(',',$array_phones),'name'=>'','code'=>'','gender'=>'','phone'=>'');
+
+foreach($array_phones as $arr_phone){
+    $rows[] = array('Stt'=>implode(',',$arr_phone),'name'=>'','code'=>'','gender'=>'','phone'=>'');
+}
+
 App::import('Vendor', 'PHPExcel/PHPExcel');
 
 // Create new PHPExcel object

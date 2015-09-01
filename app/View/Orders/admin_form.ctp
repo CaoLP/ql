@@ -122,7 +122,10 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         echo $this->Form->hidden('flag_type');
                                         ?>
                                         <input id="input-customer" readonly class="form-control" value="<?php
-                                        if(isset($this->request->data['Order']['customer_id']) && !empty($this->request->data['Order']['customer_id']))
+                                        if(isset($this->request->data['Order']['customer_id'])
+                                            && !empty($this->request->data['Order']['customer_id'])
+                                            && isset($customersl[$this->request->data['Order']['customer_id']])
+                                        )
                                             echo $customersl[$this->request->data['Order']['customer_id']];
                                         else echo $customersl[1];
                                         ?>">
@@ -270,6 +273,23 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                         <div class="form-control" id="cur-point">0</div>
                                     </div>
                                 </li>
+                                <?php
+                                if($this->Session->read('Auth.User.group_id') == 1) {
+                                    ?>
+                                    <li class="list-group-item">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">Shop</span>
+                                            <?php
+                                            echo $this->Form->input('store_id', array('label' => false,
+                                                'div' => false,
+                                                'class' => 'form-control',
+                                            ));
+                                            ?>
+                                        </div>
+                                    </li>
+                                    <?php
+                                }
+                                ?>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="note">
@@ -367,7 +387,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                             <div class="input-group">
                                 <div class="input-group-addon">Mã thẻ</div>
                                 <input name="data[Customer][code]" class="form-control"
-                                       type="text" id="CustomerCode" required="required">
+                                       type="text" id="CustomerCode">
                             </div>
                         </div>
                     </div>
@@ -411,7 +431,7 @@ echo $this->Html->css(array('order'), array('inline' => false));
                                 <div class="input-group-addon">Giới tính</div>
                                 <div class="input-group-addon" style="width: 30%">Nam
                                     <input name="data[Customer][gender]" class="form-control"
-                                           type="radio" checked required="required" value="0">
+                                           type="radio" required="required" value="0">
                                 </div>
                                 <div class="input-group-addon" style="width: 30%">Nữ
                                     <input name="data[Customer][gender]" class="form-control"

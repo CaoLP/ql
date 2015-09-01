@@ -72,6 +72,9 @@ $(document).ready(function () {
                             $('#input-customer').val(data[0].Customer.name);
                             $('#input-customer-id').val(data[0].Customer.id);
                             $('#cur-point').text(digits(data[0].Customer.point));
+                            if(data[0].Customer.id != 1){
+                                $('#OrderPromoteId').removeAttr('readonly');
+                            }
                             console.log(data[0]);
                         }else{
                             $('#CustomerCode').val(field.val());
@@ -112,6 +115,9 @@ $(document).ready(function () {
         var id = $(this).data('id');
         var name = $(this).data('name');
         var point = $(this).data('point');
+        if(id != 1){
+            $('#OrderPromoteId').removeAttr('readonly');
+        }
         $('#input-customer').val(name);
         $('#input-customer-id').val(id);
         $('#cur-point').text(digits(point));

@@ -133,6 +133,15 @@ class CustomersController extends AppController {
 							break;
 					}
 				}
+				if($this->request->data('birth') != 0){
+					$conditions['Customer.birthday LIKE'] = "%'".date('m-d')."'";
+				}
+				$total = 0;
+				if($this->request->data('total')){
+					$total = $this->request->data('total');
+				}
+				$this->set(compact('total'));
+
 				if($this->request->data('code') != 'all'){
 					if($this->request->data('code') == 1){
 						$conditions['AND'] = array(

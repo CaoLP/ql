@@ -558,7 +558,8 @@ class OrdersController extends AppController
         $options = $this->Order->OrderDetail->Product->ProductOption->Option->find('list');
         $promoteData = Set::combine($promoteData, '{n}.Promote.id', '{n}');
         $this->layout = 'order';
-        $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options', 'customersl'));
+        $stores = $this->Order->Store->find('list');
+        $this->set(compact('customers', 'users', 'promotes', 'promoteData', 'options', 'stores','customersl'));
     }
 
     /**

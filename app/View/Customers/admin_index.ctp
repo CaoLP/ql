@@ -110,6 +110,20 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <select class="form-control input-sm" name="birth">
+                                            <option value="0">Tất cã ngày sinh</option>
+                                            <option value="1">Hôm nay</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control input-sm" name="total">
+                                            <option value="30">Nhóm 30</option>
+                                            <option value="50">Nhóm 50</option>
+                                            <option value="60">Nhóm 60</option>
+                                            <option value="100">Nhóm 100</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <button type="submit" class="btn btn-primary">Export</button>
                                     </div>
                                 </form>
@@ -123,11 +137,11 @@
                                         ));
                                         ?>
                                     </div>
-                                    <ul class="pagination pull-right">
+                                    <ul class="pagination pagination-sm pull-right">
                                         <?php
-                                        echo $this->Paginator->prev(__('&laquo;'), array('tag' => 'li', 'escape' => false), null, array('tag' => 'li', 'class' => 'disabled', 'disabledTag' => 'a', 'escape' => false));
-                                        echo $this->Paginator->numbers(array('separator' => '', 'currentTag' => 'a', 'currentClass' => 'active', 'tag' => 'li', 'first' => 1));
-                                        echo $this->Paginator->next(__('&raquo;'), array('tag' => 'li', 'currentClass' => 'disabled', 'escape' => false), null, array('tag' => 'li', 'class' => 'disabled', 'disabledTag' => 'a', 'escape' => false));
+                                        echo $this->Paginator->prev('&larr; Previous', array('class' => 'prev', 'tag' => 'li', 'escape' => false), '<a onclick="return false;">&larr; Previous</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                        echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentClass' => 'active', 'currentTag' => 'a', 'first' => 1, 'last' => 3, 'ellipsis' => false));
+                                        echo $this->Paginator->next('Next &rarr;', array('class' => 'next', 'tag' => 'li', 'escape' => false), '<a onclick="return false;">Next &rarr;</a>', array('class' => 'next disabled', 'tag' => 'li', 'escape' => false));
                                         ?>
                                     </ul>
                                 </div>

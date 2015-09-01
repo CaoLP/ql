@@ -63,6 +63,8 @@ $(function () {
         },
         select: function (event, ui) {
             var html = '';
+            var html1 = '';
+            var html2 = '';
             $.each(ui.item.work_session, function (index, item) {
                 var content = template;
                 content= content.replace(/{id}/g,item.id);
@@ -75,8 +77,12 @@ $(function () {
                 var d1 = '';
                 var d2 = '';
                 $.each(item.attended,function(i,it){
-                    if(it.begin_time !='0000-00-00 00:00:00') d1 = 'disabled';
-                    if(it.end_time !='0000-00-00 00:00:00') d2 = 'disabled';
+                    if(it.begin_time !='0000-00-00 00:00:00'){
+                        d1 = 'disabled';
+                    }
+                    if(it.end_time !='0000-00-00 00:00:00') {
+                        d2 = 'disabled';
+                    }
                 });
                 var disabled = '';
                 if(d1 == 'disabled' && d2 == 'disabled'){
@@ -85,8 +91,17 @@ $(function () {
                 content= content.replace(/{d1}/g,d1);
                 content= content.replace(/{d2}/g,d2);
                 content= content.replace(/{disabled}/g,disabled);
-                html+= content;
+                if(d1 === 'disabled' && d2 === ''){
+                    html1+= content;
+                }else if(d1 === 'disabled' && d2 === 'disabled'){
+
+                }else{
+                    html+= content;
+                }
             });
+            if(html1 != ''){
+                html = html1;
+            }
             $('#select-session').html(html);
         }
     });

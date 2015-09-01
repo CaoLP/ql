@@ -55,6 +55,11 @@ $(document).ready(function () {
     $('#submit-customer').on('click', function () {
         if(!validate($('#customer'))) return false;
         var cus_name = $('#CustomerName').val();
+        var gender= $('#customer *[name="data[Customer][gender]"]:checked').val();
+        if(typeof gender == "undefined") {
+            alert("Chọn giới tính");
+            return false;
+        }
         $.ajax({
             url: '/admin/customers/add',
             type: 'POST',
@@ -64,7 +69,7 @@ $(document).ready(function () {
                     name: $('#CustomerName').val(),
                     code: $('#CustomerCode').val(),
                     email: $('#CustomerEmail').val(),
-                    gender: $('#customer *[name="data[Customer][gender]"]').val(),
+                    gender: gender,
                     birthday: {
                         'day' : $('#customer *[name="data[Customer][birthday][day]"]').val(),
                         'month' : $('#customer *[name="data[Customer][birthday][month]"]').val(),
@@ -79,10 +84,13 @@ $(document).ready(function () {
             success: function (data) {
                 var source = JSON.parse(data);
                 var last_item = source.pop();
-                $('#input-customer').autocomplete("option", { source: source});
+                //$('#input-customer').autocomplete("option", { source: source});
                 if(last_item.label.trim() == cus_name.trim()){
                     $('#input-customer').val(last_item.label);
                     $('#input-customer-id').val(last_item.value);
+                    if(last_item.value != 1){
+                        $('#OrderPromoteId').removeAttr('readonly');
+                    }
                 }
                 $('#CustomerName').val('');
                 $('#CustomerPhone').val('');
