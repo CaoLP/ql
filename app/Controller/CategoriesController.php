@@ -71,6 +71,8 @@ class CategoriesController extends AppController {
 				$this->Session->setFlash (__ ('The category could not be saved. Please, try again.'));
 			}
 		}
+		$id = $this->Category->getNextAutoNumber($this->Category);
+		$this->request->data('Category.id',$id);
 		$parents = $this->Category->ParentCategory->find ('list');
 		$this->set (compact ('parents'));
 	}
