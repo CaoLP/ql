@@ -29,12 +29,33 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
 });
 
 $(document).ready(function () {
+    $(document).keydown(function (e) {
+        console.log(e.keyCode);
+        switch (e.keyCode) {
+            case 113: //F3
+                $('#p-search').focus();
+                e.originalEvent.keyCode = 0;
+                break;
+            case 118: //F4
+                $('button[data-target="#search-customer"]').click();
+                e.originalEvent.keyCode = 0;
+                break;
+            case 119: //F8
+                $('#OrderReceive').focus();
+                e.originalEvent.keyCode = 0;
+                break;
+            case 120: //F9
+                $('#OrderAdminAddForm').submit();
+                e.originalEvent.keyCode = 0;
+                break;
+        }
+    });
     $('#p-search').focus();
-    $('#p-search').on('keyup paste',function(e){
+    $('#p-search').on('keyup paste', function (e) {
         var field = $(this);
         clearTimeout(field.data('timeout'));
-        $(this).data('timeout', setTimeout(function(){
-            if(field.val().match(/^[A-Za-z]/)){
+        $(this).data('timeout', setTimeout(function () {
+            if (field.val().match(/^[A-Za-z]/)) {
                 $.ajax({
                     url: ajax_url + '/' + store_id,
                     dataType: 'json',
@@ -43,7 +64,7 @@ $(document).ready(function () {
                     },
                     // The success event handler will display "No match found" if no items are returned.
                     success: function (data) {
-                        if(typeof data[0] != "undefined"){
+                        if (typeof data[0] != "undefined") {
                             field.val('');
                             addProduct(
                                 data[0].Product.id,
@@ -58,7 +79,7 @@ $(document).ready(function () {
                         }
                     }
                 });
-            }else if(field.val().match(/[0-9]/g) != null){
+            } else if (field.val().match(/[0-9]/g) != null) {
                 $.ajax({
                     url: customerUrl,
                     dataType: 'json',
@@ -67,16 +88,16 @@ $(document).ready(function () {
                     },
                     // The success event handler will display "No match found" if no items are returned.
                     success: function (data) {
-                        if(typeof data[0] != "undefined"){
+                        if (typeof data[0] != "undefined") {
                             field.val('');
                             $('#input-customer').val(data[0].Customer.name);
                             $('#input-customer-id').val(data[0].Customer.id);
                             $('#cur-point').text(digits(data[0].Customer.point));
-                            if(data[0].Customer.id != 1){
+                            if (data[0].Customer.id != 1) {
                                 $('#OrderPromoteId').removeAttr('readonly');
                             }
                             console.log(data[0]);
-                        }else{
+                        } else {
                             $('#CustomerCode').val(field.val());
                             field.val('');
                             $('#customer').modal('show');
@@ -90,7 +111,7 @@ $(document).ready(function () {
     $('#search-customer-input').on("keyup keypress", function (e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
-            if($('#search-customer-input').val().length > 0){
+            if ($('#search-customer-input').val().length > 0) {
                 $('#search-customer-btn').click();
             }
             e.preventDefault();
@@ -111,11 +132,11 @@ $(document).ready(function () {
             }
         });
     });
-    $(document).on('click','.add-customer-btn', function () {
+    $(document).on('click', '.add-customer-btn', function () {
         var id = $(this).data('id');
         var name = $(this).data('name');
         var point = $(this).data('point');
-        if(id != 1){
+        if (id != 1) {
             $('#OrderPromoteId').removeAttr('readonly');
         }
         $('#input-customer').val(name);
@@ -185,8 +206,8 @@ $(document).ready(function () {
             });
         }
     }).click(function () {
-            $(this).mcautocomplete("search");
-        });
+        $(this).mcautocomplete("search");
+    });
 
     $(":input").inputmask();
 
@@ -197,18 +218,18 @@ $(document).ready(function () {
             return false;
         }
     });
-    $('#OrderAdminAddForm').on('submit',function(e){
-        if($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != ''){
+    $('#OrderAdminAddForm').on('submit', function (e) {
+        if ($('#input-customer-id').val() == 1 && $('#OrderPromoteId').val() != '') {
             alert('Vui nhập thông tin khách hàng khi dùng khuyến mãi.');
             return false;
         }
         var receive = parseNumber($('#OrderReceive').val());
         var amount = parseNumber($('#OrderAmount').val());
-        if(receive < amount){
+        if (receive < amount) {
             alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng đơn hàng.');
             return false;
         }
-        $('#save').attr('disabled','disabled');
+        $('#save').attr('disabled', 'disabled');
         $('#save').removeClass('btn-success');
         $('#save').html('<img src="/img/select2-spinner.gif">Đang xử lý...');
     });
@@ -253,14 +274,14 @@ $(document).ready(function () {
         refund.val(result);
     });
     $(document).on('change', '#OrderPromoteId', function (e) {
-        if (typeof promotes[$(this).val()] != 'undefined'){
+        if (typeof promotes[$(this).val()] != 'undefined') {
             var type = promotes[$(this).val()].Promote.type;
             var value = promotes[$(this).val()].Promote.value;
             $('#OrderPromoteValue').val(value);
             $('#OrderPromoteType').val(type);
             $('#summary-total').change();
             $('#OrderFlagType').val('3');
-        }else{
+        } else {
             $('#OrderPromoteValue').val(0);
             $('#OrderPromoteType').val('');
             $('#summary-total').change();
@@ -270,22 +291,21 @@ $(document).ready(function () {
 
     $(document).on('change', '#summary-total', function (e) {
         var amount = $('#OrderAmount');
-        var promote_val =  $('#OrderPromoteValue').val();
+        var promote_val = $('#OrderPromoteValue').val();
         var promote_type = $('#OrderPromoteType').val();
         var result = 0;
         var total = parseNumber($(this).val());
-        if($('#OrderFlagType').val() == '3' || $('#OrderFlagType').val() == ''){
-            if(promote_type == 0){
+        if ($('#OrderFlagType').val() == '3' || $('#OrderFlagType').val() == '') {
+            if (promote_type == 0) {
                 $('#OrderTotalPromote').val(promote_val);
-            }else
-            if(promote_type == 1){
-                promote_val = total * (parseNumber(promote_val)/100);
+            } else if (promote_type == 1) {
+                promote_val = total * (parseNumber(promote_val) / 100);
                 $('#OrderTotalPromote').val(promote_val);
-            }else{
+            } else {
                 $('#OrderTotalPromote').val(0);
             }
             var promote = parseNumber($('#OrderTotalPromote').val());
-        }else{
+        } else {
             var summary1 = 0, summary2 = 0;
             $('#order-product-list .qty').each(function () {
                 var basis_price = $(this).data('basic_price');
@@ -294,7 +314,7 @@ $(document).ready(function () {
                 summary1 += parseInt(basis_price) * parseInt(qty);
                 summary2 += parseInt(price) * parseInt(qty);
             });
-            var promote = summary1 - summary2 ;
+            var promote = summary1 - summary2;
             $('#OrderTotalPromote').val(promote);
         }
         if (total >= promote) {
@@ -328,49 +348,49 @@ $(document).ready(function () {
         }
     });
 //    Promoted
-    $('#OrderPromoteId').on('click',function(){
-        if($('#input-customer-id').val() == 1 || $('#input-customer-id').val() == ''){
+    $('#OrderPromoteId').on('click', function () {
+        if ($('#input-customer-id').val() == 1 || $('#input-customer-id').val() == '') {
             alert('Vui lòng nhập tên khách trước khi giảm giá');
             return false;
         }
-       if($('#OrderFlagType').val() == '' || $('#OrderFlagType').val() == '0' || $('#OrderFlagType').val() == '3'){
+        if ($('#OrderFlagType').val() == '' || $('#OrderFlagType').val() == '0' || $('#OrderFlagType').val() == '3') {
 
-       }else{
-           alert('Hoá đơn thay đổi tiền không được giảm giá.');
-           return false;
-       }
+        } else {
+            alert('Hoá đơn thay đổi tiền không được giảm giá.');
+            return false;
+        }
     });
 //    =============================================================
 //    BEGIN POPOVER
 //    =============================================================
-    $('#OrderAdminAddForm, #OrderAdminEditForm').on("keyup keypress", function(e) {
+    $('#OrderAdminAddForm, #OrderAdminEditForm').on("keyup keypress", function (e) {
         var code = e.keyCode || e.which;
-        if (code  == 13) {
+        if (code == 13) {
             e.preventDefault();
             return false;
         }
     });
 
-    $(document).on('keydown','.input-box',function(e){
+    $(document).on('keydown', '.input-box', function (e) {
         if (e.which == 13) {
             $('.btn-approve').click();
             e.preventDefault();
             return false;
         }
     });
-    $(document).on('click','.pov',function(){
-        if($('#OrderPromoteId').val() != ''){
+    $(document).on('click', '.pov', function () {
+        if ($('#OrderPromoteId').val() != '') {
             alert('Hoá đơn giảm giá không được thay đổi tiền.');
             return false;
         }
         var template = '<div class="popover">' +
-                        '       <div class="arrow"></div>' +
-                        '            <h3 class="popover-title"></h3>' +
-                        '            <div class="popover-content"></div>' +
-                        '            <div class="popover-footer">' +
-                        '                <button type="button" class="btn btn-success btn-sm">Chấp nhận</button>' +
-                        '            </div>' +
-                        '</div>';
+            '       <div class="arrow"></div>' +
+            '            <h3 class="popover-title"></h3>' +
+            '            <div class="popover-content"></div>' +
+            '            <div class="popover-footer">' +
+            '                <button type="button" class="btn btn-success btn-sm">Chấp nhận</button>' +
+            '            </div>' +
+            '</div>';
         var content = '<div class="input-group input-group-sm">' +
             '<div class="input-group-btn">' +
             '<div class="onoffswitch">' +
@@ -383,22 +403,22 @@ $(document).ready(function () {
             '</div>' +
             '<input name="mod-price" class="form-control input-box" value="{{value}}">' +
             '<div class="input-group-btn">' +
-            '<button type="button" class="btn btn-success btn-sm btn-approve" data-price="{{price}}" data-key="{{key}}"><i class="icon-checkmark"></i></button>'+
+            '<button type="button" class="btn btn-success btn-sm btn-approve" data-price="{{price}}" data-key="{{key}}"><i class="icon-checkmark"></i></button>' +
             '</div>' +
             '</div>';
         var i_key = $(this).data('key');
         var i_price = $(this).data('price');
-        var mod_price_field = $('#'+i_key+'-mod-price');
+        var mod_price_field = $('#' + i_key + '-mod-price');
         var uid = uniqId();
-        content= content.replace(/{{id}}/g,uid);
-        content= content.replace('{{name}}',uid);
-        content= content.replace('{{value}}',mod_price_field.val());
-        content =  content.replace('{{price}}',i_price);
-        content =  content.replace('{{key}}',i_key);
+        content = content.replace(/{{id}}/g, uid);
+        content = content.replace('{{name}}', uid);
+        content = content.replace('{{value}}', mod_price_field.val());
+        content = content.replace('{{price}}', i_price);
+        content = content.replace('{{key}}', i_key);
         $(this).popover('destroy').popover(
             {
                 trigger: 'manual',
-                content:content,
+                content: content,
                 placement: 'left',
 //                template: template,
                 title: 'Thay đổi giá',
@@ -414,79 +434,79 @@ $(document).ready(function () {
             }
         });
     });
-    $(document).on('change','.popover-content .onoffswitch-checkbox',function(){
+    $(document).on('change', '.popover-content .onoffswitch-checkbox', function () {
         var s_price = $(this).closest('.popover-content').find('button').data('price');
-        if($(this).is(':checked')){
+        if ($(this).is(':checked')) {
             $(this).closest('.popover-content').find('input[name=mod-price]').val(0).focus();
-        }else{
+        } else {
             $(this).closest('.popover-content').find('input[name=mod-price]').val(digits(s_price)).focus();
         }
     });
-    $(document).on('click','.popover-content button',function(){
+    $(document).on('click', '.popover-content button', function () {
 
-        if($('#input-customer-id').val() == 1){
+        if ($('#input-customer-id').val() == 1) {
             alert('Vui nhập thông tin khách hàng khi giảm giá.');
             return false;
         }
         var i_key = $(this).data('key');
-        var  s_price = $(this).data('price');
+        var s_price = $(this).data('price');
         var tep = s_price;
         var i_price = $(this).closest('.popover-content').find('input[name=mod-price]').val();
         i_price = parseNumber(i_price);
         var type_box = $(this).closest('.popover-content').find('input[type=checkbox]');
         var type = 0;
-        if(type_box.is(':checked')){
-           type = 1;
+        if (type_box.is(':checked')) {
+            type = 1;
         }
-        var maxPrice  = parseInt(s_price) + parseInt(s_price)*0.1;
-        var minPrice  = parseInt(s_price) - parseInt(s_price)*0.1;
-        if(type == 0){
-            if(i_price >= minPrice && i_price <= maxPrice){
+        var maxPrice = parseInt(s_price) + parseInt(s_price) * 0.1;
+        var minPrice = parseInt(s_price) - parseInt(s_price) * 0.1;
+        if (type == 0) {
+            if (i_price >= minPrice && i_price <= maxPrice) {
                 $('#OrderFlagType').val('1');
-            }else{
+            } else {
                 $('#OrderFlagType').val('2');
                 //alert('Giá thay đổi không được quá 10% giá gốc');
             }
-            var mod_price_field = $('#'+i_key+'-mod-price');
-            var price_field = $('#'+i_key+'-price-text');
+            var mod_price_field = $('#' + i_key + '-mod-price');
+            var price_field = $('#' + i_key + '-price-text');
             mod_price_field.val(digits(i_price));
-            $('#'+i_key+'-cur-price').data('price',i_price).change();
-            price_field.text(digits(i_price*1));
+            $('#' + i_key + '-cur-price').data('price', i_price).change();
+            price_field.text(digits(i_price * 1));
             $('.pov').each(function () {
                 $(this).popover('destroy');
             });
-        }else{
-            if(i_price >= -10 && i_price <= 10){
+        } else {
+            if (i_price >= -10 && i_price <= 10) {
                 $('#OrderFlagType').val('1');
-            }else{
+            } else {
                 $('#OrderFlagType').val('2');
                 //alert('Giá thay đổi không được quá 10% giá gốc');
             }
-            var mod_price_field = $('#'+i_key+'-mod-price');
-            var price_field = $('#'+i_key+'-price-text');
+            var mod_price_field = $('#' + i_key + '-mod-price');
+            var price_field = $('#' + i_key + '-price-text');
 
-            i_price = s_price + s_price * (i_price/100);
+            i_price = s_price + s_price * (i_price / 100);
 
             mod_price_field.val(digits(i_price));
-            $('#'+i_key+'-cur-price').data('price',i_price).change();
-            price_field.text(digits(i_price*1));
+            $('#' + i_key + '-cur-price').data('price', i_price).change();
+            price_field.text(digits(i_price * 1));
             $('.pov').each(function () {
                 $(this).popover('destroy');
             });
         }
-        if(parseInt(tep) == i_price){
+        if (parseInt(tep) == i_price) {
             console.log('equal');
             console.log($('#OrderPromoteId').val() == '');
-            if($('#OrderPromoteId').val() == ''){
+            if ($('#OrderPromoteId').val() == '') {
                 $('#OrderFlagType').val('0');
-            }else{
+            } else {
                 $('#OrderFlagType').val('3');
             }
             saveCart();
         }
 
     });
-    $('#refresh').on('click',function(){
+    $('#refresh').on('click', function () {
         updatePrice();
     })
 //    =============================================================
@@ -494,20 +514,31 @@ $(document).ready(function () {
 //    =============================================================
 
 //    filter
-    $('.btn-expand').on('click',function(){
-        var position = $('#panel-from-left').css('left');
-        if(position=='0px')$('#panel-from-left').css('left','-600px');
-        else $('#panel-from-left').css('left','0px');
+    var w_h = $(window).height();
+    var header_h = $('header').height();
+    var h = w_h - header_h;
+    $('.dashboard-wrapper').height(h);
+    $('.div-left').height(h);
+    $('.div-right').height(h);
+    $('.kv2List').height(h - 5);
+    $('.btn-expand').on('click', function () {
+        if ($('.btn-expand .icon').hasClass('icon-arrow-up')) {
+            $('.btn-expand .icon').removeClass('icon-arrow-up').addClass('icon-arrow-down');
+            $('.kv2List').height(h - 5 - $('.kv2Pro').height());
+        } else {
+            $('.kv2List').height(h - 5);
+            $('.btn-expand .icon').removeClass('icon-arrow-down').addClass('icon-arrow-up');
+        }
     });
     loadajaxPro('');
 
-    $(document).on('click','#panel-from-left #next,#panel-from-left #prev',function(e){
+    $(document).on('click', '#panel-from-left #next,#panel-from-left #prev', function (e) {
         e.preventDefault();
         var link = $(this).attr('href');
-        if(link)
+        if (link)
             loadajaxProPage(link);
     });
-    $(document).on('click','#panel-from-left .thumbnail',function(e){
+    $(document).on('click', '#panel-from-left .thumbnail', function (e) {
         var pId = $(this).data('id'),
             pSku = $(this).data('code'),
             pName = $(this).data('name'),
@@ -515,44 +546,44 @@ $(document).ready(function () {
             limit = $(this).data('limit'),
             optionNames = $(this).data('optionsname'),
             pPrice = $(this).data('price'),
-            pData  = $("#" + $(this).data('key')).text();
+            pData = $("#" + $(this).data('key')).text();
         addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pData);
     });
-    $(document).on('keyup change','#search-input',function(){
-        loadajaxPro({q:$(this).val(),category_id:$('#search-select').val()});
+    $(document).on('keyup change', '#search-input', function () {
+        loadajaxPro({q: $(this).val(), category_id: $('#search-select').val()});
     });
-    $(document).on('change','#search-select',function(){
-        loadajaxPro({q:$('#search-input').val(),category_id:$(this).val()});
+    $(document).on('change', '#search-select', function () {
+        loadajaxPro({q: $('#search-input').val(), category_id: $(this).val()});
     });
 
 });
-function loadajaxProPage(link){
+function loadajaxProPage(link) {
     $.ajax({
-        url : link,
-        type : 'post',
-        beforeSend: function(){
-            var loading = '<div class="col-md-12 text-center">'+
-                '<img src="/img/select2-spinner.gif">'+
+        url: link,
+        type: 'post',
+        beforeSend: function () {
+            var loading = '<div class="col-md-12 text-center">' +
+                '<img src="/img/select2-spinner.gif">' +
                 '</div>';
             $('#product-list').html(loading);
         },
-        success: function(response){
+        success: function (response) {
             $('#product-list').html(response);
         }
     });
 }
-function loadajaxPro(data){
+function loadajaxPro(data) {
     $.ajax({
-        url : product_ajax + '/' + store_id,
-        type : 'post',
-        data : data,
-        beforeSend: function(){
-            var loading = '<div class="col-md-12 text-center">'+
-                '<img src="/img/select2-spinner.gif">'+
+        url: product_ajax + '/' + store_id,
+        type: 'post',
+        data: data,
+        beforeSend: function () {
+            var loading = '<div class="col-md-12 text-center">' +
+                '<img src="/img/select2-spinner.gif">' +
                 '</div>';
             $('#product-list').html(loading);
         },
-        success: function(response){
+        success: function (response) {
             $('#product-list').html(response);
         }
     });
@@ -599,18 +630,18 @@ function addProduct(pId, pSku, pName, pOptions, limit, optionNames, pPrice, pDat
             '<br><span class="opt">' + optionNames + '</span>' +
             '</td>' +
             '<td class="text-right">' +
-            ' <span class="price-text">'+ digits(pPrice) +'</span>'+
-            '</td>'+
+            ' <span class="price-text">' + digits(pPrice) + '</span>' +
+            '</td>' +
             '<td class="text-right">' +
-            '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">'+
+            '<a href="javascript:;" class="pov" data-price="' + pPrice + '" data-key="' + uuid + '">' +
             '<span class="price-text" id="' + uuid + '-price-text">' + digits(pPrice) + '</span>' +
-            ' <i class="icon icon-pen"></i>'+
-            '<input type="hidden" name="data[OrderDetail]['+uuid+'][mod_price]" id="'+uuid+'-mod-price" value="'+digits(pPrice)+'">'+
-            '</a>'+
+            ' <i class="icon icon-pen"></i>' +
+            '<input type="hidden" name="data[OrderDetail][' + uuid + '][mod_price]" id="' + uuid + '-mod-price" value="' + digits(pPrice) + '">' +
+            '</a>' +
             '</td>' +
             '<td class="text-right">' +
             '<a href="javascript:;" class="price-down"><i class="icon icon-arrow-down"></i></a>' +
-            '<input class="qty"  id="'+uuid+'-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
+            '<input class="qty"  id="' + uuid + '-cur-price"  name="data[OrderDetail][' + uuid + '][qty]" data-limit="' + limit + '" data-basic_price="' + pPrice + '" data-price="' + pPrice + '" value="1">' +
             '<a href="javascript:;"  class="price-up"><i class="icon icon-arrow-up"></i></a>' +
             '</td>' +
             '<td class="text-right">' +
@@ -638,7 +669,7 @@ function updatePrice() {
     $('#summary-total').val(summary);
     $('#summary-total').change();
     $('#OrderReceive').change();
-    $('#OrderPoint').val(Math.round(summary/point_cal))
+    $('#OrderPoint').val(Math.round(summary / point_cal))
     saveCart();
 }
 
@@ -657,12 +688,12 @@ function parseNumber(number) {
 function digits(number) {
     return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 }
-function saveCart(){
+function saveCart() {
     $.ajax({
         url: saveUrl,
         type: 'post',
         data: $('#OrderAdminAddForm').serialize(),
-        success: function (data){
+        success: function (data) {
 
         }
     });

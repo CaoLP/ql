@@ -322,7 +322,7 @@ class OrdersController extends AppController
             }
         }
         if($this->Session->read('Cart')){
-            $this->request->data =  $this->Session->read('Cart');
+            $this->request->data = $this->Session->read('Cart');
         }
         $this->loadModel('Category');
 

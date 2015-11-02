@@ -1,0 +1,123 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.main-container {
+    margin: 0 10px;
+    height: 100%;
+}
+
+.dashboard-wrapper {
+    min-height: 100%;
+    padding: 0;
+}
+
+.navbar-nav > li > a {
+    line-height: 1.5;
+}
+
+#real-log-btn {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    right: 0;
+}
+
+.div-left {
+    margin-right: 358px;
+    padding: 8px 0 0 30px;
+    position: relative;
+}
+
+.div-right {
+    width: 342px;
+    padding: 15px 10px 10px;
+    background: #ebf7fb;
+    border-left: 1px solid #dceaee;
+    border-right: 1px solid #dceaee;
+    margin-right: 8px;
+    position: relative;
+    float: right;
+    height: 700px;
+}
+
+.kv2List {
+    border: 1px solid #e8e8e8;
+    color: #333;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.kv2Pro {
+    height: auto;
+    padding: 0;
+    border: 1px solid #4bc6f2;
+    position: relative;
+}
+
+.kv2Pro .panel-heading {
+    height: 50px;
+}
+
+.kv2Pro .panel {
+    margin: 0;
+}
+
+.kv2ListScroll {
+    height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#product-list .thumbnail {
+    position: relative;
+}
+
+#product-list .detail {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.btn-expand {
+    position: absolute;
+    top: -25px;
+    background: #D9EDF7;
+    border: 1px solid #5BC0DE;
+    border-radius: 10px;
+    padding: 5px;
+    z-index: 10;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.content-2 {
+    height: auto;
+}
+
+.div-right .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0;
+    margin-bottom: 5px;
+    background-color: #fff;
+    border: none;
+}
+
+.right-block {
+    margin-bottom: 10px;
+}
+.right-block .input-group-addon{
+    width: 100px;
+}
+.right-block .input-group{
+    width: 100%;
+}
+.right-block .form-control{
+    width: 100%;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+    background-color: #FFF;
+}

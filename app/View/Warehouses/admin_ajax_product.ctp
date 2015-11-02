@@ -1,4 +1,4 @@
-<div class="row">
+<div class="">
     <div class="col-md-12">
             <?php
             echo $this->Paginator->prev(__('<i class="icon-arrow-left-3"></i> Trang trước'), array('tag' => false,'id'=>'prev','class'=>'pull-left', 'escape' => false), null, array('tag' => false,'id'=>'prev', 'class' => 'disabled pull-left', 'disabledTag' => 'a', 'escape' => false));
@@ -7,11 +7,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" style="padding: 0;">
         <?php
         foreach($warehouses as $key=>$warehouse){
         ?>
-            <div class="col-xs-6 col-md-3">
+            <div class="col-xs-6 col-md-2" style="padding: 0;">
                 <a href="javascript:;" class="thumbnail"
                    data-key="data<?php echo $key;?>"
                    data-limit="<?php echo $warehouse['qty'];?>"
