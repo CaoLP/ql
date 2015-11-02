@@ -41,9 +41,7 @@ if ($this->request->params['action'] == 'admin_add') {
                     echo $this->Form->input('code', array ('label' => array ('text' => 'Mã', 'class' => 'col-lg-2 control-label')));
                     echo $this->Form->input('excerpt', array ('label' => array ('text' => 'Mô tả ngắn', 'class' => 'col-lg-2 control-label')));
                     ?>
-                    <div class="form-group">
-                        <?php echo $this->Media->ckeditor('descriptions', array('label' => array('text' => 'Nội dung', 'class' => 'col-lg-2 control-label')));?>
-                    </div>
+					<?php echo $this->Media->ckeditor('descriptions', array('label' => array('text' => 'Nội dung','empty' => true, 'class' => 'col-lg-2 control-label')));?>
                     <?php
 					echo $this->Form->input('status', array ('label' => array ('text' => 'Trạng thái', 'class' => 'col-lg-2 control-label')));
 					?>

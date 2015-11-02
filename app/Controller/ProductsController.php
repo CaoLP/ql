@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class ProductsController extends AppController {
 
-	public $title_for_layout = 'Sáº£n pháº©m';
+	public $title_for_layout = 'Sản phẩm';
 
 /**
  * Components

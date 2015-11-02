@@ -68,23 +68,6 @@ class SettingsController extends AppController
      */
     public function admin_add()
     {
-        $temp = array(
-            'Setting' => array(
-                'name' => 'temp',
-                'key' => 'temp',
-            )
-        );
-        $data = $this->Setting->find('first', array('conditions' => array('Setting.name' => 'temp')));
-        if ($data) {
-            $id = $data['Setting']['id'];
-        } else {
-            $this->Setting->save($temp);
-            $id = $this->Setting->id;
-        }
-
-        if (!$this->Setting->exists($id)) {
-            throw new NotFoundException(__('Invalid setting'));
-        }
         if ($this->request->is(array('post', 'put'))) {
 
             if ($this->Setting->save($this->request->data)) {
@@ -93,10 +76,10 @@ class SettingsController extends AppController
             } else {
                 $this->Session->setFlash(__('The setting could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
             }
-        } else {
-            $options = array('conditions' => array('Setting.' . $this->Setting->primaryKey => $id));
-            $this->request->data = $this->Setting->find('first', $options);
         }
+        $id = $this->Setting->getNextAutoNumber($this->Setting);
+        $this->request->data('Setting.id',$id);
+
         $parents = $this->Setting->ParentSetting->find('list', array('conditions' => array('ParentSetting.key <>' => 'temp')));
         $this->set(compact('parents'));
         $this->view = 'admin_edit';
